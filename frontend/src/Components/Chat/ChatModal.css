@@ -1,0 +1,109 @@
+/* Floating chat window anchored to bottom-right */
+.chat-modal {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 360px;
+  max-height: 520px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px !important;
+  overflow: hidden;
+  z-index: 1300;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22) !important;
+  animation: chat-slide-up 0.25s ease;
+}
+
+@keyframes chat-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+  flex-shrink: 0;
+}
+
+/* Messages scroll area */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 14px;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 260px;
+  max-height: 340px;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #c5cae9;
+  border-radius: 4px;
+}
+
+/* Bubble row */
+.chat-bubble-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+}
+.chat-bubble-row.me {
+  flex-direction: row-reverse;
+}
+
+/* Bubble */
+.chat-bubble {
+  max-width: 72%;
+  padding: 8px 12px;
+  border-radius: 16px;
+  word-break: break-word;
+}
+.bubble-me {
+  background: #1976d2;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.bubble-other {
+  background: #fff;
+  color: #212121;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.bubble-me .chat-time {
+  color: rgba(255,255,255,0.7);
+}
+.bubble-other .chat-time {
+  color: #9e9e9e;
+}
+
+/* Timestamp */
+.chat-time {
+  font-size: 10px;
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* Input area */
+.chat-input-area {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-top: 1px solid #e0e0e0;
+  background: #fff;
+  flex-shrink: 0;
+}

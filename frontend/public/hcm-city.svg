@@ -1,0 +1,56 @@
+<svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Night sky -->
+  <rect width="300" height="200" fill="#0f172a"/>
+  
+  <!-- Water -->
+  <rect x="0" y="140" width="300" height="60" fill="#1e293b"/>
+  
+  <!-- City buildings -->
+  <rect x="20" y="80" width="25" height="60" fill="#1e40af"/>
+  <rect x="50" y="70" width="20" height="70" fill="#7c3aed"/>
+  <rect x="75" y="90" width="30" height="50" fill="#dc2626"/>
+  <rect x="110" y="60" width="25" height="80" fill="#059669"/>
+  <rect x="140" y="75" width="20" height="65" fill="#ea580c"/>
+  <rect x="165" y="85" width="35" height="55" fill="#be185d"/>
+  <rect x="205" y="70" width="25" height="70" fill="#4338ca"/>
+  <rect x="235" y="80" width="20" height="60" fill="#0891b2"/>
+  
+  <!-- Building lights -->
+  <rect x="25" y="85" width="3" height="3" fill="#fbbf24"/>
+  <rect x="30" y="90" width="3" height="3" fill="#fbbf24"/>
+  <rect x="55" y="75" width="3" height="3" fill="#fbbf24"/>
+  <rect x="60" y="80" width="3" height="3" fill="#fbbf24"/>
+  <rect x="80" y="95" width="3" height="3" fill="#fbbf24"/>
+  <rect x="85" y="100" width="3" height="3" fill="#fbbf24"/>
+  <rect x="115" y="65" width="3" height="3" fill="#fbbf24"/>
+  <rect x="120" y="70" width="3" height="3" fill="#fbbf24"/>
+  
+  <!-- Boat with lights -->
+  <ellipse cx="100" cy="160" rx="25" ry="8" fill="#1f2937"/>
+  <rect x="85" y="152" width="30" height="16" fill="#374151" rx="8"/>
+  <rect x="90" y="155" width="20" height="10" fill="#fbbf24" rx="2"/>
+  <rect x="95" y="158" width="10" height="4" fill="#1f2937"/>
+  
+  <!-- Boat lights -->
+  <circle cx="100" cy="160" r="2" fill="#fbbf24"/>
+  <circle cx="105" cy="158" r="1" fill="#60a5fa"/>
+  <circle cx="95" cy="158" r="1" fill="#60a5fa"/>
+  
+  <!-- Light trails on water -->
+  <path d="M 50 150 Q 100 145 150 150" stroke="#fbbf24" stroke-width="2" fill="none" opacity="0.7"/>
+  <path d="M 100 155 Q 150 150 200 155" stroke="#60a5fa" stroke-width="2" fill="none" opacity="0.7"/>
+  
+  <!-- Traffic lights -->
+  <circle cx="80" cy="155" r="1" fill="#ef4444"/>
+  <circle cx="120" cy="155" r="1" fill="#22c55e"/>
+  
+  <!-- Sky gradient -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#334155;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="300" height="200" fill="url(#skyGradient)"/>
+</svg>

@@ -1,0 +1,227 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #bce3df5e;
+  min-height: 100vh; /* 👈 dùng min-height thay height */
+  padding: 2rem 0; /* 👈 thêm padding để có khoảng trống */
+  font-family: "Inter", sans-serif;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  width: 900px;
+  max-width: 95%;
+  min-height: 550px; /* 👈 đổi thành min-height */
+  overflow: visible; /* 👈 cho phép hiện phần dưới */
+}
+
+
+/* --- Cột bên trái: form --- */
+.login-left {
+  flex: 1;
+  padding: 3rem 3rem 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  font-weight: 700;
+  color: #2b6fe8;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.login-heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtext {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+/* --- Form login --- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-form label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* --- Mắt hiện/ẩn mật khẩu --- */
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  width: 100%;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.eye-icon:hover {
+  color: #2b6fe8;
+}
+
+/* --- Nhớ mật khẩu + quên mật khẩu --- */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.login-options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+.login-options input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2b6fe8;
+}
+
+.forgot-link {
+  color: #ff4b4b;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* --- Nút đăng nhập --- */
+.login-btn {
+  width: 100%;
+  background-color: #2b6fe8;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #2157b3;
+}
+
+/* --- Link đăng ký --- */
+.register-text {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.register-link {
+  color: #ff3d3d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* --- Divider --- */
+.divider {
+  text-align: center;
+  color: #999;
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+.divider span {
+  background: white;
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: #e0e0e0;
+  z-index: 1;
+}
+
+/* --- Nút mạng xã hội --- */
+.social-login {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: nowrap;
+}
+
+.social-btn {
+  flex: 1;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 0.6rem 0;
+  font-size: 1.3rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-btn:hover {
+  background-color: #f7f7f7;
+  transform: translateY(-2px);
+}
+
+/* --- Cột bên phải: ảnh minh họa --- */
+.login-right {
+  flex: 1;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-right img {
+  width: 80%;
+  max-width: 300px;
+}

@@ -1,0 +1,110 @@
+.verify-page {
+  background-color: #bce3df5e;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.verify-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  width: 900px;
+  max-width: 95%;
+  overflow: hidden;
+}
+
+/* --- Cột trái --- */
+.verify-left {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.back-link {
+  color: #2b6fe8;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.verify-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.verify-desc {
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+.resend {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #2b6fe8;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.resend-btn:disabled {
+  color: gray;
+  cursor: not-allowed;
+}
+
+.verify-btn {
+  width: 100%;
+  background-color: #2b6fe8;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.9rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.verify-btn:hover {
+  background-color: #2157b3;
+}
+
+/* --- Cột phải --- */
+.verify-right {
+  flex: 1;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.verify-right img {
+  width: 80%;
+  max-width: 300px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .verify-card {
+    flex-direction: column;
+  }
+
+  .verify-right {
+    order: -1;
+    padding: 1.5rem 0;
+  }
+
+  .verify-left {
+    padding: 2rem;
+  }
+}

@@ -1,0 +1,29 @@
+/* VerifyCode.css */
+
+.verify-code-paper {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.verify-code-paper h4 {
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.verify-code-paper form {
+  width: 100%;
+}
+
+.verify-code-paper button {
+  text-transform: none;
+  font-weight: 700;
+  padding: 12px;
+}
+
+.verify-code-paper .MuiTypography-body2 {
+  margin-top: 10px;
+}
