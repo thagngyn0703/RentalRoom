@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const PendingUser = require('../models/PendingUser');
 const { sendMail } = require('../utils/mailer');
 const PendingUserPasswordReset = require('../models/PendingUserPasswordReset');
+const { refreshCookieOptions } = require('../utils/cookieOptions');
 
 // ===== Helpers cho flow đăng ký xác minh =====
 function generateCode(len = 8) {
@@ -132,29 +133,11 @@ const authControllers = {
           console.error('Error hashing/saving refresh token:', hashErr);
         }
 
-        // Set cookie with refresh token (httpOnly)
-        console.log('Setting refreshToken cookie...');
-        // Determine secure flag based on actual request (works with proxy when trust proxy is enabled)
-        const isSecureRequest = !!(req.secure || (req.headers && req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'].includes('https')));
-        const cookieOpts = {
-          httpOnly: true,
-          path: '/',
-          secure: isSecureRequest || process.env.NODE_ENV === 'production',
-          sameSite: isSecureRequest || process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        const cookieOpts = refreshCookieOptions(req, {
           maxAge: 30 * 24 * 60 * 60 * 1000,
-        };
-
-
+        });
 
         res.cookie('refreshToken', refreshToken, cookieOpts);
-        // Log the Set-Cookie header so we can verify what was sent to the client
-        try {
-          const setCookieHeader = res.getHeader && res.getHeader('Set-Cookie');
-          console.log('Set-Cookie header after login:', setCookieHeader);
-        } catch (logErr) {
-          console.error('Error reading Set-Cookie header after login:', logErr);
-        }
-        console.log('Cookie set successfully (login)');
 
         const { password, ...userAuth } = user._doc;
         userAuth.retoken = undefined;
@@ -176,8 +159,6 @@ const authControllers = {
     try {
       const refreshToken = req.cookies?.refreshToken;
 
-      console.log('Logout request cookies:', req.cookies);
-
       // If cookie present, try to find the user and clear stored retoken
       if (refreshToken) {
         // decode to get user id
@@ -189,16 +170,10 @@ const authControllers = {
         }
       }
 
-      // Compute cookie attributes consistently with how we set them (use request to detect HTTPS behind a proxy)
-      const isSecureReq = !!(req.secure || (req.headers && req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'].includes('https')));
       const domainOption = process.env.COOKIE_DOMAIN || undefined; // set COOKIE_DOMAIN in env if you need an explicit domain
-      const clearOpts = {
-        path: '/',
-        httpOnly: true,
-        secure: isSecureReq || process.env.NODE_ENV === 'production',
-        sameSite: isSecureReq || process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      const clearOpts = refreshCookieOptions(req, {
         domain: domainOption,
-      };
+      });
 
       // Also set an expired cookie to ensure browsers remove it reliably
       try {
@@ -252,23 +227,11 @@ const authControllers = {
           console.error('Error hashing new refresh token:', hashErr);
         }
 
-        // Use the same cookie options as login so attributes are consistent
-        const isSecureReq2 = !!(req.secure || (req.headers && req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'].includes('https')));
-        const cookieOptsForRefresh = {
-          httpOnly: true,
-          path: '/',
-          secure: isSecureReq2 || process.env.NODE_ENV === 'production',
-          sameSite: isSecureReq2 || process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        const cookieOptsForRefresh = refreshCookieOptions(req, {
           maxAge: 30 * 24 * 60 * 60 * 1000,
-        };
+        });
 
         res.cookie('refreshToken', newRefreshToken, cookieOptsForRefresh);
-        try {
-          const setCookieHeader2 = res.getHeader && res.getHeader('Set-Cookie');
-          console.log('Set-Cookie header after refresh:', setCookieHeader2);
-        } catch (logErr2) {
-          console.error('Error reading Set-Cookie header after refresh:', logErr2);
-        }
 
         return res.status(200).json({ accessToken: newAccessToken });
       } catch (e) {
