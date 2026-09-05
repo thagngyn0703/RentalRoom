@@ -112,7 +112,7 @@ Chromium thật ở `1440x900` cùng `390x844`, gồm console, network và respo
 
 ## Verification record — 2026-09-05 UTC
 
-- Vòng 1: backend `19/19`, frontend `4/4`; production build exit `0`; Nginx,
+- Vòng 1: backend `21/21`, frontend `4/4`; production build exit `0`; Nginx,
   systemd, MongoDB health, loopback API và Socket.IO đạt.
 - Vòng 2: public homepage/API/Socket.IO đạt; 200 request homepage và 200 request
   health ở concurrency 20 đều trả HTTP 200; Chromium thật kiểm tra `1440x900`
