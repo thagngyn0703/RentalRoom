@@ -29,7 +29,7 @@ fi
 
 runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" "$YARN_BIN" --cwd "$PROJECT_ROOT/backend" install --frozen-lockfile
 runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" "$YARN_BIN" --cwd "$PROJECT_ROOT/frontend" install --frozen-lockfile
-runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" CI=true "$YARN_BIN" --cwd "$PROJECT_ROOT/frontend" build
+runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" "$YARN_BIN" --cwd "$PROJECT_ROOT/frontend" build
 
 install -d -m 0755 -o root -g root /var/www/rentalroom
 rsync -a --delete "$PROJECT_ROOT/frontend/build/" /var/www/rentalroom/
