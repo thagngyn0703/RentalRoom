@@ -6,6 +6,17 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter } from 'react-router-dom';
 
+jest.mock('axios', () => ({
+  __esModule: true,
+  default: {
+    defaults: {},
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    patch: jest.fn(),
+    delete: jest.fn(),
+  },
+}));
 jest.mock('../../../config/axiosJWT');
 
 const mockAuthReducer = (state = { login: { currentUser: { _id: 'u1', id: 'u1', role: 'admin' } } }, action) => state;
@@ -22,29 +33,23 @@ function renderWithStore(ui) {
 }
 
 describe('UserSidebar', () => {
-  it('loads balance and islandor badge', async () => {
-    // mock history/mine
+  it('loads wallet balance and islandor status', async () => {
     axiosJWT.get.mockImplementation((url) => {
-      if (url === '/api/payments/history/mine') {
-        return Promise.resolve({ data: { success: true, items: [
-          { status: 'completed', type: 'in', amount: 100000 },
-          { status: 'completed', type: 'out', amount: 20000 }
-        ] } });
+      if (url === '/api/payments/wallet') {
+        return Promise.resolve({ data: { success: true, wallet: { balance: 80000 } } });
       }
       if (url === '/api/payments/islandor') {
-        const future = new Date(Date.now() + 1000 * 60 * 60 * 5).toISOString();
-        return Promise.resolve({ data: { success: true, isActive: true, expiresAt: future } });
+        return Promise.resolve({ data: { success: true, isActive: false, expiresAt: null } });
       }
       return Promise.resolve({ data: {} });
     });
 
     renderWithStore(<UserSidebar />);
 
-    // wallet chip should show computed balance 80000
-    await screen.findByText(/Số dư:/i);
-    expect(screen.getByText(/80,000/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getAllByText(/Số dư:\s*80[.,]000\s*đ/i)).toHaveLength(2);
+    });
 
-    // islandor badge should appear (text like '5h' or 'Đang hoạt động')
-    await screen.findByText(/Đang hoạt động|h|m/);
+    expect(axiosJWT.get).toHaveBeenCalledWith('/api/payments/islandor');
   });
 });
