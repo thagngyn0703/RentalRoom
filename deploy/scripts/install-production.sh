@@ -32,7 +32,7 @@ runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" "$YARN_BIN" --cwd "$PROJECT
 runuser -u "$APP_USER" -- env HOME="/home/$APP_USER" "$YARN_BIN" --cwd "$PROJECT_ROOT/frontend" build
 
 install -d -m 0755 -o root -g root /var/www/rentalroom
-rsync -a --delete "$PROJECT_ROOT/frontend/build/" /var/www/rentalroom/
+rsync -a --delete --chmod=D755,F644 "$PROJECT_ROOT/frontend/build/" /var/www/rentalroom/
 chown -R root:root /var/www/rentalroom
 
 install -m 0644 "$PROJECT_ROOT/deploy/nginx/rentalroom.conf" /etc/nginx/sites-available/rentalroom

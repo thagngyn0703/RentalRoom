@@ -73,7 +73,7 @@ Không dán log chứa thông tin nhạy cảm vào issue công khai.
 cd /home/codexproxy/Codex-thangtts/RentalRoom/.worktrees/public-ip-production/frontend
 CI=true yarn test --watchAll=false
 yarn build
-sudo rsync -a --delete build/ /var/www/rentalroom/
+sudo rsync -a --delete --chmod=D755,F644 build/ /var/www/rentalroom/
 sudo chown -R root:root /var/www/rentalroom
 sudo nginx -t
 sudo systemctl reload nginx
