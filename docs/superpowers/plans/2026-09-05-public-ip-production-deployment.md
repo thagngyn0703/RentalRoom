@@ -367,7 +367,7 @@ Correct `backend/README.md` to use `REFRESH_JWT_SECRET`, production-safe placeho
 Run:
 
 ```bash
-rg -n 'mongodb\+srv://[^:]+:[^@]+@|AIza[0-9A-Za-z_-]{20,}|SMTP_PASS=[^<]|API_SECRET=[^<]' README.md docs backend/README.md && exit 1 || true
+rg -n 'mongodb\+srv://[^:]+:[^@]+@|AIza[0-9A-Za-z_-]{20,}|SMTP_PASS=[^<]|API_SECRET=[^<]' README.md backend/README.md docs/wiki docs/superpowers/specs && exit 1 || true
 test -f docs/wiki/operations.md
 test -f docs/superpowers/specs/2026-09-05-public-ip-production-deployment-design.md
 test -f docs/superpowers/plans/2026-09-05-public-ip-production-deployment.md
