@@ -26,6 +26,7 @@ const chatRouter = require('./routers/chat');
 const notificationRouter = require('./routers/notification');
 const withdrawalRouter = require('./routers/withdrawal');
 const Message = require('./models/Message');
+const { getHealth, resolveListenHost } = require('./utils/runtimeStatus');
 // const adminRouter = require('./routers/admin'); // File admin.js chưa có
 
 dotenv.config();
@@ -128,6 +129,11 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use(cookieParser());
 app.use(express.json());
 
+app.get('/api/health', (req, res) => {
+  const health = getHealth(mongoose.connection.readyState);
+  return res.status(health.statusCode).json(health.body);
+});
+
 // Public folder cho ảnh/video nếu lưu local
 
 // Debug request
@@ -163,6 +169,7 @@ const tmpDir = './tmp';
 if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
 const PORT = process.env.PORT || 8000;
+const HOST = resolveListenHost(process.env.HOST);
 
 // ===================== HTTP + Socket.io =====================
 const httpServer = http.createServer(app);
@@ -258,6 +265,6 @@ io.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+httpServer.listen(PORT, HOST, () => {
+  console.log(`🚀 Server listening on ${HOST}:${PORT}`);
 });
