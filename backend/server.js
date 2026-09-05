@@ -78,21 +78,6 @@ const corsOptions = {
     if (whitelist.indexOf(normalizedOrigin) !== -1) {
       return callback(null, true);
     }
-    // allow any localhost origin (http://localhost:3000 or 127.0.0.1 variants)
-    if (typeof normalizedOrigin === 'string' && (normalizedOrigin.includes('localhost') || normalizedOrigin.includes('127.0.0.1'))) {
-      return callback(null, true);
-    }
-
-    // Allow Vercel preview and production domains (e.g. *.vercel.app)
-    // This is useful when your front-end is deployed as preview apps on Vercel
-    // which generate dynamic subdomains like
-    // `trochung-deployment-fe-phase2-hwoa72ovm-...vercel.app`.
-    // IMPORTANT: because credentials are enabled, allow only vercel.app suffix
-    // if you trust all Vercel preview builds for this project.
-    if (typeof normalizedOrigin === 'string' && normalizedOrigin.endsWith('.vercel.app')) {
-      console.log('Allowing Vercel origin:', normalizedOrigin);
-      return callback(null, true);
-    }
     console.warn('CORS check failed. Whitelist:', whitelist);
     return callback(new Error('Not allowed by CORS'));
   },
@@ -136,13 +121,14 @@ app.get('/api/health', (req, res) => {
 
 // Public folder cho ảnh/video nếu lưu local
 
-// Debug request
-app.use((req, res, next) => {
-  console.log(`🔥 ${new Date().toISOString()} - ${req.method} ${req.path}`);
-  console.log('Headers:', req.headers);
-  console.log('Body:', req.body);
-  next();
-});
+// Request bodies and headers can contain credentials. Keep detailed diagnostics
+// out of production journals.
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log(`🔥 ${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+  });
+}
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
@@ -179,11 +165,7 @@ const io = new Server(httpServer, {
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
       const norm = typeof origin === 'string' ? origin.replace(/\/+$/g, '') : origin;
-      if (
-        whitelist.indexOf(norm) !== -1 ||
-        (typeof norm === 'string' && (norm.includes('localhost') || norm.includes('127.0.0.1'))) ||
-        (typeof norm === 'string' && norm.endsWith('.vercel.app'))
-      ) {
+      if (whitelist.indexOf(norm) !== -1) {
         return callback(null, true);
       }
       return callback(new Error('Socket CORS: not allowed'));

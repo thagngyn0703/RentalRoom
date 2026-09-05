@@ -17,10 +17,11 @@ loopback `127.0.0.1:8000`. API và Socket.IO dùng cùng origin.
 ## Trạng thái
 
 - Mục tiêu public: `http://161.248.81.124`.
-- Trạng thái: đang triển khai và kiểm chứng.
+- Trạng thái: đang phục vụ qua Nginx/systemd; kiểm chứng public, browser và stress
+  đã đạt, còn chờ tài khoản test để xác nhận trọn luồng đăng nhập/thanh toán.
 - Giới hạn: chưa có domain/TLS; HTTP không an toàn cho dữ liệu nhạy cảm.
-- Tiếp theo: hoàn tất hai vòng audit, trỏ domain, bật HTTPS và xoay toàn bộ
-  credentials đã lộ.
+- Tiếp theo: kiểm thử luồng authenticated bằng tài khoản test, xử lý warning kỹ
+  thuật hiện hữu, trỏ domain, bật HTTPS và xoay toàn bộ credentials đã lộ.
 
 Chi tiết nằm trong [operations wiki](docs/wiki/operations.md).
 

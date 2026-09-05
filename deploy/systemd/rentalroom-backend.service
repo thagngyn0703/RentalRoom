@@ -5,9 +5,9 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=codexproxy
-Group=codexproxy
-WorkingDirectory=/home/codexproxy/Codex-thangtts/RentalRoom/.worktrees/public-ip-production/backend
+User=@APP_USER@
+Group=@APP_GROUP@
+WorkingDirectory=@PROJECT_ROOT@/backend
 EnvironmentFile=/etc/rentalroom/backend.env
 ExecStart=/usr/bin/node server.js
 Restart=on-failure

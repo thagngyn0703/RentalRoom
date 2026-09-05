@@ -41,7 +41,13 @@ if [[ -L /etc/nginx/sites-enabled/default ]]; then
   unlink /etc/nginx/sites-enabled/default
 fi
 
-install -m 0644 "$PROJECT_ROOT/deploy/systemd/rentalroom-backend.service" /etc/systemd/system/rentalroom-backend.service
+sed \
+  -e "s|@APP_USER@|$APP_USER|g" \
+  -e "s|@APP_GROUP@|$APP_GROUP|g" \
+  -e "s|@PROJECT_ROOT@|$PROJECT_ROOT|g" \
+  "$PROJECT_ROOT/deploy/systemd/rentalroom-backend.service" \
+  > /etc/systemd/system/rentalroom-backend.service
+chmod 0644 /etc/systemd/system/rentalroom-backend.service
 
 nginx -t
 systemctl daemon-reload
@@ -49,6 +55,9 @@ systemctl enable --now nginx
 systemctl enable rentalroom-backend
 systemctl restart rentalroom-backend
 systemctl reload nginx
+
+PUBLIC_URL=${PUBLIC_URL:-http://161.248.81.124}
+PUBLIC_URL="$PUBLIC_URL" "$PROJECT_ROOT/deploy/scripts/verify-production.sh"
 
 if command -v ufw >/dev/null 2>&1 && [[ ${ENABLE_UFW:-0} == 1 ]]; then
   ufw allow OpenSSH

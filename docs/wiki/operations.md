@@ -8,7 +8,7 @@
 | Frontend | Nginx static build at `/var/www/rentalroom` |
 | Backend | systemd `rentalroom-backend`, loopback port `8000` |
 | Database | MongoDB Atlas database `WDP301` |
-| Current state | Deployment in progress; verification not yet recorded |
+| Current state | Serving publicly; infrastructure/browser/stress checks passed, authenticated flow pending test credentials |
 | Known risk | HTTP only; sensitive data is not transport-encrypted |
 
 Không đổi trạng thái thành “pass” nếu database, public route, đăng nhập, test
@@ -40,7 +40,7 @@ sudo PROJECT_ROOT="$PWD" ENABLE_UFW=1 bash deploy/scripts/install-production.sh
 
 Script kiểm tra environment file, cài Nginx/rsync nếu thiếu, cài dependency theo
 Yarn lockfile, build frontend, publish static files, cài systemd/Nginx, giữ SSH
-trong UFW rồi khởi động dịch vụ.
+trong UFW, khởi động dịch vụ và chỉ kết thúc sau khi health/public/Socket.IO đạt.
 
 ## Status and health
 
@@ -110,9 +110,23 @@ Chromium thật ở `1440x900` cùng `390x844`, gồm console, network và respo
 Ảnh desktop/mobile được giữ tối đa 24 giờ. Job xóa chỉ nhắm đúng hai đường dẫn
 ảnh đã báo cáo; không dùng recursive delete hoặc glob rộng.
 
+## Verification record — 2026-09-05 UTC
+
+- Vòng 1: backend `19/19`, frontend `4/4`; production build exit `0`; Nginx,
+  systemd, MongoDB health, loopback API và Socket.IO đạt.
+- Vòng 2: public homepage/API/Socket.IO đạt; 200 request homepage và 200 request
+  health ở concurrency 20 đều trả HTTP 200; Chromium thật kiểm tra `1440x900`
+  và `390x844`, không thấy asset hỏng hoặc tràn ngang trên trang chủ.
+- Review độc lập đã được xử lý: bỏ log header/body production, giới hạn CORS theo
+  exact origin, render systemd theo checkout, thêm public health/Socket.IO vào
+  verifier, chờ readiness khi install và khôi phục security headers Nginx.
+- Chưa xác nhận E2E đăng nhập/thanh toán vì không có tài khoản test an toàn. Build
+  vẫn có warning ESLint/dependency cũ; không được diễn giải trạng thái này là toàn
+  bộ codebase sạch warning.
+
 ## Work tracking
 
-- Đang làm: triển khai public-IP và thực hiện hai vòng verification.
+- Đang làm: chờ tài khoản test để kiểm tra E2E authenticated/payment.
 - Sắp làm: domain, trusted TLS, ép HTTPS, Secure cookies, rotation credentials,
   monitoring và backup ngoài máy chủ.
 - Quy tắc bắt buộc: Git, Superpowers, planning, TDD, surgical changes, hai vòng

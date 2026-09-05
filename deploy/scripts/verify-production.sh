@@ -29,5 +29,7 @@ wait_for_url http://127.0.0.1:8000/api/health
 curl --fail --show-error --silent --max-time 10 http://127.0.0.1/api/health >/dev/null
 curl --fail --show-error --silent --max-time 10 http://127.0.0.1/ >/dev/null
 curl --fail --show-error --silent --max-time 15 "$PUBLIC_URL/" >/dev/null
+curl --fail --show-error --silent --max-time 15 "${PUBLIC_URL%/}/api/health" >/dev/null
+curl --fail --show-error --silent --max-time 15 "${PUBLIC_URL%/}/socket.io/?EIO=4&transport=polling" >/dev/null
 
 echo "RentalRoom production verification passed for $PUBLIC_URL"
