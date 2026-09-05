@@ -56,11 +56,11 @@ systemctl enable rentalroom-backend
 systemctl restart rentalroom-backend
 systemctl reload nginx
 
-PUBLIC_URL=${PUBLIC_URL:-http://161.248.81.124}
-PUBLIC_URL="$PUBLIC_URL" "$PROJECT_ROOT/deploy/scripts/verify-production.sh"
-
 if command -v ufw >/dev/null 2>&1 && [[ ${ENABLE_UFW:-0} == 1 ]]; then
   ufw allow OpenSSH
   ufw allow 80/tcp
   ufw --force enable
 fi
+
+PUBLIC_URL=${PUBLIC_URL:-http://161.248.81.124}
+PUBLIC_URL="$PUBLIC_URL" "$PROJECT_ROOT/deploy/scripts/verify-production.sh"

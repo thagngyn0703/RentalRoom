@@ -27,6 +27,7 @@ const notificationRouter = require('./routers/notification');
 const withdrawalRouter = require('./routers/withdrawal');
 const Message = require('./models/Message');
 const { getHealth, resolveListenHost } = require('./utils/runtimeStatus');
+const { isAllowedOrigin, normalizeOrigin } = require('./utils/originPolicy');
 // const adminRouter = require('./routers/admin'); // File admin.js chưa có
 
 dotenv.config();
@@ -71,11 +72,10 @@ const corsOptions = {
     // Debug/log origin and allow localhost patterns for dev
     console.log('CORS origin check, incoming Origin header:', origin);
     // normalize incoming origin (strip trailing slash) for safe comparison
-    const normalizedOrigin = typeof origin === 'string' ? origin.replace(/\/+$/g, '') : origin;
+    const normalizedOrigin = normalizeOrigin(origin);
     console.log('CORS normalized origin:', normalizedOrigin);
     // allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    if (whitelist.indexOf(normalizedOrigin) !== -1) {
+    if (isAllowedOrigin(origin, whitelist)) {
       return callback(null, true);
     }
     console.warn('CORS check failed. Whitelist:', whitelist);
@@ -164,8 +164,7 @@ const io = new Server(httpServer, {
   cors: {
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
-      const norm = typeof origin === 'string' ? origin.replace(/\/+$/g, '') : origin;
-      if (whitelist.indexOf(norm) !== -1) {
+      if (isAllowedOrigin(origin, whitelist)) {
         return callback(null, true);
       }
       return callback(new Error('Socket CORS: not allowed'));
