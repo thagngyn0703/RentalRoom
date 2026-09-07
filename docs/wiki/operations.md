@@ -127,6 +127,8 @@ Chromium thật ở `1440x900` cùng `390x844`, gồm console, network và respo
 ## Work tracking
 
 - Đang làm: chờ tài khoản test để kiểm tra E2E authenticated/payment.
+- UX-02: so sánh 2 phòng đã triển khai ở frontend; lựa chọn chỉ tồn tại trong
+  phiên trang, giới hạn cứng 2 phòng, có thanh chọn và dialog responsive.
 - Sắp làm: domain, trusted TLS, ép HTTPS, Secure cookies, rotation credentials,
   monitoring và backup ngoài máy chủ.
 - Quy tắc bắt buộc: Git, Superpowers, planning, TDD, surgical changes, hai vòng

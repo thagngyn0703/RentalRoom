@@ -1,7 +1,7 @@
 # RentalRoom (Trọ Chung)
 
-RentalRoom là nền tảng quản lý và tìm phòng trọ gồm đăng tin, tìm kiếm phòng,
-đặt phòng, thanh toán chuyển khoản/VietQR, ví, gia hạn, trả phòng, chat thời gian
+RentalRoom là nền tảng quản lý và tìm phòng trọ gồm đăng tin, tìm kiếm và so sánh
+2 phòng, đặt phòng, thanh toán chuyển khoản/VietQR, ví, gia hạn, trả phòng, chat thời gian
 thực, thông báo và quản trị người dùng.
 
 ## Kiến trúc
@@ -10,6 +10,9 @@ thực, thông báo và quản trị người dùng.
 - `backend/`: Express, Socket.IO, Mongoose, MongoDB Atlas và tích hợp email/Cloudinary.
 - `deploy/`: cấu hình Nginx, systemd, environment mẫu và script vận hành.
 - `docs/wiki/operations.md`: wiki triển khai và vận hành production.
+
+UX-02 hiện hỗ trợ chọn tối đa 2 phòng ngay trong danh sách `/rooms`, xem bảng
+đối chiếu trên desktop và card đối chiếu dọc trên mobile.
 
 Luồng production là trình duyệt → Nginx cổng 80 → frontend tĩnh hoặc backend
 loopback `127.0.0.1:8000`. API và Socket.IO dùng cùng origin.
