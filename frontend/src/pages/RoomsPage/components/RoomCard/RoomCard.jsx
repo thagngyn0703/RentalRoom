@@ -29,12 +29,11 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
         }
       }}
     >
-      <Tooltip title={isCompared ? 'Bỏ khỏi so sánh' : compareDisabled ? 'Chỉ có thể so sánh 2 phòng' : 'Thêm vào so sánh'}>
+      {onToggleCompare && <Tooltip title={isCompared ? 'Bỏ khỏi so sánh' : 'Thêm vào so sánh'}>
         <span>
           <IconButton
             aria-label={isCompared ? `Bỏ ${room.title} khỏi so sánh` : `So sánh ${room.title}`}
             aria-pressed={isCompared}
-            disabled={compareDisabled}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -46,7 +45,7 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
             <CompareArrowsIcon fontSize="small" />
           </IconButton>
         </span>
-      </Tooltip>
+      </Tooltip>}
       <Grid
         container
         spacing={0.5}

@@ -9,7 +9,7 @@ const RoomList = ({
     favorites,
     toggleFavorite,
     handleViewDetails,
-    selectedRooms,
+    selectedRooms = [],
     onToggleCompare,
     totalPages,
     page,
@@ -30,7 +30,6 @@ const RoomList = ({
                         handleViewDetails={handleViewDetails}
                         isCompared={selectedRooms.some((selected) => String(selected.id ?? selected._id) === String(room.id ?? room._id))}
                         onToggleCompare={onToggleCompare}
-                        compareDisabled={selectedRooms.length >= 2 && !selectedRooms.some((selected) => String(selected.id ?? selected._id) === String(room.id ?? room._id))}
                     />
                 ))}
             </Stack>

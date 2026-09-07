@@ -44,7 +44,7 @@ const CompareBar = ({ rooms, onRemove, onClear, onCompare }) => {
         <Button variant="contained" size="small" disabled={rooms.length !== 2} onClick={onCompare} sx={{ flexShrink: 0 }}>
           So sánh
         </Button>
-        <Button variant="text" size="small" onClick={onClear} sx={{ display: { xs: 'none', sm: 'inline-flex' }, flexShrink: 0 }}>
+        <Button variant="text" size="small" onClick={onClear} sx={{ flexShrink: 0 }}>
           Xóa tất cả
         </Button>
       </Stack>
