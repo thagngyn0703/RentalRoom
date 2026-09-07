@@ -25,6 +25,9 @@ const checkoutRequestRouter = require('./routers/checkoutRequest');
 const chatRouter = require('./routers/chat');
 const notificationRouter = require('./routers/notification');
 const withdrawalRouter = require('./routers/withdrawal');
+const faqRouter = require('./routers/faq');
+const chatbotRouter = require('./routers/chatbot');
+const adminFaqRouter = require('./routers/adminFaq');
 const Message = require('./models/Message');
 const { getHealth, resolveListenHost } = require('./utils/runtimeStatus');
 const { isAllowedOrigin, normalizeOrigin } = require('./utils/originPolicy');
@@ -147,6 +150,9 @@ app.use('/api/checkout-request', checkoutRequestRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/notifications', notificationRouter);
 app.use('/api/withdrawals', withdrawalRouter);
+app.use('/api/faqs', faqRouter);
+app.use('/api/chatbot', chatbotRouter);
+app.use('/api/admin/faqs', adminFaqRouter);
 // app.use('/api/admin', adminRouter); // Tắt tạm vì chưa có routers/admin.js
 
 // ensure tmp folder exists for multer

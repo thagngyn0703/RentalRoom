@@ -63,6 +63,8 @@ import OwnerPaymentHistory from './pages/UserLayout/OwnerPaymentHistory';
 import Withdraw from "./pages/UserLayout/Withdraw/Withdraw";
 import WithdrawalHistory from "./pages/UserLayout/WithdrawalHistory/WithdrawalHistory";
 import AdminWithdrawals from "./pages/AdminPage/AdminWithdrawals/AdminWithdrawals";
+import AdminFaqs from "./pages/AdminLayout/AdminFaqs/AdminFaqs";
+import FaqChatbot from "./Components/FaqChatbot/FaqChatbot";
 import { ToastProvider } from "./Components/ToastProvider";
 import ConfirmProvider from "./Components/ConfirmProvider";
 import PostEdit from "./pages/PostEdit/PostEdit";
@@ -208,6 +210,14 @@ function AppContent() {
               }
             />
             <Route
+              path="faqs"
+              element={
+                <ProtectedRoute requireAdmin={true}>
+                  <AdminFaqs />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="withdrawals"
               element={
                 <ProtectedRoute requireAdmin={true}>
@@ -247,6 +257,7 @@ function AppContent() {
         </Routes>
       </Box>
       <Footer />
+      <FaqChatbot />
     </Box>
   );
 }

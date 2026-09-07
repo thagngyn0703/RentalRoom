@@ -15,6 +15,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PeopleIcon from '@mui/icons-material/People';
+import QuizOutlinedIcon from '@mui/icons-material/QuizOutlined';
 
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
@@ -50,6 +51,11 @@ const adminMenu = [
     label: 'Quản lý hỗ trợ',
     icon: <ContactSupportIcon color="primary" />,
     path: '/admin/viewsupport',
+  },
+  {
+    label: 'Quản lý FAQ',
+    icon: <QuizOutlinedIcon color="primary" />,
+    path: '/admin/faqs',
   },
   {
     label: 'Quản lý tài khoản',
