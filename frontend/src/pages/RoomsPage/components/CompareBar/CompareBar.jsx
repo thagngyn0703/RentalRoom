@@ -27,9 +27,9 @@ const CompareBar = ({ rooms, onRemove, onClear, onCompare }) => {
         p: 1.25
       }}
     >
-      <Stack direction="row" alignItems="center" spacing={1.25}>
+      <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} spacing={1.25}>
         <CompareArrowsIcon color="primary" aria-hidden="true" />
-        <Stack direction="row" spacing={1} sx={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flex: 1, minWidth: 0, width: '100%' }}>
           {rooms.map((room) => (
             <Stack key={roomKey(room)} direction="row" alignItems="center" spacing={0.5} sx={{ minWidth: 0, flex: 1 }}>
               <Avatar src={room.image} alt="" variant="rounded" sx={{ width: 34, height: 34 }} />
@@ -41,12 +41,14 @@ const CompareBar = ({ rooms, onRemove, onClear, onCompare }) => {
           ))}
           {rooms.length === 1 && <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' }, alignSelf: 'center' }}>Chọn thêm 1 phòng</Typography>}
         </Stack>
-        <Button variant="contained" size="small" disabled={rooms.length !== 2} onClick={onCompare} sx={{ flexShrink: 0 }}>
-          So sánh
-        </Button>
-        <Button variant="text" size="small" onClick={onClear} sx={{ flexShrink: 0 }}>
-          Xóa tất cả
-        </Button>
+        <Stack direction="row" spacing={1} justifyContent="flex-end" sx={{ width: { xs: '100%', md: 'auto' } }}>
+          <Button variant="contained" size="small" disabled={rooms.length !== 2} onClick={onCompare} sx={{ flexShrink: 0 }}>
+            So sánh
+          </Button>
+          <Button variant="text" size="small" onClick={onClear} sx={{ flexShrink: 0 }}>
+            Xóa tất cả
+          </Button>
+        </Stack>
       </Stack>
     </Box>
   );
