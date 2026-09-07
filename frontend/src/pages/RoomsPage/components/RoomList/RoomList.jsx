@@ -9,6 +9,8 @@ const RoomList = ({
     favorites,
     toggleFavorite,
     handleViewDetails,
+    selectedRooms = [],
+    onToggleCompare,
     totalPages,
     page,
     handlePageChange
@@ -26,6 +28,8 @@ const RoomList = ({
                         favorites={favorites}
                         toggleFavorite={toggleFavorite}
                         handleViewDetails={handleViewDetails}
+                        isCompared={selectedRooms.some((selected) => String(selected.id ?? selected._id) === String(room.id ?? room._id))}
+                        onToggleCompare={onToggleCompare}
                     />
                 ))}
             </Stack>

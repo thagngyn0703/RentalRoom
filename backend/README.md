@@ -1,42 +1,37 @@
-# Backend Setup Guide
+# RentalRoom Backend
 
-## Environment Variables
+Express/Socket.IO backend sử dụng MongoDB Atlas, JWT refresh cookie, Cloudinary,
+SMTP, Gemini, GHN và thông tin VietQR.
 
-Tạo file `.env` trong thư mục `backend/` với nội dung sau:
+## Environment
+
+Tạo `.env` cho development hoặc `/etc/rentalroom/backend.env` cho production.
+Không commit file chứa secrets. Danh sách đầy đủ nằm tại
+`../deploy/env/backend.production.env.example`.
+
+Ví dụ development tối thiểu:
 
 ```env
-# Database
-MONGO_URL=mongodb+srv://your-username:your-password@your-cluster.mongodb.net/trochung?retryWrites=true&w=majority
-
-# JWT
-JWT_SECRET=your-jwt-secret-key-here
-JWT_REFRESH_SECRET=your-jwt-refresh-secret-key-here
-
-# Cloudinary Configuration
-# Đăng ký tài khoản tại https://cloudinary.com/console
-CLOUD_NAME=your-cloudinary-cloud-name
-API_KEY=your-cloudinary-api-key
-API_SECRET=your-cloudinary-api-secret
-
-# Server
+MONGO_URL=<mongodb-atlas-uri>
+JWT_SECRET=<random-secret>
+REFRESH_JWT_SECRET=<different-random-secret>
 PORT=8000
+HOST=127.0.0.1
 NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+CLOUD_NAME=<cloudinary-cloud-name>
+API_KEY=<cloudinary-api-key>
+API_SECRET=<cloudinary-api-secret>
 ```
 
-## Cloudinary Setup
-
-1. Đăng ký tài khoản tại [Cloudinary](https://cloudinary.com/console)
-2. Lấy thông tin từ Dashboard:
-   - Cloud Name
-   - API Key  
-   - API Secret
-3. Cập nhật vào file `.env`
-
-## Chạy Server
+## Commands
 
 ```bash
-npm install
-npm run dev
+yarn install
+yarn test --runInBand
+yarn dev
 ```
 
-Server sẽ chạy tại `http://localhost:8000`
+Production được quản lý bằng systemd. Xem
+[`../docs/wiki/operations.md`](../docs/wiki/operations.md) để cài đặt, kiểm tra
+health, xem log, restart và rollback.

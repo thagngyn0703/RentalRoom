@@ -2,15 +2,11 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import store from '../redux/store';
 import { loginSuccess } from '../redux/slices/authSlice';
+import { resolveApiBaseUrl } from './apiBaseUrl';
 
 // Tạo axios instance riêng cho các API cần JWT
-// Giữ logic baseURL đồng nhất với axios thường:
-// - Dev: dùng relative URL (proxy qua CRA tới backend local)
-// - Prod: fallback sang backend deploy nếu không cấu hình env
-const API_URL_FROM_ENV = (process.env.REACT_APP_API_URL || '').trim();
-const IS_DEV = process.env.NODE_ENV === 'development';
-const API_BASE_URL =
-  API_URL_FROM_ENV || (IS_DEV ? '' : 'https://trochung-deployment-phase2.onrender.com');
+// Mặc định gọi cùng origin; REACT_APP_API_URL chỉ dùng khi tách riêng backend.
+const API_BASE_URL = resolveApiBaseUrl(process.env.REACT_APP_API_URL);
 
 const axiosJWT = axios.create({
   baseURL: API_BASE_URL,

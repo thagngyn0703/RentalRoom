@@ -67,14 +67,18 @@ describe('roomController', () => {
       const req = { params: { id: '1' }, user: { _id: 'user123', role: 'user' } };
       const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
       const fakeRoom = { _id: '1', user: { _id: 'user123' }, toObject: () => ({ _id: '1', user: { _id: 'user123' } }) };
-      Room.findById.mockReturnValue({ populate: jest.fn().mockReturnThis(), populate: jest.fn().mockResolvedValue(fakeRoom) });
+      const query = { populate: jest.fn() };
+      query.populate.mockReturnValueOnce(query).mockResolvedValueOnce(fakeRoom);
+      Room.findById.mockReturnValue(query);
       await roomController.getRoomDetail(req, res);
       expect(res.json).toHaveBeenCalledWith(fakeRoom);
     });
     it('should return 404 if room not found', async () => {
       const req = { params: { id: '1' }, user: { _id: 'user123', role: 'user' } };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-      Room.findById.mockReturnValue({ populate: jest.fn().mockReturnThis(), populate: jest.fn().mockResolvedValue(null) });
+      const query = { populate: jest.fn() };
+      query.populate.mockReturnValueOnce(query).mockResolvedValueOnce(null);
+      Room.findById.mockReturnValue(query);
       await roomController.getRoomDetail(req, res);
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith({ error: 'Room not found' });
@@ -126,7 +130,9 @@ describe('roomController', () => {
       const res = { json: jest.fn(), status: jest.fn().mockReturnThis() };
       const fakeRoom = { _id: '1', user: { _id: 'user123', toString: () => 'user123' } };
       Room.findById.mockResolvedValue(fakeRoom);
-      Room.findByIdAndUpdate.mockReturnValue({ populate: jest.fn().mockReturnThis(), populate: jest.fn().mockResolvedValue(fakeRoom) });
+      const query = { populate: jest.fn() };
+      query.populate.mockReturnValueOnce(query).mockResolvedValueOnce(fakeRoom);
+      Room.findByIdAndUpdate.mockReturnValue(query);
       await roomController.updateRoom(req, res);
       expect(res.json).toHaveBeenCalled();
     });

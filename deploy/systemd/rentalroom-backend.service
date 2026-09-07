@@ -1,0 +1,21 @@
+[Unit]
+Description=RentalRoom Express backend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=@APP_USER@
+Group=@APP_GROUP@
+WorkingDirectory=@PROJECT_ROOT@/backend
+EnvironmentFile=/etc/rentalroom/backend.env
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

@@ -17,6 +17,9 @@ import RoomList from './components/RoomList/RoomList';
 import { DEFAULT_PAGE_SIZE } from './constants/filterOptions';
 import { fetchRooms } from '../../services/api/postApi';
 import Grid from '@mui/material/Grid';
+import CompareBar from './components/CompareBar/CompareBar';
+import CompareDialog from './components/CompareDialog/CompareDialog';
+import { removeRoom, toggleRoom } from './compareSelection';
 const RoomsPage = ({ postType = 'room_rental' }) => {
   const navigate = useNavigate();
   const { showToast } = useToast();
@@ -32,6 +35,8 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
   const [openAIFilter, setOpenAIFilter] = useState(false);
   const [aiSearchText, setAISearchText] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [selectedRooms, setSelectedRooms] = useState([]);
+  const [compareOpen, setCompareOpen] = useState(false);
 
   // Custom hooks
   const { rooms: hookRooms, total: hookTotal, page, setPage, searchParams, setSearchParams, setRooms, setTotal } = useRooms(sort, postType, showToast);
@@ -518,6 +523,16 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
 
   const handleViewDetails = (roomId) => {
     navigate(`/room/${roomId}`);
+  };
+
+  const handleToggleCompare = (room) => {
+    setSelectedRooms((current) => {
+      const next = toggleRoom(current, room);
+      if (next.length === current.length && next.length === 2 && !current.some((item) => String(item.id ?? item._id) === String(room.id ?? room._id))) {
+        showToast('Bạn chỉ có thể so sánh tối đa 2 phòng.', 'info');
+      }
+      return next;
+    });
   };
 
   const applyFilters = () => {
@@ -1329,6 +1344,8 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
           favorites={favorites}
           toggleFavorite={toggleFavorite}
           handleViewDetails={handleViewDetails}
+          selectedRooms={selectedRooms}
+          onToggleCompare={handleToggleCompare}
           totalPages={totalPages}
           page={page}
           handlePageChange={handlePageChange}
@@ -1366,6 +1383,21 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
 
       {/* BLOCK 2: DialogFilter - Mobile Filter Dialog */}
       {renderDialogFilter()}
+      <CompareBar
+        rooms={selectedRooms}
+        onRemove={(id) => setSelectedRooms((current) => removeRoom(current, id))}
+        onClear={() => setSelectedRooms([])}
+        onCompare={() => setCompareOpen(true)}
+      />
+      <CompareDialog
+        open={compareOpen}
+        rooms={selectedRooms}
+        onClose={() => setCompareOpen(false)}
+        onViewDetails={(roomId) => {
+          setCompareOpen(false);
+          handleViewDetails(roomId);
+        }}
+      />
     </Box>
   );
 };

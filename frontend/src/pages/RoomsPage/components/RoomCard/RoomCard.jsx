@@ -1,15 +1,17 @@
 import React from 'react';
-import { Paper, Grid } from '@mui/material';
+import { Paper, Grid, IconButton, Tooltip } from '@mui/material';
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import RoomImage from './RoomImage';
 import RoomInfo from './RoomInfo';
 
-const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails }) => {
+const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompared, onToggleCompare, compareDisabled }) => {
   return (
     <Paper 
       key={room.id} 
       elevation={0}
       onClick={() => handleViewDetails(room.id)}
       sx={{ 
+        position: 'relative',
         p: 2.5, 
         borderRadius: 3, 
         minHeight: 180,
@@ -27,6 +29,23 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails }) => {
         }
       }}
     >
+      {onToggleCompare && <Tooltip title={isCompared ? 'Bỏ khỏi so sánh' : 'Thêm vào so sánh'}>
+        <span>
+          <IconButton
+            aria-label={isCompared ? `Bỏ ${room.title} khỏi so sánh` : `So sánh ${room.title}`}
+            aria-pressed={isCompared}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onToggleCompare(room);
+            }}
+            size="small"
+            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,0.94)', color: isCompared ? 'primary.main' : 'text.secondary' }}
+          >
+            <CompareArrowsIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>}
       <Grid
         container
         spacing={0.5}
