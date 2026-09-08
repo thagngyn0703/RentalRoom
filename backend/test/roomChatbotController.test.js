@@ -46,7 +46,7 @@ describe('room chatbot controller', () => {
 
     await controller.ask({ body: { question: 'Tìm phòng 3,5 triệu gần Đại học Quốc gia' } }, res);
 
-    expect(Post.find).toHaveBeenCalledWith({ status: 'approved', postType: 'room_rental' });
+    expect(Post.find).toHaveBeenCalledWith({ status: { $ne: 'rejected' }, postType: 'room_rental' });
     expect(matchRoomsWithAI).toHaveBeenCalledWith(
       expect.arrayContaining([expect.objectContaining({ id: 'room-1', title: expect.any(String) })]),
       'Tìm phòng 3,5 triệu gần Đại học Quốc gia',

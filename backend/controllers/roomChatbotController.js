@@ -59,7 +59,7 @@ const toPublicRoomResult = (room, aiReason) => ({
 
 const findAvailablePosts = async (Post, Booking) => {
   const posts = await Post.find({
-    status: 'approved',
+    status: { $ne: 'rejected' },
     postType: 'room_rental',
   })
     .populate('room')
