@@ -1,8 +1,8 @@
 const express = require('express');
-const { faqController } = require('../controllers/faqController');
+const { roomChatbotController } = require('../controllers/roomChatbotController');
 const { chatbotRateLimit } = require('../middleware/chatbotRateLimit');
 
 const router = express.Router();
-router.post('/ask', chatbotRateLimit, faqController.ask);
+router.post('/ask', chatbotRateLimit, roomChatbotController.ask);
 
 module.exports = router;

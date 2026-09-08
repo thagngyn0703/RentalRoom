@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -18,39 +19,29 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import { askChatbot, getPublicFaqs } from '../../services/api/faqChatbotApi';
+import { askChatbot } from '../../services/api/roomChatbotApi';
 
 const greeting = {
   id: 'greeting',
   role: 'assistant',
-  text: 'Xin chào! Tôi có thể giúp bạn về đặt phòng, thanh toán, đăng tin và các vấn đề thường gặp.',
+  text: 'Xin chào! Hãy cho tôi biết bạn muốn tìm phòng ở đâu, ngân sách bao nhiêu và cần tiện ích gì.',
 };
 
-const FaqChatbot = () => {
+const formatPrice = (price, unit = 'VND') => {
+  if (typeof price !== 'number') return 'Liên hệ giá';
+  return `${new Intl.NumberFormat('vi-VN').format(price)} ${unit}`;
+};
+
+const RoomSearchChatbot = () => {
   const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
   const [messages, setMessages] = useState([greeting]);
   const [loading, setLoading] = useState(false);
-  const [loadError, setLoadError] = useState('');
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state?.auth?.login?.currentUser);
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   const endRef = useRef(null);
-
-  useEffect(() => {
-    if (!open || suggestions.length || loadError) return;
-    let active = true;
-    getPublicFaqs()
-      .then((result) => {
-        if (active) setSuggestions((result?.data || []).slice(0, 6));
-      })
-      .catch(() => {
-        if (active) setLoadError('Không thể tải câu hỏi gợi ý. Bạn vẫn có thể nhập câu hỏi.');
-      });
-    return () => { active = false; };
-  }, [open, suggestions.length, loadError]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -77,9 +68,8 @@ const FaqChatbot = () => {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
         text: result?.answer || 'Tôi chưa thể trả lời câu hỏi này.',
-        source: result?.source,
         canCreateTicket: Boolean(result?.canCreateTicket),
-        matchedFaqs: result?.matchedFaqs || [],
+        rooms: Array.isArray(result?.rooms) ? result.rooms : [],
       }]);
     } catch (error) {
       const message = error?.response?.status === 429
@@ -124,8 +114,8 @@ const FaqChatbot = () => {
           <Box sx={{ px: 2, py: 1.5, bgcolor: 'primary.main', color: 'primary.contrastText', display: 'flex', alignItems: 'center' }}>
             <SmartToyOutlinedIcon sx={{ mr: 1 }} />
             <Box sx={{ flex: 1 }}>
-              <Typography variant="subtitle1" fontWeight={700}>Trợ lý phòng trọ</Typography>
-              <Typography variant="caption" sx={{ opacity: 0.9 }}>Trả lời từ nội dung FAQ đã duyệt</Typography>
+              <Typography variant="subtitle1" fontWeight={700}>Trợ lý tìm phòng</Typography>
+              <Typography variant="caption" sx={{ opacity: 0.9 }}>Gemini phân tích nhu cầu và đề xuất phòng phù hợp</Typography>
             </Box>
             <IconButton color="inherit" aria-label="Đóng trợ lý" onClick={() => setOpen(false)}>
               <CloseIcon />
@@ -142,12 +132,28 @@ const FaqChatbot = () => {
                   >
                     <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{message.text}</Typography>
                   </Paper>
-                  {message.matchedFaqs?.length > 0 && message.source === 'unanswered' && (
-                    <Stack spacing={0.5} sx={{ mt: 1 }}>
-                      {message.matchedFaqs.map((faq) => (
-                        <Button key={faq._id || faq.question} size="small" variant="text" onClick={() => sendQuestion(faq.question)} sx={{ justifyContent: 'flex-start', textAlign: 'left' }}>
-                          {faq.question}
-                        </Button>
+                  {message.rooms?.length > 0 && (
+                    <Stack spacing={1} sx={{ mt: 1, width: 'min(100%, 360px)' }}>
+                      {message.rooms.map((room) => (
+                        <Paper key={room.id} variant="outlined" sx={{ p: 1, bgcolor: 'background.paper' }}>
+                          <Stack direction="row" spacing={1}>
+                            <Box
+                              component="img"
+                              src={room.image || '/logo512.png'}
+                              alt=""
+                              sx={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 1, flexShrink: 0 }}
+                            />
+                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                              <Typography variant="subtitle2" fontWeight={700}>{room.title}</Typography>
+                              <Typography variant="caption" display="block">{formatPrice(room.price, room.unit)} · {room.area || '—'} m²</Typography>
+                              <Typography variant="caption" color="text.secondary" display="block" noWrap>{room.address}, {room.district}</Typography>
+                            </Box>
+                          </Stack>
+                          {room.aiReason && <Typography variant="caption" sx={{ display: 'block', mt: 0.75 }}>{room.aiReason}</Typography>}
+                          <Button component={RouterLink} to={`/room/${room.id}`} size="small" sx={{ mt: 0.5, px: 0 }}>
+                            Xem phòng
+                          </Button>
+                        </Paper>
                       ))}
                     </Stack>
                   )}
@@ -163,27 +169,13 @@ const FaqChatbot = () => {
             </Stack>
           </Box>
 
-          {messages.length === 1 && suggestions.length > 0 && (
-            <Box sx={{ px: 2, py: 1, borderTop: '1px solid', borderColor: 'divider', maxHeight: 130, overflowY: 'auto' }}>
-              <Typography variant="caption" color="text.secondary">Câu hỏi phổ biến</Typography>
-              <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 0.5 }}>
-                {suggestions.map((faq) => (
-                  <Button key={faq._id || faq.question} size="small" variant="outlined" onClick={() => sendQuestion(faq.question)}>
-                    {faq.question}
-                  </Button>
-                ))}
-              </Stack>
-            </Box>
-          )}
-          {loadError && <Typography variant="caption" color="error" sx={{ px: 2, pt: 1 }}>{loadError}</Typography>}
-
           <Box sx={{ p: 1.5, borderTop: '1px solid', borderColor: 'divider', display: 'flex', gap: 1, alignItems: 'flex-end' }}>
             <TextField
               fullWidth
               multiline
               maxRows={3}
               size="small"
-              label="Câu hỏi"
+              label="Yêu cầu tìm phòng"
               value={question}
               inputProps={{ maxLength: 500 }}
               onChange={(event) => setQuestion(event.target.value)}
@@ -194,7 +186,7 @@ const FaqChatbot = () => {
                 }
               }}
             />
-            <IconButton color="primary" aria-label="Gửi câu hỏi" disabled={!question.trim() || loading} onClick={() => sendQuestion()}>
+            <IconButton color="primary" aria-label="Tìm phòng" disabled={!question.trim() || loading} onClick={() => sendQuestion()}>
               <SendIcon />
             </IconButton>
           </Box>
@@ -204,4 +196,4 @@ const FaqChatbot = () => {
   );
 };
 
-export default FaqChatbot;
+export default RoomSearchChatbot;
