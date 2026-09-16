@@ -30,83 +30,77 @@ const RoomDetailPage = () => {
   const { showToast } = useToast();
   const [room, setRoom] = useState(null);
   const [favorites, setFavorites] = useState(new Set());
+  const [favoritesLoading, setFavoritesLoading] = useState(Boolean(accessToken));
   const [loading, setLoading] = useState(true);
   const [similarRooms, setSimilarRooms] = useState([]);
   const [comments, setComments] = useState([]);
   const [myRating, setMyRating] = useState(null);
   const [ratingStats, setRatingStats] = useState({ average: 0, count: 0 });
+  const [reviewsLoading, setReviewsLoading] = useState(true);
   const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
+    let active = true;
+    setFavorites(new Set());
+    setFavoritesLoading(Boolean(accessToken));
+    if (accessToken) {
+      FavoriteApi.getMyFavorites().then(res => {
+        if (active) setFavorites(new Set((res?.favorites || []).map(f => String(f.room?._id || f.clientRoomId || f.room))));
+      }).catch(err => console.error('Error loading favorites:', err))
+        .finally(() => { if (active) setFavoritesLoading(false); });
+    }
+    return () => { active = false; };
+  }, [accessToken]);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    setRoom(null);
+    setSimilarRooms([]);
+    setChatOpen(false);
+    const loadRoom = async () => {
       try {
-        console.log('RoomDetailPage - Loading room with ID:', id);
-
-        // Favorites: do NOT read/write localStorage. If authenticated, load favorites from backend; otherwise keep empty in-memory.
-        if (accessToken) {
-          try {
-            const resFav = await FavoriteApi.getMyFavorites();
-            const ids = (resFav?.favorites || []).map(f => String(f.room?._id || f.clientRoomId || f.room));
-            setFavorites(new Set(ids));
-          } catch (err) {
-            console.error('Error loading favorites in RoomDetailPage:', err);
-            setFavorites(new Set());
-          }
-        } else {
-          setFavorites(new Set());
-        }
-
-        // Fetch room details from API
         const foundRoom = await fetchRoomById(id);
-        console.log('RoomDetailPage - Found room:', foundRoom);
-
+        if (!active) return;
+        setRoom(foundRoom);
+        setLoading(false);
         if (foundRoom) {
-          setRoom(foundRoom);
-          const postId = foundRoom?.postId || foundRoom?.post || foundRoom?.id;
-          console.log('🔑 PostId for comments/ratings:', postId);
-          console.log('📦 Room data:', foundRoom);
-
-          try {
-            // Load comments & ratings từ server nếu có postId hợp lệ
-            if (postId) {
-              console.log('📡 Loading comments and ratings...');
-              const cmtPromise = CommentApi.listByPost(postId).catch(e => { console.error('Comments error:', e); return []; });
-              const statsPromise = RatingApi.stats(postId).catch(e => { console.error('Stats error:', e); return { average: 0, count: 0 }; });
-              const minePromise = accessToken ? RatingApi.me(postId).catch(e => { console.log('Me rating error (OK if not logged in):', e.message); return null; }) : Promise.resolve(null);
-              const [cmt, stats, mine] = await Promise.all([cmtPromise, statsPromise, minePromise]);
-              console.log('✅ Comments loaded:', cmt);
-              console.log('✅ Stats loaded:', stats);
-              console.log('✅ My rating loaded:', mine);
-              setComments(Array.isArray(cmt) ? cmt : []);
-              setRatingStats(stats || { average: 0, count: 0 });
-              setMyRating(mine || null);
-            } else {
-              console.warn('⚠️ No postId found, cannot load comments/ratings');
-              setComments([]);
-              setRatingStats({ average: 0, count: 0 });
-              setMyRating(null);
-            }
-          } catch (e) {
-            console.error('❌ Load comments/ratings failed:', e);
-            setComments([]);
-            setRatingStats({ average: 0, count: 0 });
-            setMyRating(null);
-          }
-
-          // Load similar rooms from API
-          const allRooms = await fetchAllRooms();
-          const similar = allRooms.filter(r => r && r.id !== foundRoom.id).slice(0, 3);
-          setSimilarRooms(similar);
+          fetchAllRooms({ limit: 4 }).then(rooms => {
+            if (active) setSimilarRooms(rooms.filter(r => r && String(r.id) !== String(foundRoom.id)).slice(0, 3));
+          }).catch(err => console.error('Error loading similar rooms:', err));
         }
-        setLoading(false);
-      } catch (e) {
-        console.error('Error loading room data:', e);
-        setLoading(false);
+      } catch (err) {
+        console.error('Error loading room:', err);
+        if (active) setLoading(false);
       }
     };
-
-    loadData();
+    loadRoom();
+    return () => { active = false; };
   }, [id]);
+
+  useEffect(() => {
+    let active = true;
+    setReviewsLoading(true);
+    setComments([]);
+    setRatingStats({ average: 0, count: 0 });
+    setMyRating(null);
+    const postId = room?.postId || room?.post || room?.id;
+    if (postId && String(room.id) === String(id)) {
+      const commentsRequest = CommentApi.listByPost(postId).then(value => {
+        if (active) setComments(Array.isArray(value) ? value : []);
+      }).catch(err => console.error('Error loading comments:', err));
+      const statsRequest = RatingApi.stats(postId).then(value => {
+        if (active) setRatingStats(value || { average: 0, count: 0 });
+      }).catch(err => console.error('Error loading rating stats:', err));
+      const mineRequest = accessToken ? RatingApi.me(postId).then(value => {
+        if (active) setMyRating(value || null);
+      }).catch(err => console.error('Error loading my rating:', err)) : Promise.resolve();
+      Promise.all([commentsRequest, statsRequest, mineRequest]).then(() => {
+        if (active) setReviewsLoading(false);
+      });
+    }
+    return () => { active = false; };
+  }, [room, id, accessToken]);
 
   const toggleFavorite = async () => {
     console.log('❤️ Favorite toggle (header)');
@@ -115,6 +109,7 @@ const RoomDetailPage = () => {
       showToast('Vui lòng đăng nhập để lưu phòng yêu thích.', 'warning');
       return;
     }
+    if (favoritesLoading) return;
     const MAX_FAVORITES = 20;
     const newFavorites = new Set(favorites);
     if (newFavorites.has(id)) {
@@ -144,7 +139,7 @@ const RoomDetailPage = () => {
     setChatOpen((prev) => !prev);
   };
 
-  if (loading) {
+  if (loading || (room && String(room.id) !== String(id))) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
         <Typography>Đang tải...</Typography>
@@ -171,6 +166,7 @@ const RoomDetailPage = () => {
       <RoomHeader
         room={room}
         isFavorite={isFavorite}
+        favoritesLoading={favoritesLoading}
         onBack={handleBack}
         onToggleFavorite={toggleFavorite}
       />
@@ -181,7 +177,7 @@ const RoomDetailPage = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           {/* Image Gallery */}
-          <ImageGallery room={room} />
+          <ImageGallery key={room.id} room={room} />
 
           <Box sx={{ mb: 3, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             <Button
@@ -216,7 +212,8 @@ const RoomDetailPage = () => {
           <Description description={room.description} />
 
           {/* Reviews & Comments */}
-          <ReviewsComments
+          {reviewsLoading ? <Typography sx={{ mb: 3 }}>Đang tải đánh giá và bình luận...</Typography> : <ReviewsComments
+            key={room.id}
             room={room}
             comments={comments}
             setComments={setComments}
@@ -227,11 +224,12 @@ const RoomDetailPage = () => {
             accessToken={accessToken}
             currentUser={currentUser}
             showToast={showToast}
-          />
+          />}
 
           {/* Similar Rooms */}
           <SimilarRooms
             similarRooms={similarRooms}
+            favoritesLoading={favoritesLoading}
             favorites={favorites}
             setFavorites={setFavorites}
             accessToken={accessToken}

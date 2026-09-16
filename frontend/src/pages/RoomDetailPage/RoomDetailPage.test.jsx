@@ -1,0 +1,63 @@
+import { render, screen, act, waitFor } from '@testing-library/react';
+import RoomDetailPage from './RoomDetailPage';
+import { fetchRoomById, fetchAllRooms } from '../../services/api/postApi';
+import { FavoriteApi } from '../../services/api';
+import { CommentApi } from '../../services/api/commentApi';
+import { RatingApi } from '../../services/api/ratingApi';
+let mockId = 'one';
+jest.mock('react-router-dom', () => ({ useParams: () => ({ id: mockId }), useNavigate: () => jest.fn() }));
+jest.mock('react-redux', () => ({ useSelector: fn => fn({ auth: { login: { accessToken: 'token' } } }) }));
+jest.mock('../../Components/ToastProvider', () => ({ useToast: () => ({ showToast: jest.fn() }) }));
+jest.mock('../../services/api', () => ({ FavoriteApi: { getMyFavorites: jest.fn() } }));
+jest.mock('../../services/api/postApi', () => ({ fetchRoomById: jest.fn(), fetchAllRooms: jest.fn() }));
+jest.mock('../../services/api/commentApi', () => ({ CommentApi: { listByPost: jest.fn() } }));
+jest.mock('../../services/api/ratingApi', () => ({ RatingApi: { stats: jest.fn(), me: jest.fn() } }));
+jest.mock('../../Components/Chat/ChatModal', () => () => null);
+jest.mock('./components/RoomHeader/RoomHeader', () => ({ room, favoritesLoading }) => <><h1>{room.title}</h1><button disabled={favoritesLoading}>Favorite</button></>);
+jest.mock('./components/RoomInfoCard/RoomInfoCard', () => () => null);
+jest.mock('./components/ImageGallery/ImageGallery', () => () => null);
+jest.mock('./components/UtilitiesFurniture/UtilitiesFurniture', () => () => null);
+jest.mock('./components/CostDetails/CostDetails', () => () => null);
+jest.mock('./components/Description/Description', () => () => null);
+jest.mock('./components/ReviewsComments/ReviewsComments', () => ({ comments }) => <div>{comments.map(c => c.text).join(',')}</div>);
+jest.mock('./components/SimilarRooms/SimilarRooms', () => ({ similarRooms }) => <div>{similarRooms.map(r => r.title).join(',')}</div>);
+jest.mock('./components/MapLocation/MapLocation', () => () => null);
+const pending = () => new Promise(() => {});
+beforeEach(() => { jest.clearAllMocks(); mockId = 'one'; FavoriteApi.getMyFavorites.mockImplementation(pending); CommentApi.listByPost.mockImplementation(pending); RatingApi.stats.mockImplementation(pending); RatingApi.me.mockImplementation(pending); fetchAllRooms.mockImplementation(pending); });
+test('shows room without waiting for favorites, reviews or recommendations', async () => {
+  fetchRoomById.mockResolvedValue({ id: 'one', title: 'Room one' });
+  render(<RoomDetailPage />);
+  expect(await screen.findByText('Room one')).toBeInTheDocument();
+  expect(fetchAllRooms).toHaveBeenCalledWith({ limit: 4 });
+});
+test('ignores a previous room response after navigation', async () => {
+  let resolveOld; fetchRoomById.mockImplementationOnce(() => new Promise(r => { resolveOld = r; })).mockResolvedValue({ id: 'two', title: 'Room two' });
+  const view = render(<RoomDetailPage />); mockId = 'two'; view.rerender(<RoomDetailPage />);
+  expect(await screen.findByText('Room two')).toBeInTheDocument();
+  await act(async () => resolveOld({ id: 'one', title: 'Old room' }));
+  expect(screen.queryByText('Old room')).not.toBeInTheDocument();
+});
+test('late reviews cannot overwrite the next room and suggestions exclude current room', async () => {
+  RatingApi.stats.mockResolvedValue({ average: 0, count: 0 }); RatingApi.me.mockResolvedValue(null);
+  let resolveOld; CommentApi.listByPost.mockImplementationOnce(() => new Promise(r => { resolveOld = r; })).mockResolvedValue([{ text: 'New review' }]);
+  fetchRoomById.mockImplementation(async id => ({ id, title: 'Room '+id }));
+  fetchAllRooms.mockResolvedValue([{ id: 'two', title: 'Current suggestion' }, ...['a','b','c'].map(id => ({ id, title: id }))]);
+  const view = render(<RoomDetailPage />); await screen.findByText('Room one'); mockId = 'two'; view.rerender(<RoomDetailPage />);
+  await screen.findByText('New review'); await act(async () => resolveOld([{ text: 'Old review' }]));
+  expect(screen.queryByText('Old review')).not.toBeInTheDocument();
+  await waitFor(() => expect(screen.getByText('a,b,c')).toBeInTheDocument());
+});
+
+test('keeps favorite and review actions unavailable until their initial data settles', async () => {
+  let resolveFavorites, resolveComments;
+  FavoriteApi.getMyFavorites.mockImplementation(() => new Promise(r => { resolveFavorites = r; }));
+  CommentApi.listByPost.mockImplementation(() => new Promise(r => { resolveComments = r; }));
+  RatingApi.stats.mockResolvedValue({ average: 0, count: 0 }); RatingApi.me.mockResolvedValue(null);
+  fetchRoomById.mockResolvedValue({ id: 'one', title: 'Room one' });
+  render(<RoomDetailPage />); await screen.findByText('Room one');
+  expect(screen.getByText('Favorite')).toBeDisabled();
+  expect(screen.getByText('Đang tải đánh giá và bình luận...')).toBeInTheDocument();
+  await act(async () => { resolveFavorites({ favorites: [] }); resolveComments([{ text: 'Ready review' }]); });
+  expect(screen.getByText('Favorite')).not.toBeDisabled();
+  expect(await screen.findByText('Ready review')).toBeInTheDocument();
+});

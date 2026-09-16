@@ -1,9 +1,11 @@
+import { roomThumbnail } from '../../../../utils/roomThumbnail';
 import { Paper, Typography, Grid, Card, Box, CardContent, Stack, Chip, Button, IconButton, Rating as MuiRating } from '@mui/material';
 import { LocationOn, Favorite, FavoriteBorder } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const SimilarRooms = ({ 
-  similarRooms, 
+  similarRooms,
+  favoritesLoading,
   favorites, 
   setFavorites, 
   accessToken, 
@@ -17,6 +19,7 @@ const SimilarRooms = ({
       if (showToast) showToast('Vui lòng đăng nhập để lưu phòng yêu thích.', 'warning');
       return;
     }
+    if (favoritesLoading) return;
     const newFavorites = new Set(favorites);
     if (newFavorites.has(roomId)) {
       newFavorites.delete(roomId);
@@ -73,7 +76,9 @@ const SimilarRooms = ({
               }}>
                 <Box 
                   component="img" 
-                  src={similarRoom.image} 
+                  src={roomThumbnail(similarRoom.image)}
+                  loading="lazy"
+                  decoding="async"
                   alt={similarRoom.title}
                   sx={{ 
                     width: '100%', 
@@ -84,6 +89,7 @@ const SimilarRooms = ({
                   }} 
                 />
                 <IconButton 
+                  disabled={favoritesLoading}
                   size="small" 
                   onClick={() => handleToggleFavorite(similarRoom.id)}
                   sx={{ 

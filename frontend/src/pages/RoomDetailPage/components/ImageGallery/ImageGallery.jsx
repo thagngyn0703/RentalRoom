@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { roomThumbnail } from '../../../../utils/roomThumbnail';
 import { Paper, Box, IconButton } from '@mui/material';
 import { NavigateBefore, NavigateNext, Close } from '@mui/icons-material';
 
@@ -35,7 +36,9 @@ const ImageGallery = ({ room }) => {
         >
           <Box
             component="img"
-            src={images[current]}
+            src={roomThumbnail(images[current], 1280)}
+            srcSet={`${roomThumbnail(images[current], 640)} 640w, ${roomThumbnail(images[current], 1280)} 1280w`}
+            sizes="(max-width: 600px) 100vw, 1200px"
             alt={`${room.title} ${current + 1}`}
             sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
@@ -104,7 +107,9 @@ const ImageGallery = ({ room }) => {
               >
                 <Box
                   component="img"
-                  src={img}
+                  src={roomThumbnail(img, 240)}
+                  loading="lazy"
+                  decoding="async"
                   alt={`${room.title} thumb ${idx + 1}`}
                   sx={{ width: 120, height: 90, objectFit: 'cover', display: 'block' }}
                 />
