@@ -93,6 +93,11 @@ export const fetchPosts = async () => {
 };
 
 // Lấy danh sách tất cả phòng trọ từ database
+export const fetchHomeSummary = async (statsIds = []) => {
+    const res = await axios.get('/api/posts/rooms', { params: { homeSummary: 1, statsIds: statsIds.slice(0, 50).join(',') } });
+    return res.data;
+};
+
 export const fetchAllRooms = async ({ page = 1, limit = 2000 } = {}) => {
     try {
         const res = await axios.get('/api/posts/rooms', { params: { page, limit } });
@@ -378,6 +383,5 @@ export const fetchHomeData = async () => {
         throw error;
     }
 };
-
 
 

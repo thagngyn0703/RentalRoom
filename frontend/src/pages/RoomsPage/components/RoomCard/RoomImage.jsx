@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Tooltip, IconButton } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { roomThumbnail } from '../../../../utils/roomThumbnail';
 
 const RoomImage = ({ room, favorites, toggleFavorite }) => {
   const isFavorite = favorites.has(room.id);
@@ -22,7 +23,8 @@ const RoomImage = ({ room, favorites, toggleFavorite }) => {
       <Box
         component="img"
         loading="lazy"
-        src={room.image}
+        decoding="async"
+        src={roomThumbnail(room.image)}
         alt={room.title}
         sx={{
           position: { xs: 'relative', sm: 'absolute' },

@@ -19,6 +19,11 @@ chỉ lắng nghe nội bộ tại `127.0.0.1:8000`. API và Socket.IO dùng cù
 
 ## Trạng thái
 
+- Tối ưu tải trang: tách mã theo tuyến, nén gzip cho JS/CSS/JSON, tải trễ ảnh thẻ
+  phòng và dùng ảnh Cloudinary 640 px. Trang chủ gọi dữ liệu tóm tắt thay vì
+  tải tối đa 5.000 bản ghi về trình duyệt và gọi riêng từng khu vực.
+  Giữ nguyên quy tắc hiển thị, xếp hạng và đếm phòng; chưa commit/push bản tối ưu.
+
 - Bản giao diện thử nghiệm mới dùng màu xanh ngọc/xanh rừng, nền trắng ngà, ảnh minh họa nội thất
   nhẹ và hệ thống MUI chung cho trang công khai, tài khoản và quản trị.
 - Trang chủ, điều hướng, chân trang, danh sách phòng, biểu mẫu xác thực và khung

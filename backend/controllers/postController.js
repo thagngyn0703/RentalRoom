@@ -3,6 +3,7 @@ const Post = require('../models/Post');
 const Room = require('../models/Room');
 const User = require('../models/Users');
 const Booking = require('../models/Booking');
+const { buildHomeSummary } = require('../utils/homeSummary');
 // Ẩn phòng theo collection bookings: phòng bị ẩn khi có document thỏa
 //   room = roomId, status in ['pending','confirmed'], startDate <= now <= endDate.
 // Admin từ chối duyệt → booking chuyển sang 'cancelled' → không thỏa điều kiện trên → phòng hiển thị lại.
@@ -92,7 +93,8 @@ exports.getAllRooms = async (req, res) => {
     try {
         // Support paginated queries and basic filters via query params
         const page = Math.max(1, parseInt(req.query.page) || 1);
-        const limit = Math.max(1, Math.min(10000, parseInt(req.query.limit) || 12));
+        const homeSummary = req.query.homeSummary === '1';
+        const limit = homeSummary ? 5000 : Math.max(1, Math.min(10000, parseInt(req.query.limit) || 12));
         const skip = (page - 1) * limit;
 
         console.log('🔍 ALL Query Params:', req.query);
@@ -385,8 +387,13 @@ exports.getAllRooms = async (req, res) => {
 
         // Get total count with filters
         const countPipeline = [...pipeline, { $count: 'total' }];
-        const countResult = await Room.aggregate(countPipeline);
+        const countResult = homeSummary ? [] : await Room.aggregate(countPipeline);
         const totalCount = countResult.length > 0 ? countResult[0].total : 0;
+        const regionCounts = homeSummary ? await Room.aggregate([
+            ...pipeline,
+            { $match: { 'postData.postType': 'room_rental' } },
+            { $group: { _id: '$province', count: { $sum: 1 } } }
+        ]) : null;
 
         // Sorting
         // - popular: ưu tiên điểm trung bình, rồi số bình luận, rồi mới nhất
@@ -401,7 +408,7 @@ exports.getAllRooms = async (req, res) => {
         console.log('🔍 [DEBUG] About to execute aggregation with', pipeline.length, 'stages');
 
         pipeline.push({ $sort: sortStage });
-        pipeline.push({ $skip: skip });
+        pipeline.push({ $skip: homeSummary ? 0 : skip });
         pipeline.push({ $limit: limit });
 
         const rooms = await Room.aggregate(pipeline);
@@ -467,6 +474,14 @@ exports.getAllRooms = async (req, res) => {
             authorProfession: room.userInfoData?.profession || ''
         }));
 
+
+        if (homeSummary) {
+            const summary = buildHomeSummary(formattedRooms, String(req.query.statsIds || '').split(',').slice(0, 50), regionCounts);
+            // Cards need no contact details, user profiles, full galleries or video URLs.
+            summary.recommendedRooms = summary.recommendedRooms.map(({ id, postId, title, price, unit, image, address, ward, district, city, description, author, rating, totalRatings, totalComments, postedAt }) =>
+                ({ id, postId, title, price, unit, image, address, ward, district, city, description, author, rating, totalRatings, totalComments, postedAt }));
+            return res.json({ success: true, ...summary });
+        }
 
         // AI Search Processing
         let aiMessage = null;

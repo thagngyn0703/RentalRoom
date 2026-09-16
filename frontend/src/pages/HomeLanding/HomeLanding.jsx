@@ -9,14 +9,16 @@ import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Section from './Section.jsx';
-import { fetchAllRooms, fetchHomeData, fetchRooms } from '../../services/api/postApi';
+import { fetchHomeSummary, fetchHomeData } from '../../services/api/postApi';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { FavoriteApi } from '../../services/api';
 import { useSelector } from 'react-redux';
 import { useToast } from '../../Components/ToastProvider';
 import { useNavigate } from 'react-router-dom';
-import { resolveRegionCardImage, NEUTRAL_FALLBACK } from '../../utils/viWikiCityImage';
+import { resolveRegionCardImage } from '../../utils/viWikiCityImage';
+
+import { roomThumbnail } from '../../utils/roomThumbnail';
 
 const formatAddress = (item) => {
   if (!item) return '';
@@ -49,44 +51,6 @@ const scoreByComments = (room) => Number(
   (Array.isArray(room?.comments) ? room.comments.length : 0) ??
   0
 );
-
-const postedAtTs = (room) => {
-  const ts = new Date(room?.postedAt || room?.createdAt || 0).getTime();
-  return Number.isNaN(ts) ? Number.MAX_SAFE_INTEGER : ts;
-};
-
-const normalizeCity = (raw) =>
-  String(raw || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/^(thanh pho|tp\.?|tinh)\s+/i, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-const prettifyCityTitle = (raw) => {
-  const s = String(raw || '').trim();
-  if (!s) return '';
-  const stripped = s
-    .replace(/^(Thành\s+phố|TP\.?|Tỉnh)\s+/iu, '')
-    .trim();
-  return stripped || s;
-};
-
-const REGION_TOP_LIMIT = 5;
-
-const pickRepresentativeCityQuery = (rawFreq) => {
-  let bestRaw = '';
-  let bestN = -1;
-  rawFreq.forEach((n, raw) => {
-    if (n > bestN) {
-      bestN = n;
-      bestRaw = raw;
-    }
-  });
-  // Use a clean canonical query to avoid split counts
-  return prettifyCityTitle(bestRaw || '');
-};
 
 const HomePostGrid = ({ items = [], favoriteIds = new Set(), onToggleFavorite, showRecommendationBadge = false }) => {
   const navigate = useNavigate();
@@ -131,7 +95,9 @@ const HomePostGrid = ({ items = [], favoriteIds = new Set(), onToggleFavorite, s
         >
           <Box sx={{ position: 'relative', width: '100%', flexShrink: 0 }}>
             <img
-              src={it.thumbnail || (process.env.PUBLIC_URL + '/logo192.png')}
+              loading="lazy"
+              decoding="async"
+              src={roomThumbnail(it.thumbnail) || (process.env.PUBLIC_URL + '/logo192.png')}
               alt={it.title}
               style={{
                 width: '100%',
@@ -348,69 +314,12 @@ const HomeLanding = () => {
     const buildRecommendedPosts = async () => {
       setRecommendedLoading(true);
       try {
-        const allRooms = await fetchAllRooms({ page: 1, limit: 5000 });
-
-        const buckets = new Map();
-        (Array.isArray(allRooms) ? allRooms : []).forEach((room) => {
-          const raw = room?.city;
-          if (!raw || !String(raw).trim()) return;
-          const norm = normalizeCity(raw);
-          if (!norm) return;
-          if (!buckets.has(norm)) buckets.set(norm, { count: 0, rawFreq: new Map() });
-          const b = buckets.get(norm);
-          b.count += 1;
-          const r = String(raw).trim();
-          b.rawFreq.set(r, (b.rawFreq.get(r) || 0) + 1);
-        });
-
-        const topNorms = [...buckets.entries()]
-          .filter(([, data]) => data.count > 0)
-          .sort((a, b) => b[1].count - a[1].count)
-          .slice(0, REGION_TOP_LIMIT);
-
-        const draftCards = topNorms.map(([normKey, data]) => {
-          const cityQuery = pickRepresentativeCityQuery(data.rawFreq);
-          return {
-            key: normKey,
-            cityQuery,
-            title: prettifyCityTitle(cityQuery),
-            count: data.count,
-            image: NEUTRAL_FALLBACK,
-          };
-        });
-
-        const attachRegionImages = async (cards) =>
-          Promise.all(
-            cards.map(async (c) => ({
-              ...c,
-              image: await resolveRegionCardImage(c.key, c.title),
-            }))
-          );
-
-        try {
-          const synced = await Promise.all(
-            draftCards.map(async (c) => {
-              const res = await fetchRooms({
-                page: 1,
-                limit: 1,
-                city: c.cityQuery,
-                postType: 'room_rental',
-              });
-              return { ...c, count: Number(res?.total) ?? c.count };
-            })
-          );
-          const ranked = synced
-            .filter((c) => c.count > 0)
-            .sort((a, b) => b.count - a.count)
-            .slice(0, REGION_TOP_LIMIT);
-          setTopRegionCards(await attachRegionImages(ranked));
-        } catch (_) {
-          const ranked = draftCards
-            .filter((c) => c.count > 0)
-            .sort((a, b) => b.count - a.count)
-            .slice(0, REGION_TOP_LIMIT);
-          setTopRegionCards(await attachRegionImages(ranked));
-        }
+        const summary = await fetchHomeSummary((homeData.latestPosts || []).map(p => String(p.roomId || p.id)));
+        const allRooms = summary.recommendedRooms || [];
+        setRoomStatsByRoomId(summary.roomStats || {});
+        setTopRegionCards(await Promise.all((summary.regions || []).map(async c => ({
+          ...c, image: await resolveRegionCardImage(c.key, c.title),
+        }))));
 
         const rows = (Array.isArray(allRooms) ? allRooms : []).map((room) => ({
           id: room.postId || room.id,
@@ -429,22 +338,6 @@ const HomeLanding = () => {
           commentsScore: scoreByComments(room),
           postedAt: room.postedAt || room.createdAt || null,
         }));
-        const statsMap = {};
-        rows.forEach((r) => {
-          if (r.roomId) {
-            statsMap[String(r.roomId)] = {
-              avgStars: r.avgStars,
-              starsVotes: r.starsVotes,
-              commentsScore: r.commentsScore,
-            };
-          }
-        });
-        setRoomStatsByRoomId(statsMap);
-        rows.sort((a, b) => {
-          if (b.avgStars !== a.avgStars) return b.avgStars - a.avgStars;
-          if (b.commentsScore !== a.commentsScore) return b.commentsScore - a.commentsScore;
-          return postedAtTs(a) - postedAtTs(b);
-        });
         setRecommendedPosts(rows.slice(0, 4));
       } catch (err) {
         console.error('Unable to build recommended rooms list:', err);
@@ -454,8 +347,8 @@ const HomeLanding = () => {
         setRecommendedLoading(false);
       }
     };
-    buildRecommendedPosts();
-  }, []);
+    if (!loading && !error) buildRecommendedPosts();
+  }, [loading, error, homeData]);
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
@@ -560,6 +453,8 @@ const HomeLanding = () => {
                   >
                     <Box
                       component="img"
+                      loading="lazy"
+                      decoding="async"
                       src={topRegionCards[0].image}
                       alt={topRegionCards[0].title}
                       sx={{
@@ -606,6 +501,8 @@ const HomeLanding = () => {
                     >
                       <Box
                         component="img"
+                      loading="lazy"
+                      decoding="async"
                         src={topRegionCards[0].image}
                         alt={topRegionCards[0].title}
                         sx={{
@@ -646,6 +543,8 @@ const HomeLanding = () => {
                         >
                           <Box
                             component="img"
+                      loading="lazy"
+                      decoding="async"
                             src={area.image}
                             alt={area.title}
                             sx={{

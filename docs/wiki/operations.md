@@ -158,3 +158,20 @@ mạng và khả năng thích ứng với kích thước màn hình.
   giám sát và sao lưu ngoài máy chủ.
 - Quy tắc bắt buộc: Git, Superpowers, lập kế hoạch, phát triển hướng kiểm thử (TDD), thay đổi đúng phạm vi cần thiết,
   hai vòng rà soát/kiểm thử tải, kiểm tra trình duyệt trên máy tính/điện thoại và cập nhật README/wiki sau thay đổi.
+# Tối ưu hiệu năng ngày 16/09/2026
+
+- Tuyến ngoài trang chủ được tải theo nhu cầu; CSS dùng chung của đăng nhập/đăng ký
+  vẫn tải sẵn để không đổi giao diện theo thứ tự điều hướng.
+- Nginx bật gzip mức 5 cho JS, CSS, JSON và SVG; ảnh WebP/JPEG không nén lại bằng gzip.
+- Ảnh thẻ phòng tải trễ, giải mã bất đồng bộ; URL Cloudinary không ký có phiên bản
+  dùng `f_auto,q_auto,w_640,c_limit`. Không thay đổi ảnh gốc hoặc URL có chữ ký.
+- `GET /api/posts/rooms?homeSummary=1&statsIds=...` trả tối đa 4 gợi ý, 5 khu vực,
+  thống kê cho tối đa 50 mã phòng. Dùng lại điều kiện loại bài bị từ chối và booking
+  đang hiệu lực. Mẫu xếp hạng vẫn giới hạn 5.000 phòng như trước; tổng theo khu vực
+  được đếm trên toàn bộ dữ liệu hợp lệ, không theo mẫu.
+- Phần máy chủ vẫn tổng hợp mẫu phòng; đây là tối ưu tải mạng, chưa phải thay đổi
+  toàn bộ thuật toán truy vấn. Không thêm cache dữ liệu đặt phòng để tránh dữ liệu cũ.
+- Đo bằng Chromium, phiên mới, tắt cache, màn hình 390×844, không cuộn, lấy 3 lượt
+  khi không chạy build; không đồng nhất với tốc độ mạng di động ngoài thực tế.
+- Trước tối ưu: JS chính 1.464.368 byte chưa nén; trang chủ 7 API request và khoảng
+  5,4 MB dữ liệu truyền. Cần đo lại sau triển khai và giữ bằng chứng trước–sau.

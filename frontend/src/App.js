@@ -1,27 +1,20 @@
 import React from "react";
 import "./App.css";
+// Auth pages share global selectors; preserve their cascade across lazy navigation.
+import "./pages/LoginPage/LoginPage.css";
+import "./pages/Auth/Register.css";
 import "./config/axios";
 import { useEffect } from "react";
-import HomeAdmin from "./pages/AdminLayout/HomeAdmin/HomeAdmin";
-import HomePageUser from "./pages/HomePageUser/HomePageUser";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   useLocation,
 } from "react-router-dom";
-import LoginPage from "./pages/LoginPage/LoginPage";
 // RegisterPage import removed (unused)
 import NavBar from "./Components/NavBar/NavBar";
-import Register from "./pages/Auth/Register";
-import Verify from "./pages/Auth/Verify";
-import ForgotPassword from "./pages/Auth/ForgotPassword";
-import ResetPassword from "./pages/Auth/ResetPassword";
-import VerifyCode from "./pages/Auth/VerifyCode";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 // Layouts
-import AdminLayout from "./pages/AdminLayout/AdminLayout";
-import UserLayout from "./pages/UserLayout/UserLayout";
 
 // Pages
 import HomeLanding from "./pages/HomeLanding/HomeLanding";
@@ -29,52 +22,63 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Box } from "@mui/material";
 import theme from "./theme/theme";
-import UserInfoForms from "./pages/UserLayout/UserInfoForm";
-import InviteroomatePages from "./pages/UserLayout/InviteRoomatePages";
-import Paying from "./pages/UserLayout/Paying";
-import RentRoomCheckout from "./pages/UserLayout/RentRoomCheckout";
-import TopupHistory from "./pages/UserLayout/TopupHistory/TopupHistory";
-import Pricing from "./pages/UserLayout/Pricing/Pricing";
-import IsLandorStatus from "./pages/UserLayout/IsLandorStatus";
 
-import SupportPage from "./pages/UserLayout/Support";
-import RoomsPage from "./pages/RoomsPage/RoomsPage";
-import FavoritesPage from "./pages/FavoritesPage/FavoritesPage";
-import RoomDetailPage from "./pages/RoomDetailPage/RoomDetailPage";
-import RoomReviewsPage from "./pages/RoomReviewsPage/RoomReviewsPage";
 import Footer from "./Components/Footer/Footer";
-import PostRoomPages from "./pages/UserLayout/PostRoomPages";
-import AdminBookings from "./pages/AdminPage/AdminBookings/AdminBookings";
-import AdminCheckout from "./pages/AdminPage/AdminCheckout/AdminCheckout";
-import AdminDeposits from "./pages/AdminPage/AdminDeposits/AdminDeposits";
-import AdminEarlyCheckout from "./pages/AdminPage/AdminEarlyCheckout/AdminEarlyCheckout";
-import AdminDashboard from "./pages/AdminPage/AdminDashboard/AdminDashboard";
-import AdminPosts from "./pages/AdminLayout/AdminPosts/AdminPosts";
 // eslint-disable-next-line no-unused-vars -- used in Route path="users"
-import AdminUsers from "./pages/AdminLayout/AdminUsers/AdminUsers";
-import AdminSupport from "./pages/AdminLayout/AdminSupport/AdminSupport";
-import ManageRoomUser from "./pages/UserLayout/ManageRoomUser/ManageRoomUser";
-import ManagePostUser from './pages/UserLayout/ManagePostUser';
-import MyRentals from './pages/UserLayout/MyRentals';
-import RentalDetail from "./pages/UserLayout/RentalDetail/RentalDetail";
-import OwnerCheckoutRequests from './pages/UserLayout/OwnerCheckoutRequests';
-import OwnerExtendRequests from './pages/UserLayout/OwnerExtendRequests';
-import OwnerPaymentHistory from './pages/UserLayout/OwnerPaymentHistory';
-import Withdraw from "./pages/UserLayout/Withdraw/Withdraw";
-import WithdrawalHistory from "./pages/UserLayout/WithdrawalHistory/WithdrawalHistory";
-import AdminWithdrawals from "./pages/AdminPage/AdminWithdrawals/AdminWithdrawals";
 import RoomSearchChatbot from "./Components/RoomSearchChatbot/RoomSearchChatbot";
 import { ToastProvider } from "./Components/ToastProvider";
 import ConfirmProvider from "./Components/ConfirmProvider";
-import PostEdit from "./pages/PostEdit/PostEdit";
-import InviteDetail from "./pages/InviteDetail/InviteDetail";
-import NoPermission from "./pages/NoPermission";
-import AboutPage from "./pages/AboutPage/AboutPage";
-import ChatInboxPage from "./pages/ChatInboxPage/ChatInboxPage";
-import NotificationsPage from "./pages/Notifications";
+
+const HomeAdmin = React.lazy(() => import('./pages/AdminLayout/HomeAdmin/HomeAdmin'));
+const HomePageUser = React.lazy(() => import('./pages/HomePageUser/HomePageUser'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage/LoginPage'));
+const Register = React.lazy(() => import('./pages/Auth/Register'));
+const Verify = React.lazy(() => import('./pages/Auth/Verify'));
+const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
+const ResetPassword = React.lazy(() => import('./pages/Auth/ResetPassword'));
+const VerifyCode = React.lazy(() => import('./pages/Auth/VerifyCode'));
+const AdminLayout = React.lazy(() => import('./pages/AdminLayout/AdminLayout'));
+const UserLayout = React.lazy(() => import('./pages/UserLayout/UserLayout'));
+const UserInfoForms = React.lazy(() => import('./pages/UserLayout/UserInfoForm'));
+const InviteroomatePages = React.lazy(() => import('./pages/UserLayout/InviteRoomatePages'));
+const Paying = React.lazy(() => import('./pages/UserLayout/Paying'));
+const RentRoomCheckout = React.lazy(() => import('./pages/UserLayout/RentRoomCheckout'));
+const TopupHistory = React.lazy(() => import('./pages/UserLayout/TopupHistory/TopupHistory'));
+const Pricing = React.lazy(() => import('./pages/UserLayout/Pricing/Pricing'));
+const IsLandorStatus = React.lazy(() => import('./pages/UserLayout/IsLandorStatus'));
+const SupportPage = React.lazy(() => import('./pages/UserLayout/Support'));
+const RoomsPage = React.lazy(() => import('./pages/RoomsPage/RoomsPage'));
+const FavoritesPage = React.lazy(() => import('./pages/FavoritesPage/FavoritesPage'));
+const RoomDetailPage = React.lazy(() => import('./pages/RoomDetailPage/RoomDetailPage'));
+const RoomReviewsPage = React.lazy(() => import('./pages/RoomReviewsPage/RoomReviewsPage'));
+const PostRoomPages = React.lazy(() => import('./pages/UserLayout/PostRoomPages'));
+const AdminBookings = React.lazy(() => import('./pages/AdminPage/AdminBookings/AdminBookings'));
+const AdminCheckout = React.lazy(() => import('./pages/AdminPage/AdminCheckout/AdminCheckout'));
+const AdminDeposits = React.lazy(() => import('./pages/AdminPage/AdminDeposits/AdminDeposits'));
+const AdminEarlyCheckout = React.lazy(() => import('./pages/AdminPage/AdminEarlyCheckout/AdminEarlyCheckout'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminPage/AdminDashboard/AdminDashboard'));
+const AdminPosts = React.lazy(() => import('./pages/AdminLayout/AdminPosts/AdminPosts'));
+const AdminUsers = React.lazy(() => import('./pages/AdminLayout/AdminUsers/AdminUsers'));
+const AdminSupport = React.lazy(() => import('./pages/AdminLayout/AdminSupport/AdminSupport'));
+const ManageRoomUser = React.lazy(() => import('./pages/UserLayout/ManageRoomUser/ManageRoomUser'));
+const ManagePostUser = React.lazy(() => import('./pages/UserLayout/ManagePostUser'));
+const MyRentals = React.lazy(() => import('./pages/UserLayout/MyRentals'));
+const RentalDetail = React.lazy(() => import('./pages/UserLayout/RentalDetail/RentalDetail'));
+const OwnerCheckoutRequests = React.lazy(() => import('./pages/UserLayout/OwnerCheckoutRequests'));
+const OwnerExtendRequests = React.lazy(() => import('./pages/UserLayout/OwnerExtendRequests'));
+const OwnerPaymentHistory = React.lazy(() => import('./pages/UserLayout/OwnerPaymentHistory'));
+const Withdraw = React.lazy(() => import('./pages/UserLayout/Withdraw/Withdraw'));
+const WithdrawalHistory = React.lazy(() => import('./pages/UserLayout/WithdrawalHistory/WithdrawalHistory'));
+const AdminWithdrawals = React.lazy(() => import('./pages/AdminPage/AdminWithdrawals/AdminWithdrawals'));
+const PostEdit = React.lazy(() => import('./pages/PostEdit/PostEdit'));
+const InviteDetail = React.lazy(() => import('./pages/InviteDetail/InviteDetail'));
+const NoPermission = React.lazy(() => import('./pages/NoPermission'));
+const AboutPage = React.lazy(() => import('./pages/AboutPage/AboutPage'));
+const ChatInboxPage = React.lazy(() => import('./pages/ChatInboxPage/ChatInboxPage'));
+const NotificationsPage = React.lazy(() => import('./pages/Notifications'));
+const DocsPage = React.lazy(() => import('./pages/DocsPage/DocsPage'));
 
 // Component con để sử dụng useLocation hook
-const DocsPage = React.lazy(() => import('./pages/DocsPage/DocsPage'));
 
 function AppContent() {
   const location = useLocation();
@@ -119,6 +123,7 @@ function AppContent() {
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {shouldShowNavbar && <NavBar />}
       <Box component="main" sx={{ flex: 1 }}>
+        <React.Suspense fallback={<Box role="status" sx={{ p: 4 }}>Đang tải trang…</Box>}>
         <Routes>
           <Route path="/homeadmin" element={<HomeAdmin />} />
           <Route path="/homepage" element={<HomePageUser />} />
@@ -249,6 +254,7 @@ function AppContent() {
             <Route path="withdrawalhistory" element={<WithdrawalHistory />} />
           </Route>
         </Routes>
+        </React.Suspense>
       </Box>
       <Footer />
       <RoomSearchChatbot />
