@@ -74,6 +74,8 @@ import ChatInboxPage from "./pages/ChatInboxPage/ChatInboxPage";
 import NotificationsPage from "./pages/Notifications";
 
 // Component con để sử dụng useLocation hook
+const DocsPage = React.lazy(() => import('./pages/DocsPage/DocsPage'));
+
 function AppContent() {
   const location = useLocation();
 
@@ -122,6 +124,7 @@ function AppContent() {
           <Route path="/homepage" element={<HomePageUser />} />
           <Route path="/" element={<HomeLanding />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/docs" element={<React.Suspense fallback={<Box role="status" sx={{ p: 4 }}>Đang tải tài liệu…</Box>}><DocsPage /></React.Suspense>} />
           <Route path="/login" element={<LoginPage />} />
           {/* <Route path="/register" element={<RegisterPage />} /> */}
           <Route path="/register" element={<Register />} />

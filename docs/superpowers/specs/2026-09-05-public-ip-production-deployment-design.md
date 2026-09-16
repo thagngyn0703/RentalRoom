@@ -1,176 +1,173 @@
-# Public-IP Production Deployment Design
+# Thiết kế triển khai vận hành chính thức qua IP công khai
 
-## Objective
+## Mục tiêu
 
-Deploy the existing RentalRoom application as a persistent service at
-`http://161.248.81.124`, using the supplied MongoDB Atlas data and restarting
-automatically after application failures or server reboots.
+Triển khai ứng dụng RentalRoom hiện có thành một dịch vụ hoạt động liên tục tại
+`http://161.248.81.124`, sử dụng dữ liệu MongoDB Atlas đã được cung cấp và tự động
+khởi động lại sau khi ứng dụng gặp sự cố hoặc máy chủ khởi động lại.
 
-This is an interim public-IP deployment. It is not considered secure for real
-credentials or personal data until a domain and trusted HTTPS certificate are
-added.
+Đây là phương án triển khai tạm thời qua IP công khai. Phương án này chưa được coi là
+an toàn cho thông tin xác thực thật hoặc dữ liệu cá nhân cho đến khi bổ sung tên miền
+và chứng chỉ HTTPS được tin cậy.
 
-## Current constraints
+## Các ràng buộc hiện tại
 
-- The server is Ubuntu 24.04 with public IPv4 address `161.248.81.124`.
-- Node.js 22 and Yarn 1.22 are installed; Nginx is not installed.
-- The application is a Create React App frontend and an Express/Socket.IO
-  backend backed by MongoDB Atlas.
-- No domain is available, so trusted browser HTTPS cannot be provided in this
-  phase.
-- The supplied secrets have appeared in conversation history. They must be
-  rotated before treating this deployment as production-safe.
-- Existing unrelated working-tree changes and screenshots must not be included
-  in deployment commits.
+- Máy chủ chạy Ubuntu 24.04 với địa chỉ IPv4 công khai `161.248.81.124`.
+- Đã cài Node.js 22 và Yarn 1.22; chưa cài Nginx.
+- Ứng dụng gồm giao diện Create React App và máy chủ ứng dụng Express/Socket.IO
+  sử dụng MongoDB Atlas làm cơ sở dữ liệu.
+- Chưa có tên miền nên giai đoạn này không thể cung cấp HTTPS được trình duyệt tin cậy.
+- Các giá trị bí mật đã cung cấp từng xuất hiện trong lịch sử hội thoại. Phải thay mới
+  chúng trước khi coi bản triển khai này là an toàn cho vận hành chính thức.
+- Không đưa các thay đổi có sẵn trong cây làm việc và ảnh chụp màn hình không liên quan
+  vào các bản ghi thay đổi phục vụ triển khai.
 
-## Architecture
+## Kiến trúc
 
-Nginx will be the only public application listener on TCP port 80. It will:
+Nginx sẽ là thành phần ứng dụng duy nhất lắng nghe công khai trên cổng TCP 80. Nginx sẽ:
 
-- serve the compiled React application from a release directory;
-- fall back to `index.html` for client-side routes;
-- proxy `/api/` to the Express service on `127.0.0.1:8000`;
-- proxy `/socket.io/` with WebSocket upgrade headers to the same service;
-- add baseline security and caching headers without caching `index.html`.
+- phục vụ ứng dụng React đã biên dịch từ thư mục phát hành;
+- trả về `index.html` cho các đường dẫn do phía máy khách xử lý;
+- chuyển tiếp `/api/` tới dịch vụ Express trên `127.0.0.1:8000`;
+- chuyển tiếp `/socket.io/` kèm các tiêu đề nâng cấp WebSocket tới cùng dịch vụ;
+- bổ sung các tiêu đề bảo mật và bộ nhớ đệm cơ bản nhưng không lưu đệm `index.html`.
 
-The backend will run as a dedicated systemd service under the existing
-unprivileged `codexproxy` account. It will bind only to loopback, load secrets
-from an owner-readable environment file outside Git, restart on failure, and
-start after networking is available.
+Máy chủ ứng dụng sẽ chạy dưới dạng một dịch vụ systemd riêng bằng tài khoản
+`codexproxy` hiện có, không có đặc quyền. Dịch vụ chỉ lắng nghe trên địa chỉ nội bộ,
+đọc các giá trị bí mật từ một tệp môi trường nằm ngoài Git mà chỉ chủ sở hữu có quyền đọc,
+khởi động lại khi gặp lỗi và khởi động sau khi mạng sẵn sàng.
 
-The production frontend build will use the browser origin for HTTP API and
-Socket.IO traffic. This keeps frontend and backend same-origin and avoids
-shipping the obsolete Render URL into the bundle.
+Bản dựng giao diện cho môi trường vận hành chính thức sẽ sử dụng nguồn gốc của trang
+trong trình duyệt cho lưu lượng HTTP API và Socket.IO. Nhờ đó, giao diện và máy chủ
+ứng dụng có cùng nguồn gốc, đồng thời tránh đưa URL Render đã lỗi thời vào gói mã.
 
-## Application changes
+## Thay đổi ứng dụng
 
-Changes must stay limited to deployment correctness:
+Các thay đổi phải giới hạn trong phạm vi bảo đảm triển khai đúng:
 
-1. Make the frontend production API fallback same-origin. An explicit
-   `REACT_APP_API_URL` remains supported.
-2. Make authentication-cookie security depend on whether the request is
-   actually HTTPS, instead of setting `Secure` solely because
-   `NODE_ENV=production`. This permits the approved interim HTTP deployment.
-   The cookie remains `HttpOnly`; `SameSite=Lax` is used over HTTP and
-   `SameSite=None; Secure` over HTTPS.
-3. Add a lightweight backend health endpoint that reports process readiness
-   and MongoDB connection state without revealing secrets.
-4. Make the backend listener honor `HOST`, defaulting to the current all-host
-   behavior for development and using `127.0.0.1` in production deployment.
-5. Add versioned deployment templates and scripts for Nginx/systemd plus an
-   environment-variable example containing placeholders only.
+1. Đặt địa chỉ API dự phòng của giao diện trong môi trường vận hành chính thức về cùng nguồn gốc.
+   Vẫn hỗ trợ cấu hình `REACT_APP_API_URL` tường minh.
+2. Để thuộc tính bảo mật của cookie xác thực phụ thuộc vào việc yêu cầu có thực sự dùng
+   HTTPS hay không, thay vì đặt `Secure` chỉ vì `NODE_ENV=production`. Điều này cho phép
+   triển khai HTTP tạm thời đã được chấp thuận. Cookie vẫn có `HttpOnly`; dùng
+   `SameSite=Lax` trên HTTP và `SameSite=None; Secure` trên HTTPS.
+3. Thêm một điểm kiểm tra tình trạng gọn nhẹ cho máy chủ ứng dụng, báo cáo mức độ sẵn sàng
+   của tiến trình và trạng thái kết nối MongoDB mà không tiết lộ các giá trị bí mật.
+4. Để địa chỉ lắng nghe của máy chủ ứng dụng tuân theo `HOST`, mặc định giữ hành vi hiện tại
+   là lắng nghe trên mọi địa chỉ khi phát triển và dùng `127.0.0.1` khi triển khai vận hành chính thức.
+5. Thêm các mẫu cấu hình và tập lệnh triển khai Nginx/systemd được quản lý phiên bản,
+   cùng tệp ví dụ biến môi trường chỉ chứa giá trị giữ chỗ.
 
-Behavior changes require tests first. Pure host configuration is verified by
-syntax checks and live integration probes.
+Thay đổi hành vi yêu cầu viết kiểm thử trước. Cấu hình thuần túy trên máy chủ được
+kiểm chứng bằng kiểm tra cú pháp và các phép kiểm tra tích hợp trực tiếp.
 
-## Configuration and secrets
+## Cấu hình và thông tin bí mật
 
-The supplied `.env` values will be installed into a non-versioned production
-environment file owned by `codexproxy` with mode `0600`. Comments embedded
-after values will be removed. Production overrides are:
+Các giá trị `.env` đã cung cấp sẽ được cài vào một tệp môi trường vận hành chính thức
+không được quản lý phiên bản, thuộc sở hữu của `codexproxy` với quyền `0600`.
+Các chú thích nằm sau giá trị sẽ bị loại bỏ. Các giá trị ghi đè cho môi trường này gồm:
 
 - `NODE_ENV=production`
 - `PORT=8000`
 - `HOST=127.0.0.1`
 - `FRONTEND_URL=http://161.248.81.124`
 
-No secret value may appear in Git history, service definitions, Nginx
-configuration, test logs, screenshots, or final reporting. MongoDB Atlas must
-allow inbound database access from `161.248.81.124/32`. If Atlas rejects the
-connection, deployment stops at a clearly reported database blocker rather
-than claiming the product is healthy.
+Không giá trị bí mật nào được xuất hiện trong lịch sử Git, định nghĩa dịch vụ,
+cấu hình Nginx, nhật ký kiểm thử, ảnh chụp màn hình hoặc báo cáo cuối cùng. MongoDB Atlas
+phải cho phép truy cập cơ sở dữ liệu từ `161.248.81.124/32`. Nếu Atlas từ chối kết nối,
+việc triển khai phải dừng lại với báo cáo rõ ràng về trở ngại cơ sở dữ liệu,
+thay vì tuyên bố sản phẩm đang hoạt động tốt.
 
-Before real users are invited, rotate at least the MongoDB password, both JWT
-secrets, Gemini key, Gmail app password, Cloudinary secret, and any other token
-included in the supplied file.
+Trước khi mời người dùng thật, phải thay mới ít nhất mật khẩu MongoDB, cả hai khóa
+bí mật JWT, khóa Gemini, mật khẩu ứng dụng Gmail, khóa bí mật Cloudinary và mọi
+mã thông báo khác có trong tệp đã cung cấp.
 
-## Service lifecycle
+## Vòng đời dịch vụ
 
-The frontend is built into a timestamp-independent release directory owned by
-the deployment user. Nginx reads the build but cannot modify source files.
+Giao diện được dựng vào một thư mục phát hành không phụ thuộc dấu thời gian,
+thuộc sở hữu của người dùng triển khai. Nginx đọc bản dựng nhưng không thể sửa các tệp mã nguồn.
 
-The backend systemd unit will use restart-on-failure, a bounded restart delay,
-and journal logging. Deployment commands must be idempotent: a second run may
-rebuild/restart services but must not duplicate configuration or lose data.
+Đơn vị dịch vụ systemd của máy chủ ứng dụng sẽ khởi động lại khi gặp lỗi, có khoảng
+chờ khởi động lại được giới hạn và ghi nhật ký vào journal. Các lệnh triển khai phải có
+tính lũy đẳng: lần chạy thứ hai có thể dựng lại/khởi động lại dịch vụ nhưng không được
+tạo cấu hình trùng lặp hoặc làm mất dữ liệu.
 
-The MongoDB database remains in Atlas; the deployment does not seed, migrate,
-delete, or rewrite existing data.
+Cơ sở dữ liệu MongoDB vẫn nằm trên Atlas; việc triển khai không nạp dữ liệu mẫu,
+chuyển đổi cấu trúc, xóa hoặc ghi lại dữ liệu hiện có.
 
-## Network and security
+## Mạng và bảo mật
 
-- Public listeners: SSH `22/tcp` and Nginx `80/tcp` only.
-- Backend `8000/tcp`: loopback only and not exposed by the firewall.
-- Nginx rejects hidden files and serves only the compiled frontend directory.
-- Request-body limits and proxy timeouts are explicit.
-- Secrets are never committed.
-- HTTP is an accepted temporary risk. Passwords, cookies, messages, and payment
-  data can be observed or modified by an on-path attacker until HTTPS exists.
+- Chỉ có các dịch vụ lắng nghe công khai: SSH `22/tcp` và Nginx `80/tcp`.
+- Máy chủ ứng dụng `8000/tcp`: chỉ dùng địa chỉ nội bộ và không được mở ra ngoài qua tường lửa.
+- Nginx từ chối các tệp ẩn và chỉ phục vụ thư mục giao diện đã biên dịch.
+- Giới hạn kích thước nội dung yêu cầu và thời gian chờ chuyển tiếp được cấu hình tường minh.
+- Tuyệt đối không đưa các giá trị bí mật vào bản ghi thay đổi.
+- HTTP là rủi ro tạm thời được chấp nhận. Kẻ tấn công trên đường truyền có thể quan sát
+  hoặc sửa đổi mật khẩu, cookie, tin nhắn và dữ liệu thanh toán cho đến khi có HTTPS.
 
-Firewall changes must preserve the active SSH path before enabling rules. If an
-upstream/cloud firewall blocks port 80, local service health can pass while
-external access remains blocked; both paths must therefore be tested.
+Thay đổi tường lửa phải giữ nguyên đường truy cập SSH đang hoạt động trước khi bật
+các quy tắc. Nếu tường lửa phía trước/đám mây chặn cổng 80, kiểm tra tình trạng dịch vụ
+cục bộ có thể đạt trong khi truy cập bên ngoài vẫn bị chặn; vì vậy phải kiểm tra cả hai đường truy cập.
 
-## Error handling and observability
+## Xử lý lỗi và khả năng quan sát
 
-- Nginx returns a clear `502` when the backend is unavailable while continuing
-  to serve the frontend shell.
-- `/api/health` distinguishes an alive process from a database-ready process
-  and uses a non-success readiness status while MongoDB is disconnected.
-- Backend logs go to journald and Nginx access/error logs use the system log
-  rotation defaults.
-- Deployment documentation includes status, restart, log, rollback, and secret
-  rotation commands.
+- Nginx trả mã `502` rõ ràng khi máy chủ ứng dụng không khả dụng, đồng thời vẫn phục vụ
+  khung giao diện.
+- `/api/health` phân biệt tiến trình còn hoạt động với tiến trình đã sẵn sàng kết nối
+  cơ sở dữ liệu, đồng thời trả mã trạng thái sẵn sàng không thành công khi MongoDB mất kết nối.
+- Nhật ký máy chủ ứng dụng được gửi vào journald; nhật ký truy cập/lỗi Nginx dùng
+  thiết lập luân chuyển nhật ký mặc định của hệ thống.
+- Tài liệu triển khai bao gồm các lệnh kiểm tra trạng thái, khởi động lại, xem nhật ký,
+  khôi phục phiên bản trước và thay mới thông tin bí mật.
 
-## Verification and acceptance criteria
+## Kiểm chứng và tiêu chí nghiệm thu
 
-The deployment is accepted only after two independent verification rounds.
+Chỉ nghiệm thu bản triển khai sau hai vòng kiểm chứng độc lập.
 
-### Round 1: build and service audit
+### Vòng 1: kiểm tra bản dựng và dịch vụ
 
-- Backend automated tests pass.
-- Frontend automated tests pass in non-watch mode.
-- Frontend production build exits successfully.
-- Nginx configuration syntax check passes.
-- systemd reports the backend and Nginx active.
-- Local frontend, health endpoint, API proxy, and WebSocket handshake are
-  probed.
-- Service restart and reboot-survival configuration are inspected.
-- Git diff contains no secret material.
+- Các bài kiểm thử tự động của máy chủ ứng dụng đạt.
+- Các bài kiểm thử tự động của giao diện đạt ở chế độ không theo dõi thay đổi.
+- Quá trình dựng giao diện cho môi trường vận hành chính thức kết thúc thành công.
+- Kiểm tra cú pháp cấu hình Nginx đạt.
+- systemd báo máy chủ ứng dụng và Nginx đang hoạt động.
+- Thực hiện các phép kiểm tra giao diện cục bộ, điểm kiểm tra tình trạng, chuyển tiếp API
+  và bắt tay WebSocket.
+- Kiểm tra cấu hình khởi động lại dịch vụ và tự chạy sau khi máy chủ khởi động lại.
+- Phần khác biệt Git không chứa thông tin bí mật.
 
-### Round 2: public-path and browser audit
+### Vòng 2: kiểm tra đường truy cập công khai và trình duyệt
 
-- A request to `http://161.248.81.124` from the public path returns the React
-  application.
-- Health and representative read-only APIs respond through Nginx.
-- A bounded concurrency test checks the homepage and health endpoint for
-  connection failures and unexpected status codes.
-- Chromium tests desktop `1440x900` and mobile `390x844` views.
-- Browser console, failed requests, responsive overflow, loading, empty, and
-  error states are inspected.
-- Desktop and mobile screenshots are saved, linked in the report, and scheduled
-  for deletion after 24 hours.
+- Yêu cầu tới `http://161.248.81.124` qua đường truy cập công khai trả về ứng dụng React.
+- Điểm kiểm tra tình trạng và các API chỉ đọc tiêu biểu phản hồi qua Nginx.
+- Kiểm thử đồng thời có giới hạn kiểm tra trang chủ và điểm kiểm tra tình trạng
+  để phát hiện lỗi kết nối và mã trạng thái ngoài dự kiến.
+- Chromium kiểm tra giao diện máy tính `1440x900` và điện thoại `390x844`.
+- Kiểm tra bảng điều khiển trình duyệt, yêu cầu thất bại, lỗi tràn khi thích ứng kích thước
+  màn hình và các trạng thái đang tải, trống, lỗi.
+- Lưu ảnh chụp màn hình máy tính và điện thoại, liên kết ảnh trong báo cáo và lên lịch
+  xóa sau 24 giờ.
 
-No pass claim is permitted if the database is disconnected, authentication is
-nonfunctional, the public route cannot be reached, tests fail, or browser/API
-errors remain.
+Không được tuyên bố đạt nếu cơ sở dữ liệu mất kết nối, xác thực không hoạt động,
+không truy cập được đường dẫn công khai, kiểm thử thất bại hoặc vẫn còn lỗi trình duyệt/API.
 
-## Documentation and rollback
+## Tài liệu và khôi phục phiên bản trước
 
-The repository root `README.md` will become the product entry point and link to
-`docs/wiki/operations.md`. Both documents will record implemented features,
-current deployment status, known HTTP risk, work in progress, next steps, the
-two-round verification requirement, and screenshot-retention policy.
+`README.md` ở thư mục gốc kho mã sẽ trở thành điểm bắt đầu tìm hiểu sản phẩm và liên kết
+tới `docs/wiki/operations.md`. Cả hai tài liệu sẽ ghi lại các tính năng đã triển khai,
+trạng thái triển khai hiện tại, rủi ro HTTP đã biết, công việc đang làm, bước tiếp theo,
+yêu cầu kiểm chứng hai vòng và chính sách lưu giữ ảnh chụp màn hình.
 
-Rollback restores the previous Nginx site and systemd unit from timestamped
-backups, restores the previous frontend build directory, reloads systemd and
-Nginx, and verifies the last known-good health response. Database data is not
-modified by deployment or rollback.
+Việc khôi phục sẽ khôi phục cấu hình trang Nginx và đơn vị dịch vụ systemd trước đó
+từ các bản sao lưu có dấu thời gian, khôi phục thư mục bản dựng giao diện trước đó,
+nạp lại systemd và Nginx, rồi xác minh phản hồi kiểm tra tình trạng hoạt động tốt gần nhất.
+Việc triển khai hoặc khôi phục không sửa đổi dữ liệu cơ sở dữ liệu.
 
-## Deferred work
+## Công việc để sau
 
-- Acquire or point a domain to `161.248.81.124`.
-- Issue and automatically renew a trusted TLS certificate.
-- Force HTTP-to-HTTPS redirects and permanently require Secure cookies.
-- Rotate all exposed credentials and revoke the old values.
-- Configure monitoring, alerting, and off-host backup policies if the service
-  becomes business-critical.
+- Đăng ký hoặc trỏ tên miền tới `161.248.81.124`.
+- Cấp và tự động gia hạn chứng chỉ TLS được tin cậy.
+- Bắt buộc chuyển hướng HTTP sang HTTPS và luôn yêu cầu cookie có thuộc tính Secure.
+- Thay mới toàn bộ thông tin xác thực đã lộ và thu hồi các giá trị cũ.
+- Cấu hình chính sách giám sát, cảnh báo và sao lưu ngoài máy chủ nếu dịch vụ trở nên
+  thiết yếu đối với hoạt động kinh doanh.

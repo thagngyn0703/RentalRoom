@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+# Bắt đầu với Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dự án được khởi tạo bằng [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Các lệnh có thể sử dụng
 
-In the project directory, you can run:
+Trong thư mục dự án, bạn có thể chạy:
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Chạy ứng dụng ở chế độ phát triển.\
+Mở [http://localhost:3000](http://localhost:3000) để xem ứng dụng trong trình duyệt.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Trang tự tải lại khi bạn chỉnh sửa mã nguồn.\
+Các lỗi kiểm tra quy tắc mã nguồn cũng xuất hiện trong bảng điều khiển của trình duyệt.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Khởi động trình chạy kiểm thử ở chế độ theo dõi tương tác.\
+Xem phần [chạy kiểm thử](https://facebook.github.io/create-react-app/docs/running-tests) để biết thêm thông tin.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Biên dịch ứng dụng để triển khai chính thức vào thư mục `build`.\
+Lệnh đóng gói React ở chế độ triển khai và tối ưu bản biên dịch để đạt hiệu năng tốt nhất.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Mã được rút gọn và tên tệp có chứa mã băm.\
+Ứng dụng đã sẵn sàng để triển khai!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Xem phần [triển khai](https://facebook.github.io/create-react-app/docs/deployment) để biết thêm thông tin.
 
 ### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Lưu ý: đây là thao tác một chiều. Sau khi chạy `eject`, bạn không thể quay lại bằng một lệnh hoàn tác!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Nếu công cụ biên dịch và các lựa chọn cấu hình chưa đáp ứng nhu cầu, bạn có thể chạy `eject`. Lệnh này loại bỏ gói phụ thuộc duy nhất đang quản lý quy trình biên dịch của dự án.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Thay vào đó, toàn bộ tệp cấu hình và các gói phụ thuộc gián tiếp (webpack, Babel, ESLint, v.v.) được sao chép vào dự án để bạn toàn quyền kiểm soát. Các lệnh khác ngoài `eject` vẫn hoạt động, nhưng sẽ trỏ đến các tập lệnh đã sao chép để bạn tùy chỉnh. Từ thời điểm này, bạn tự chịu trách nhiệm quản lý cấu hình.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Bạn không bắt buộc phải dùng `eject`. Bộ tính năng có sẵn phù hợp với các dự án triển khai quy mô nhỏ và vừa. Tuy nhiên, công cụ vẫn cho phép bạn tùy chỉnh khi có nhu cầu.
 
-## Learn More
+## Tìm hiểu thêm
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Bạn có thể đọc [tài liệu Create React App](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Để học React, xem [tài liệu React](https://reactjs.org/).
 
-### Code Splitting
+### Chia nhỏ mã nguồn
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Nội dung đã được chuyển đến [hướng dẫn chia nhỏ mã nguồn](https://facebook.github.io/create-react-app/docs/code-splitting).
 
-### Analyzing the Bundle Size
+### Phân tích kích thước gói mã
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Nội dung đã được chuyển đến [hướng dẫn phân tích kích thước gói mã](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size).
 
-### Making a Progressive Web App
+### Xây dựng ứng dụng web tiến bộ (PWA)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Nội dung đã được chuyển đến [hướng dẫn xây dựng PWA](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app).
 
-### Advanced Configuration
+### Cấu hình nâng cao
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Nội dung đã được chuyển đến [hướng dẫn cấu hình nâng cao](https://facebook.github.io/create-react-app/docs/advanced-configuration).
 
-### Deployment
+### Triển khai
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Nội dung đã được chuyển đến [hướng dẫn triển khai](https://facebook.github.io/create-react-app/docs/deployment).
 
-### `npm run build` fails to minify
+### Lỗi rút gọn mã khi chạy `npm run build`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Nội dung đã được chuyển đến [hướng dẫn xử lý lỗi rút gọn mã](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify).

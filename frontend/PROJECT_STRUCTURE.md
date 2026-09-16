@@ -2,7 +2,7 @@
 
 ```
 src/
-├── components/          # Các component tái sử dụng
+├── components/          # Các thành phần tái sử dụng
 │   ├── ui/
 │   │   ├── Button.jsx
 │   │   ├── Modal.jsx
@@ -26,37 +26,36 @@ src/
 │       ├── UserList.jsx
 │       └── UserDetail.jsx
 │
-├── services/            # API calls và business logic
+├── services/            # Lời gọi API và xử lý nghiệp vụ
 │   ├── api/
 │   │   ├── authApi.js
 │   │   ├── userApi.js
 │   │   └── index.js
 │   └── httpClient.js
 │
-├── hooks/               # Custom hooks
+├── hooks/               # Các hook tùy chỉnh
 │   ├── useAuth.js
 │   └── useApi.js
 │
-├── utils/               # Utility functions
+├── utils/               # Các hàm tiện ích
 │   ├── constants.js
 │   ├── helpers.js
 │   └── validators.js
 │
-├── redux/               # Chỉ chứa Redux logic
+├── redux/               # Chỉ chứa xử lý trạng thái Redux
 │   ├── slices/
 │   │   ├── authSlice.js
 │   │   └── userSlice.js
 │   └── store.js
 │
-└── config/              # Configuration files
+└── config/              # Các tệp cấu hình
     ├── axios.js
     └── axiosJWT.js
 ```
 
 ## Lợi ích:
-- **components/**: Chỉ chứa UI components tái sử dụng
+- **components/**: Chỉ chứa thành phần giao diện tái sử dụng
 - **pages/**: Chứa các trang/màn hình cụ thể
-- **services/**: Tách riêng API logic khỏi Redux
-- **Separation of concerns**: Mỗi folder có trách nhiệm riêng
-- **Scalable**: Dễ mở rộng khi dự án lớn
-```
+- **services/**: Tách riêng xử lý API khỏi Redux
+- **Phân tách trách nhiệm**: Mỗi thư mục có trách nhiệm riêng
+- **Khả năng mở rộng**: Dễ mở rộng khi dự án lớn

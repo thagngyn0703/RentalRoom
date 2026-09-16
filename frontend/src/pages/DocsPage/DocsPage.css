@@ -1,0 +1,15 @@
+.project-document { color: #193b34; line-height: 1.8; overflow-wrap: anywhere; }
+.project-document h1 { font-size: 1.9rem; }
+.project-document h2 { font-size: 1.45rem; }
+.project-document h3 { font-size: 1.2rem; }
+.project-document h1, .project-document h2, .project-document h3 { margin-top: 1.6em; margin-bottom: .7em; line-height: 1.35; }
+.project-document a { color: #087f72; text-decoration: underline; }
+.project-document pre { max-width: 100%; overflow: auto; background: #f6f8f5; padding: 16px; border: 1px solid #e1e9e3; border-radius: 10px; }
+.project-document code { font-size: .88em; background: #f6f8f5; padding: 2px 4px; }
+.project-document pre code { padding: 0; }
+.project-document blockquote { border-left: 3px solid #087f72; margin-left: 0; padding-left: 20px; color: #64756f; }
+.project-document img { max-width: 100%; }
+.document-table { overflow-x: auto; }
+.document-table table { border-collapse: collapse; width: 100%; }
+.document-table th, .document-table td { padding: 10px 14px; border: 1px solid #e1e9e3; text-align: left; }
+.document-table th { background: #f6f8f5; }

@@ -1,15 +1,15 @@
-# RentalRoom Backend
+# Phần máy chủ RentalRoom
 
-Express/Socket.IO backend sử dụng MongoDB Atlas, JWT refresh cookie, Cloudinary,
+Phần máy chủ Express/Socket.IO sử dụng MongoDB Atlas, cookie làm mới JWT, Cloudinary,
 SMTP, Gemini, GHN và thông tin VietQR.
 
-## Environment
+## Biến môi trường
 
-Tạo `.env` cho development hoặc `/etc/rentalroom/backend.env` cho production.
-Không commit file chứa secrets. Danh sách đầy đủ nằm tại
+Tạo `.env` cho môi trường phát triển hoặc `/etc/rentalroom/backend.env` cho môi trường triển khai chính thức.
+Không đưa tệp chứa thông tin bí mật vào Git. Danh sách đầy đủ nằm tại
 `../deploy/env/backend.production.env.example`.
 
-Ví dụ development tối thiểu:
+Ví dụ cấu hình tối thiểu cho môi trường phát triển:
 
 ```env
 MONGO_URL=<mongodb-atlas-uri>
@@ -24,7 +24,7 @@ API_KEY=<cloudinary-api-key>
 API_SECRET=<cloudinary-api-secret>
 ```
 
-## Commands
+## Các lệnh
 
 ```bash
 yarn install
@@ -32,6 +32,6 @@ yarn test --runInBand
 yarn dev
 ```
 
-Production được quản lý bằng systemd. Xem
+Môi trường triển khai chính thức được quản lý bằng systemd. Xem
 [`../docs/wiki/operations.md`](../docs/wiki/operations.md) để cài đặt, kiểm tra
-health, xem log, restart và rollback.
+tình trạng hoạt động, xem nhật ký, khởi động lại và khôi phục phiên bản trước.

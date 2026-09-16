@@ -1,0 +1,13 @@
+[
+  {"path":"README.md","title":"Tổng quan dự án","group":"Tổng quan"},
+  {"path":"DESIGN.md","title":"Thiết kế giao diện","group":"Tổng quan"},
+  {"path":"frontend/PROJECT_STRUCTURE.md","title":"Cấu trúc phần giao diện","group":"Phát triển"},
+  {"path":"frontend/README.md","title":"Hướng dẫn phần giao diện","group":"Phát triển"},
+  {"path":"backend/README.md","title":"Hướng dẫn phần máy chủ","group":"Phát triển"},
+  {"path":"frontend/README-LEAFLET.md","title":"Bản đồ Leaflet","group":"Phát triển"},
+  {"path":"frontend/src/pages/AdminLayout/AdminSupport/README.md","title":"Hệ thống hỗ trợ","group":"Phát triển"},
+  {"path":"docs/wiki/operations.md","title":"Triển khai và vận hành","group":"Vận hành"},
+  {"path":"docs/superpowers/specs/2026-09-05-public-ip-production-deployment-design.md","title":"Thiết kế triển khai","group":"Vận hành"},
+  {"path":"docs/superpowers/plans/2026-09-05-public-ip-production-deployment.md","title":"Kế hoạch triển khai","group":"Vận hành"},
+  {"path":"frontend/public/images/home-interior.source.md","title":"Nguồn ảnh giao diện","group":"Tham khảo"}
+]

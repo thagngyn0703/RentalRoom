@@ -1,7 +1,7 @@
 ---
 version: 2
-name: TroChung Everyday Living
-description: A clear, approachable rental marketplace for Vietnamese users.
+name: Trọ Chung – Không gian sống mỗi ngày
+description: Nền tảng phòng trọ rõ ràng, gần gũi dành cho người dùng Việt Nam.
 colors:
   primary: "#087F72"
   primary-dark: "#075B51"
@@ -55,52 +55,60 @@ components:
     imageFit: cover
 ---
 
-## Overview
+## Tổng quan
 
-TroChung should feel practical, friendly and trustworthy. Housing information
-is the focus; decoration must never compete with prices, locations or actions.
+Trọ Chung cần mang lại cảm giác thiết thực, thân thiện và đáng tin cậy. Thông tin
+nhà ở là trọng tâm; yếu tố trang trí không được lấn át giá, vị trí hoặc thao tác.
 
-## Colors
+## Màu sắc
 
-Teal identifies primary actions, forest green anchors navigation and the footer,
-and warm ivory surfaces keep listing photography legible. Clay is an accent.
-Normal text must meet WCAG AA contrast.
+Xanh ngọc dùng cho thao tác chính, xanh rừng làm điểm tựa cho thanh điều hướng và
+chân trang. Nền trắng ngà ấm giúp ảnh bài đăng rõ nét. Màu đất nung tạo điểm nhấn.
+Văn bản thông thường phải đạt độ tương phản WCAG AA.
 
-## Typography
+## Kiểu chữ
 
-Inter is the product typeface. Headings are decisive and compact; body copy is
-comfortable at mobile widths. Truncation is reserved for listing-card summaries.
+Inter là phông chữ của sản phẩm. Tiêu đề rõ ràng, gọn; nội dung dễ đọc trên màn
+hình điện thoại. Chỉ rút gọn văn bản trong phần tóm tắt của thẻ bài đăng.
 
-## Layout
+## Bố cục
 
-Use an 8px-based rhythm with a 4px micro-step. Desktop content uses a bounded
-grid; mobile becomes one column with at least 16px side padding. No component
-may create horizontal page overflow.
+Khoảng cách theo đơn vị cơ bản 8px và bước nhỏ 4px. Nội dung trên máy tính dùng
+lưới có giới hạn chiều rộng; trên điện thoại chuyển thành một cột với khoảng
+đệm hai bên ít nhất 16px. Không thành phần nào được làm trang tràn ngang.
 
-## Elevation & Depth
+## Độ nổi và chiều sâu
 
-Prefer borders and restrained soft shadows. Elevation communicates actionable
-cards or sticky navigation, not decoration.
+Ưu tiên đường viền và bóng đổ nhẹ, tiết chế. Độ nổi dùng để thể hiện thẻ có thể
+tương tác hoặc thanh điều hướng cố định, không chỉ để trang trí.
 
-## Shapes
+## Hình dạng
 
-Use 6–16px radii consistently. Pills are limited to compact status and price
-chips.
+Dùng bán kính bo góc 6–16px nhất quán. Dạng viên thuốc chỉ dùng cho nhãn trạng
+thái và giá có kích thước nhỏ gọn.
 
-## Components
+## Thành phần giao diện
 
-Legacy carousel artwork already contains campaign typography, so it must not receive
-an additional caption overlay. Images use meaningful alt text; controls remain
-keyboard accessible and visible against the artwork.
+Ảnh quảng bá trong trình chiếu cũ đã chứa chữ, vì vậy không thêm lớp chú thích
+đè lên ảnh. Ảnh cần văn bản thay thế có ý nghĩa; các nút điều khiển phải dùng
+được bằng bàn phím và dễ nhìn trên nền ảnh.
 
-Buttons require visible hover, pressed, disabled and keyboard-focus states.
-Loading, empty and error states must reserve stable space and use clear copy.
+Nút cần thể hiện rõ trạng thái rê chuột, nhấn, vô hiệu hóa và được chọn bằng
+bàn phím. Trạng thái đang tải, không có dữ liệu và lỗi phải giữ bố cục ổn định,
+sử dụng thông báo dễ hiểu.
 
-## Do's and Don'ts
+## Nên và không nên
 
-- Do preserve a clear hierarchy from navigation to campaign to listings.
-- Do test desktop and mobile with real data and slow/error states.
-- Do keep text and interactive controls within their containers.
-- Don't overlay duplicate marketing copy on text-bearing artwork.
-- Don't hide broken images, API failures or focus indicators.
-- Don't use viewport-only heights that clip content.
+- Giữ thứ bậc rõ ràng từ điều hướng đến nội dung quảng bá rồi đến danh sách bài đăng.
+- Kiểm thử trên máy tính và điện thoại bằng dữ liệu thật, cả khi tải chậm hoặc có lỗi.
+- Giữ văn bản và các nút tương tác trong phạm vi phần tử chứa.
+- Không chồng thêm nội dung quảng bá trùng lặp lên ảnh đã có chữ.
+- Không che giấu ảnh hỏng, lỗi API hoặc dấu hiệu chọn bằng bàn phím.
+- Không dùng chiều cao chỉ dựa trên khung nhìn khiến nội dung bị cắt.
+
+## Tài liệu dự án
+
+Trang công khai `/docs` dùng thanh điều hướng xanh ngọc và nền trắng ngà hiện có.
+Trên máy tính, danh mục tài liệu nằm cạnh khung đọc màu trắng; trên điện thoại,
+danh mục xếp phía trên. Giữ nguyên tiêu đề, bảng và khối mã Markdown; đoạn mã dài
+được cuộn trong khung. Thanh điều hướng và trình đơn điện thoại đều có mục “Tài liệu”.

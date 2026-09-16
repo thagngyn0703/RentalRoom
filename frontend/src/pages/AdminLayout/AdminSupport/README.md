@@ -1,7 +1,7 @@
-# Trang Quản Lý Tin Hỗ Trợ Admin
+# Trang quản lý tin hỗ trợ dành cho quản trị viên
 
 ## Mô tả
-Trang admin quản lý các tin hỗ trợ mà người dùng gửi lên hệ thống. Chỉ có tài khoản admin mới có thể truy cập trang này.
+Trang quản trị quản lý các tin hỗ trợ mà người dùng gửi lên hệ thống. Chỉ có tài khoản quản trị viên mới có thể truy cập trang này.
 
 ## URL
 - `/admin/viewsupport` - Trang quản lý tin hỗ trợ
@@ -9,7 +9,7 @@ Trang admin quản lý các tin hỗ trợ mà người dùng gửi lên hệ th
 ## Tính năng
 
 ### 1. Hiển thị danh sách tin hỗ trợ
-- Hiển thị tất cả tin hỗ trợ từ model Support
+- Hiển thị tất cả tin hỗ trợ từ mô hình dữ liệu `Support`
 - Phân trang với 10 tin mỗi trang
 - Hiển thị thông tin: tên người gửi, email, tin nhắn, trạng thái, ngày tạo
 
@@ -20,11 +20,11 @@ Trang admin quản lý các tin hỗ trợ mà người dùng gửi lên hệ th
 - Đã đóng (closed)
 
 ### 3. Cập nhật trạng thái
-- Dropdown để thay đổi trạng thái trực tiếp từ bảng
+- Danh sách thả xuống để thay đổi trạng thái trực tiếp từ bảng
 - Các trạng thái: Mở, Đang xử lý, Đã đóng
 
 ### 4. Xem chi tiết
-- Dialog hiển thị đầy đủ thông tin tin hỗ trợ
+- Hộp thoại hiển thị đầy đủ thông tin tin hỗ trợ
 - Bao gồm: tên, email, số điện thoại, tin nhắn, trạng thái, ngày tạo, ngày cập nhật
 
 ### 5. Thống kê
@@ -33,16 +33,16 @@ Trang admin quản lý các tin hỗ trợ mà người dùng gửi lên hệ th
 - Số tin đã đóng
 
 ## Bảo mật
-- Chỉ tài khoản admin mới có thể truy cập
-- Sử dụng ProtectedRoute với requireAdmin=true
-- Backend có middleware verifyAdmin để kiểm tra quyền
+- Chỉ tài khoản quản trị viên mới có thể truy cập
+- Sử dụng `ProtectedRoute` với `requireAdmin=true`
+- Phần máy chủ có lớp kiểm tra trung gian `verifyAdmin` để kiểm tra quyền
 
-## API Endpoints
-- `GET /api/support/admin/all` - Lấy danh sách tin hỗ trợ (admin only)
-- `PUT /api/support/admin/:id/status` - Cập nhật trạng thái (admin only)
+## Các điểm truy cập API
+- `GET /api/support/admin/all` - Lấy danh sách tin hỗ trợ (chỉ dành cho quản trị viên)
+- `PUT /api/support/admin/:id/status` - Cập nhật trạng thái (chỉ dành cho quản trị viên)
 
 ## Cách sử dụng
-1. Đăng nhập bằng tài khoản admin
-2. Click vào nút "Admin" trên navbar
-3. Chọn "Quản lý tin hỗ trợ" từ menu dropdown
+1. Đăng nhập bằng tài khoản quản trị viên
+2. Nhấn vào nút "Admin" trên thanh điều hướng
+3. Chọn "Quản lý tin hỗ trợ" từ trình đơn thả xuống
 4. Hoặc truy cập trực tiếp `/admin/viewsupport`

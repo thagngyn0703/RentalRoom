@@ -20,11 +20,13 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.5.0",
     "react-leaflet": "^4.2.1",
+    "react-markdown": "8.0.7",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.1.0",
     "react-scripts": "^5.0.1",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "remark-gfm": "3.0.1",
     "socket.io-client": "^4.8.3",
     "web-vitals": "^1.1.2"
   },
@@ -33,7 +35,12 @@
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docs:generate": "node scripts/generate-docs.cjs",
+    "prebuild": "npm run docs:generate",
+    "prestart": "npm run docs:generate",
+    "predev": "npm run docs:generate",
+    "pretest": "npm run docs:generate"
   },
   "eslintConfig": {
     "extends": [

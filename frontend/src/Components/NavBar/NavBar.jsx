@@ -17,6 +17,7 @@ import {
   ManageAccounts,
   HomeWork,
   HelpOutline,
+  Description,
   Menu as MenuIcon
 } from '@mui/icons-material';
 import { logoutUser } from '../../services/api/authApi';
@@ -252,6 +253,10 @@ const NavBar = () => {
             }}
           >
             Về chúng tôi
+          </Button>
+          <Button component={Link} to="/docs" startIcon={<Description />} aria-current={location.pathname === '/docs' ? 'page' : undefined}
+            sx={{ color: location.pathname === '/docs' ? 'primary.dark' : 'primary.main', bgcolor: location.pathname === '/docs' ? 'rgba(25,59,52,.08)' : 'transparent', px: 2.5, py: 1.2, borderRadius: 2.5, fontWeight: 700 }}>
+            Tài liệu
           </Button>
 
         </Box>

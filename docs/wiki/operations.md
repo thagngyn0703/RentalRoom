@@ -1,48 +1,48 @@
-# RentalRoom Operations Wiki
+# Wiki vận hành RentalRoom
 
-## Production status
+## Trạng thái môi trường vận hành chính thức
 
-| Item | Value |
+| Hạng mục | Giá trị |
 | --- | --- |
-| Public URL | `http://161.248.81.124` |
-| Frontend | Nginx static build at `/var/www/rentalroom` |
-| Backend | systemd `rentalroom-backend`, loopback port `8000` |
-| Database | MongoDB Atlas database `WDP301` |
-| Current state | Serving publicly; infrastructure/browser/stress checks passed, authenticated flow pending test credentials |
-| Known risk | HTTP only; sensitive data is not transport-encrypted |
+| URL công khai | `http://161.248.81.124` |
+| Giao diện | Bản dựng tĩnh do Nginx phục vụ tại `/var/www/rentalroom` |
+| Máy chủ ứng dụng | Dịch vụ systemd `rentalroom-backend`, cổng nội bộ `8000` |
+| Cơ sở dữ liệu | Cơ sở dữ liệu MongoDB Atlas `WDP301` |
+| Trạng thái hiện tại | Đang phục vụ công khai; kiểm tra hạ tầng/trình duyệt/tải đã đạt, luồng có xác thực đang chờ thông tin tài khoản kiểm thử |
+| Rủi ro đã biết | Chỉ dùng HTTP; dữ liệu nhạy cảm không được mã hóa khi truyền |
 
-Không đổi trạng thái thành “pass” nếu database, public route, đăng nhập, test
-hoặc browser audit chưa đạt.
+Không đổi trạng thái thành “đạt” nếu cơ sở dữ liệu, đường truy cập công khai, đăng nhập,
+kiểm thử hoặc kiểm tra trình duyệt chưa đạt.
 
-## Required environment
+## Yêu cầu về môi trường
 
 Tạo `/etc/rentalroom/backend.env` từ
-`deploy/env/backend.production.env.example`. File phải thuộc
-`codexproxy:codexproxy`, mode `0600` và không có inline comment sau giá trị.
+`deploy/env/backend.production.env.example`. Tệp phải thuộc
+`codexproxy:codexproxy`, có quyền `0600` và không có chú thích cùng dòng sau giá trị.
 
 Các nhóm biến bắt buộc:
 
-- Runtime: `NODE_ENV`, `PORT`, `HOST`, `FRONTEND_URL`.
-- Database: `MONGO_URL`.
-- Authentication: `JWT_SECRET`, `REFRESH_JWT_SECRET`, thời hạn token.
-- Email: SMTP host, port, user, password và sender.
-- Media/AI/shipping: Cloudinary, Gemini và GHN credentials.
-- Payment display: bank account, code và display name.
+- Môi trường chạy: `NODE_ENV`, `PORT`, `HOST`, `FRONTEND_URL`.
+- Cơ sở dữ liệu: `MONGO_URL`.
+- Xác thực: `JWT_SECRET`, `REFRESH_JWT_SECRET`, thời hạn mã thông báo.
+- Thư điện tử: máy chủ SMTP, cổng, người dùng, mật khẩu và người gửi.
+- Đa phương tiện/AI/vận chuyển: thông tin xác thực Cloudinary, Gemini và GHN.
+- Hiển thị thanh toán: tài khoản ngân hàng, mã ngân hàng và tên hiển thị.
 
-Không ghi giá trị secrets vào Git, terminal transcript, log hoặc screenshot.
+Không ghi giá trị bí mật vào Git, bản ghi thiết bị đầu cuối, nhật ký hoặc ảnh chụp màn hình.
 
-## Install or redeploy
+## Cài đặt hoặc triển khai lại
 
 ```bash
 cd /home/codexproxy/Codex-thangtts/RentalRoom/.worktrees/public-ip-production
 sudo PROJECT_ROOT="$PWD" ENABLE_UFW=1 bash deploy/scripts/install-production.sh
 ```
 
-Script kiểm tra environment file, cài Nginx/rsync nếu thiếu, cài dependency theo
-Yarn lockfile, build frontend, publish static files, cài systemd/Nginx, giữ SSH
-trong UFW, khởi động dịch vụ và chỉ kết thúc sau khi health/public/Socket.IO đạt.
+Tập lệnh kiểm tra tệp môi trường, cài Nginx/rsync nếu thiếu, cài các gói phụ thuộc theo
+tệp khóa Yarn, dựng giao diện, xuất bản tệp tĩnh, cài systemd/Nginx, giữ quyền truy cập SSH
+trong UFW, khởi động dịch vụ và chỉ kết thúc sau khi kiểm tra tình trạng/truy cập công khai/Socket.IO đạt.
 
-## Status and health
+## Trạng thái và tình trạng hoạt động
 
 ```bash
 sudo systemctl status rentalroom-backend nginx --no-pager
@@ -53,9 +53,9 @@ curl --fail http://161.248.81.124/api/health
 sudo ss -ltnp
 ```
 
-Health chỉ trả `200` khi MongoDB connected; các trạng thái khác trả `503`.
+Điểm kiểm tra tình trạng chỉ trả `200` khi MongoDB đã kết nối; các trạng thái khác trả `503`.
 
-## Restart and logs
+## Khởi động lại và nhật ký
 
 ```bash
 sudo systemctl restart rentalroom-backend
@@ -65,9 +65,9 @@ sudo tail -n 200 /var/log/nginx/error.log
 sudo tail -n 200 /var/log/nginx/access.log
 ```
 
-Không dán log chứa thông tin nhạy cảm vào issue công khai.
+Không dán nhật ký chứa thông tin nhạy cảm vào báo cáo vấn đề công khai.
 
-## Rebuild frontend
+## Dựng lại giao diện
 
 ```bash
 cd /home/codexproxy/Codex-thangtts/RentalRoom/.worktrees/public-ip-production/frontend
@@ -79,74 +79,82 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-## Rollback
+## Khôi phục phiên bản trước
 
-1. Xác định commit tốt gần nhất bằng `git log --oneline`.
-2. Tạo worktree mới tại đúng commit thay vì reset phá hủy worktree đang chạy.
-3. Chạy test/build trong worktree rollback.
-4. Sao lưu cấu hình Nginx và systemd hiện tại bằng tên file có timestamp.
-5. Cài cấu hình/build từ worktree rollback, reload systemd/Nginx và restart backend.
-6. Chạy `deploy/scripts/verify-production.sh`; chỉ chuyển traffic khi database connected.
+1. Xác định bản ghi thay đổi hoạt động tốt gần nhất bằng `git log --oneline`.
+2. Tạo cây làm việc mới tại đúng bản ghi thay đổi thay vì đặt lại theo cách phá hủy cây làm việc đang chạy.
+3. Chạy kiểm thử và dựng ứng dụng trong cây làm việc dùng để khôi phục.
+4. Sao lưu cấu hình Nginx và systemd hiện tại bằng tên tệp có dấu thời gian.
+5. Cài cấu hình/bản dựng từ cây làm việc dùng để khôi phục, nạp lại systemd/Nginx và khởi động lại máy chủ ứng dụng.
+6. Chạy `deploy/scripts/verify-production.sh`; chỉ chuyển lưu lượng khi cơ sở dữ liệu đã kết nối.
 
-Rollback không seed, migrate, xóa hoặc ghi lại dữ liệu Atlas.
+Việc khôi phục không nạp dữ liệu mẫu, chuyển đổi cấu trúc, xóa hoặc ghi lại dữ liệu Atlas.
 
-## Secret rotation
+## Thay mới thông tin bí mật
 
-Credentials đã xuất hiện trong hội thoại phải được coi là compromised. Trước
+Thông tin xác thực đã xuất hiện trong hội thoại phải được coi là đã bị lộ. Trước
 khi có người dùng thật:
 
-1. Tạo MongoDB password mới và thu hồi password cũ.
-2. Tạo hai JWT secrets ngẫu nhiên, độc lập.
-3. Thu hồi/cấp lại Gemini key, Gmail app password, Cloudinary secret và token khác.
+1. Tạo mật khẩu MongoDB mới và thu hồi mật khẩu cũ.
+2. Tạo hai khóa bí mật JWT ngẫu nhiên, độc lập.
+3. Thu hồi/cấp lại khóa Gemini, mật khẩu ứng dụng Gmail, khóa bí mật Cloudinary và các mã thông báo khác.
 4. Cập nhật `/etc/rentalroom/backend.env` mà không in nội dung.
-5. Restart backend, kiểm tra health, email, upload và login/logout.
+5. Khởi động lại máy chủ ứng dụng, kiểm tra tình trạng, thư điện tử, tải lên và đăng nhập/đăng xuất.
 
-## Verification policy
+## Chính sách kiểm chứng
 
-Vòng 1 kiểm tra test, build, syntax Nginx/systemd, service lifecycle, loopback
-API/Socket.IO, Git và logs. Vòng 2 kiểm tra public path, bounded stress test và
-Chromium thật ở `1440x900` cùng `390x844`, gồm console, network và responsive.
+Vòng 1 kiểm tra các bài kiểm thử, bản dựng, cú pháp Nginx/systemd, vòng đời dịch vụ,
+API/Socket.IO qua địa chỉ nội bộ, Git và nhật ký. Vòng 2 kiểm tra đường truy cập công khai,
+kiểm thử tải có giới hạn và Chromium thật ở `1440x900` cùng `390x844`, gồm bảng điều khiển,
+mạng và khả năng thích ứng với kích thước màn hình.
 
-Ảnh desktop/mobile được giữ tối đa 24 giờ. Job xóa chỉ nhắm đúng hai đường dẫn
-ảnh đã báo cáo; không dùng recursive delete hoặc glob rộng.
+Ảnh máy tính/điện thoại được giữ tối đa 24 giờ. Tác vụ xóa chỉ nhắm đúng hai đường dẫn
+ảnh đã báo cáo; không dùng cách xóa đệ quy hoặc mẫu ký tự đại diện có phạm vi rộng.
 
-## Verification record — 2026-09-05 UTC
+## Biên bản kiểm chứng — 2026-09-05 UTC
 
-- Vòng 1: backend `21/21`, frontend `4/4`; production build exit `0`; Nginx,
-  systemd, MongoDB health, loopback API và Socket.IO đạt.
-- Vòng 2: public homepage/API/Socket.IO đạt; 200 request homepage và 200 request
-  health ở concurrency 20 đều trả HTTP 200; Chromium thật kiểm tra `1440x900`
-  và `390x844`, không thấy asset hỏng hoặc tràn ngang trên trang chủ.
-- Review độc lập đã được xử lý: bỏ log header/body production, giới hạn CORS theo
-  exact origin, render systemd theo checkout, thêm public health/Socket.IO vào
-  verifier, chờ readiness khi install và khôi phục security headers Nginx.
-- Chưa xác nhận E2E đăng nhập/thanh toán vì không có tài khoản test an toàn. Build
-  vẫn có warning ESLint/dependency cũ; không được diễn giải trạng thái này là toàn
-  bộ codebase sạch warning.
+- Vòng 1: máy chủ ứng dụng `21/21`, giao diện `4/4`; bản dựng cho môi trường vận hành chính thức có mã thoát `0`;
+  Nginx, systemd, tình trạng MongoDB, API qua địa chỉ nội bộ và Socket.IO đạt.
+- Vòng 2: trang chủ/API/Socket.IO công khai đạt; 200 yêu cầu tới trang chủ và 200 yêu cầu
+  kiểm tra tình trạng với 20 yêu cầu đồng thời đều trả HTTP 200; Chromium thật kiểm tra `1440x900`
+  và `390x844`, không thấy tài nguyên hỏng hoặc tràn ngang trên trang chủ.
+- Các góp ý rà soát độc lập đã được xử lý: bỏ ghi nhật ký phần đầu/nội dung yêu cầu trong môi trường vận hành chính thức,
+  giới hạn CORS theo nguồn gốc khớp chính xác, tạo cấu hình systemd theo bản mã nguồn đang triển khai,
+  thêm kiểm tra tình trạng/Socket.IO công khai vào bộ kiểm chứng, chờ trạng thái sẵn sàng khi cài đặt
+  và khôi phục các tiêu đề bảo mật Nginx.
+- Chưa xác nhận kiểm thử đầu cuối đăng nhập/thanh toán vì không có tài khoản kiểm thử an toàn. Bản dựng
+  vẫn có cảnh báo ESLint/gói phụ thuộc cũ; không được diễn giải trạng thái này là toàn
+  bộ mã nguồn không còn cảnh báo.
 
-## Work tracking
+## Theo dõi công việc
 
-- UI redesign preview: teal/forest shared theme; refreshed home, navigation,
-  footer, room listings, auth, account/admin shells. Backend/API unchanged.
-- Visual checks for protected pages use a browser-local fixture and intercept
-  all API calls; they must not be reported as real authenticated transaction tests.
-- On memory-constrained demo hosts, build with
+- Tài liệu công khai tại `/docs`: điều hướng trên máy tính/điện thoại, 11 tệp Markdown,
+  lựa chọn tài liệu qua `?file=` có thể chia sẻ và khả năng tải xuống tệp gốc. `prebuild` tạo
+  dữ liệu cho trình đọc từ danh sách được chỉ định rõ trong `frontend/scripts/docs-manifest.json`.
+  Thêm tài liệu công khai mới vào danh sách đó; tuyệt đối không đưa vào tệp môi trường hoặc tệp phục vụ lúc chạy.
+
+
+- Bản xem trước giao diện thiết kế lại: chủ đề chung màu xanh ngọc/xanh rừng; làm mới trang chủ,
+  điều hướng, chân trang, danh sách phòng, xác thực và khung trang tài khoản/quản trị. Máy chủ ứng dụng/API không đổi.
+- Kiểm tra hình thức các trang được bảo vệ sử dụng dữ liệu giả lập cục bộ trong trình duyệt và chặn xử lý
+  mọi lệnh gọi API; không được báo cáo chúng là kiểm thử giao dịch thực có xác thực.
+- Trên máy chủ trình diễn có bộ nhớ hạn chế, dựng ứng dụng bằng
   `GENERATE_SOURCEMAP=false NODE_OPTIONS=--max-old-space-size=1536 CI=false npm run build`.
-  Keep the existing static site until the complete build succeeds, back it up,
-  then copy the new assets. Git push still requires explicit target-branch approval.
-- UI preview deployed on 2026-09-16 at `http://161.248.81.124/`; rollback static
-  files are in `/var/backups/rentalroom-ui-20260916.24qLhM`. Backend unchanged.
-- Verification: 10 frontend tests pass (`--watchAll=false --runInBand --forceExit`;
-  legacy test/runtime warnings remain). Production build passes with existing
-  lint/dependency warnings. Public pages checked at 1440/390px; account/admin
-  visual fixture checks cover 26 routes at both sizes plus mobile drawer navigation.
-  Comparison, chatbot open/close, and room-detail overflow regression checks
-  cover 320/390/768/1024/1440px. No real payment/write transaction was tested.
+  Giữ nguyên trang tĩnh hiện có cho đến khi toàn bộ bản dựng thành công, sao lưu trang đó,
+  rồi sao chép các tài nguyên mới. Việc đẩy lên Git vẫn yêu cầu phê duyệt rõ ràng nhánh đích.
+- Bản xem trước giao diện được triển khai ngày 2026-09-16 tại `http://161.248.81.124/`; các tệp tĩnh
+  dùng để khôi phục nằm trong `/var/backups/rentalroom-ui-20260916.24qLhM`. Máy chủ ứng dụng không đổi.
+- Kiểm chứng: 10 bài kiểm thử giao diện đạt (`--watchAll=false --runInBand --forceExit`;
+  vẫn còn cảnh báo cũ từ kiểm thử/môi trường chạy). Bản dựng cho môi trường vận hành chính thức đạt nhưng vẫn có
+  các cảnh báo kiểm tra mã/gói phụ thuộc hiện hữu. Các trang công khai đã được kiểm tra ở 1440/390px;
+  kiểm tra hình thức bằng dữ liệu giả lập cho tài khoản/quản trị bao phủ 26 đường dẫn ở cả hai kích thước,
+  cùng điều hướng qua ngăn trượt trên điện thoại. Kiểm tra hồi quy cho tính năng so sánh, mở/đóng chatbot
+  và lỗi tràn ở chi tiết phòng bao phủ 320/390/768/1024/1440px. Chưa kiểm thử giao dịch thanh toán/ghi dữ liệu thực.
 
-- Đang làm: chờ tài khoản test để kiểm tra E2E authenticated/payment.
-- UX-02: so sánh 2 phòng đã triển khai ở frontend; lựa chọn chỉ tồn tại trong
-  phiên trang, giới hạn cứng 2 phòng, có thanh chọn và dialog responsive.
-- Sắp làm: domain, trusted TLS, ép HTTPS, Secure cookies, rotation credentials,
-  monitoring và backup ngoài máy chủ.
-- Quy tắc bắt buộc: Git, Superpowers, planning, TDD, surgical changes, hai vòng
-  audit/stress test, browser desktop/mobile và cập nhật README/wiki sau thay đổi.
+- Đang làm: chờ tài khoản kiểm thử để kiểm tra đầu cuối các luồng có xác thực/thanh toán.
+- UX-02: so sánh 2 phòng đã triển khai ở giao diện; lựa chọn chỉ tồn tại trong
+  phiên trang, giới hạn cứng 2 phòng, có thanh chọn và hộp thoại thích ứng với kích thước màn hình.
+- Sắp làm: tên miền, TLS được tin cậy, bắt buộc HTTPS, cookie có thuộc tính Secure, thay mới thông tin xác thực,
+  giám sát và sao lưu ngoài máy chủ.
+- Quy tắc bắt buộc: Git, Superpowers, lập kế hoạch, phát triển hướng kiểm thử (TDD), thay đổi đúng phạm vi cần thiết,
+  hai vòng rà soát/kiểm thử tải, kiểm tra trình duyệt trên máy tính/điện thoại và cập nhật README/wiki sau thay đổi.

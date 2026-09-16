@@ -1,21 +1,30 @@
-Leaflet integration (local notes)
-=================================
+# Tích hợp bản đồ Leaflet (ghi chú phát triển)
 
-This project was extended to use Leaflet + OpenStreetMap for selecting map locations without requiring a Google API key.
+Dự án đã được mở rộng để sử dụng Leaflet và OpenStreetMap khi chọn vị trí trên bản đồ, không cần khóa API của Google.
 
-Install dependencies (from frontend folder):
+## Cài đặt thư viện
 
-With yarn:
-  yarn add react-leaflet leaflet
+Chạy lệnh trong thư mục `frontend`.
 
-With npm:
-  npm install react-leaflet leaflet
+Với Yarn:
 
-Usage notes:
-- The component `src/Components/Map/LeafletMap.jsx` provides a map that accepts an `onSelect` callback.
-- Clicking the map will attempt a reverse-geocode via Nominatim (OpenStreetMap). Nominatim has rate limits for heavy usage; for production consider using a paid geocoding provider or self-hosting.
-- The `selectLocation.jsx` component was updated to render the map and store `mapLat`, `mapLng`, and `mapAddress` into the shared `nameLocation` state when the user clicks the map.
+```bash
+yarn add react-leaflet leaflet
+```
 
-Testing:
-1. From the `frontend` folder run `yarn start` or `npm start`.
-2. Open the Invite/Submit page, fill the address selectors and click "Xác nhận" to show the map placeholder, then click on the map to place a marker and capture coordinates.
+Với npm:
+
+```bash
+npm install react-leaflet leaflet
+```
+
+## Lưu ý sử dụng
+
+- Thành phần `src/Components/Map/LeafletMap.jsx` cung cấp bản đồ và nhận hàm gọi lại `onSelect`.
+- Khi nhấn vào bản đồ, ứng dụng thử chuyển tọa độ thành địa chỉ qua Nominatim (OpenStreetMap). Nominatim giới hạn tần suất yêu cầu khi sử dụng nhiều; khi triển khai chính thức, nên cân nhắc nhà cung cấp dịch vụ chuyển đổi địa chỉ có trả phí hoặc tự vận hành dịch vụ.
+- Thành phần `selectLocation.jsx` đã được cập nhật để hiển thị bản đồ và lưu `mapLat`, `mapLng`, `mapAddress` vào trạng thái dùng chung `nameLocation` khi người dùng nhấn vào bản đồ.
+
+## Kiểm thử
+
+1. Trong thư mục `frontend`, chạy `yarn start` hoặc `npm start`.
+2. Mở trang mời ở ghép/đăng tin, chọn các thông tin địa chỉ rồi nhấn "Xác nhận" để hiện vùng bản đồ. Sau đó nhấn vào bản đồ để đặt điểm đánh dấu và lấy tọa độ.

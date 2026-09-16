@@ -17,6 +17,7 @@ import {
   ManageAccounts,
   HomeWork,
   HelpOutline,
+  Description,
   Close as CloseIcon,
   Logout as LogoutIcon,
   Person as PersonIcon,
@@ -45,7 +46,8 @@ const MenuMobile = ({ open, onClose }) => {
       text: 'About',
       icon: <HelpOutline />,
       path: '/about',
-    }
+    },
+    { text: 'Tài liệu', icon: <Description />, path: '/docs' }
   ];
 
   const userMenuItems = user ? [

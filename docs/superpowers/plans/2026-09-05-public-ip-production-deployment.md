@@ -1,42 +1,42 @@
-# Public-IP Production Deployment Implementation Plan
+# Kế hoạch triển khai môi trường vận hành chính thức qua IP công khai
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **Dành cho các tác nhân thực hiện:** KỸ NĂNG CON BẮT BUỘC: Sử dụng superpowers:subagent-driven-development (khuyến nghị) hoặc superpowers:executing-plans để thực hiện lần lượt từng công việc trong kế hoạch này. Các bước sử dụng cú pháp ô đánh dấu (`- [ ]`) để theo dõi.
 
-**Goal:** Run RentalRoom persistently at `http://161.248.81.124` with Nginx, a loopback-only systemd backend, MongoDB Atlas readiness reporting, and documented operations.
+**Mục tiêu:** Vận hành RentalRoom liên tục tại `http://161.248.81.124` bằng Nginx, dịch vụ backend do systemd quản lý và chỉ lắng nghe trên địa chỉ loopback, báo cáo trạng thái sẵn sàng của MongoDB Atlas và tài liệu vận hành.
 
-**Architecture:** Nginx serves the compiled React application and proxies same-origin API and Socket.IO traffic to Express on `127.0.0.1:8000`. Application changes make the API base URL same-origin, derive cookie security from the real request protocol, expose database readiness, and honor a loopback bind address. Secrets live outside Git in a mode-`0600` environment file.
+**Kiến trúc:** Nginx phục vụ ứng dụng React đã biên dịch và chuyển tiếp lưu lượng API cùng Socket.IO có cùng nguồn đến Express tại `127.0.0.1:8000`. Các thay đổi trong ứng dụng giúp URL cơ sở của API dùng cùng nguồn với trình duyệt, xác định chế độ bảo mật cookie theo giao thức thực tế của yêu cầu, cung cấp trạng thái sẵn sàng của cơ sở dữ liệu và tuân theo địa chỉ loopback được cấu hình để lắng nghe. Thông tin bí mật được lưu ngoài Git trong tệp môi trường có quyền `0600`.
 
-**Tech Stack:** React 18/Create React App, Axios, Express 5, Socket.IO 4, Mongoose 7, Jest, Nginx, systemd, Ubuntu UFW, Chromium.
+**Công nghệ sử dụng:** React 18/Create React App, Axios, Express 5, Socket.IO 4, Mongoose 7, Jest, Nginx, systemd, Ubuntu UFW, Chromium.
 
-**Spec:** `docs/superpowers/specs/2026-09-05-public-ip-production-deployment-design.md`
+**Đặc tả:** `docs/superpowers/specs/2026-09-05-public-ip-production-deployment-design.md`
 
-## Global Constraints
+## Ràng buộc chung
 
-- Public URL is exactly `http://161.248.81.124` until a domain is available.
-- Public application ports are `80/tcp`; backend port `8000/tcp` is loopback-only.
-- Existing MongoDB Atlas data must not be seeded, migrated, deleted, or rewritten.
-- Secret values must never enter Git, service files, Nginx files, logs, screenshots, or reports.
-- Existing unrelated `yarn.lock` changes and `screenshots/` files must not be bundled into implementation commits.
-- Every behavior change follows red-green TDD.
-- Completion requires two fresh verification rounds and real Chromium checks at `1440x900` and `390x844`.
-- The current HTTP deployment is explicitly interim and unsafe for real sensitive traffic.
+- URL công khai phải là chính xác `http://161.248.81.124` cho đến khi có tên miền.
+- Cổng ứng dụng công khai là `80/tcp`; cổng backend `8000/tcp` chỉ lắng nghe trên địa chỉ loopback.
+- Không được nạp dữ liệu mẫu, di chuyển, xóa hoặc ghi lại dữ liệu hiện có trên MongoDB Atlas.
+- Tuyệt đối không đưa giá trị bí mật vào Git, tệp dịch vụ, tệp Nginx, nhật ký, ảnh chụp màn hình hoặc báo cáo.
+- Không đưa những thay đổi có sẵn nhưng không liên quan trong `yarn.lock` và các tệp `screenshots/` vào các bản commit triển khai.
+- Mọi thay đổi hành vi đều tuân theo TDD với chu trình kiểm thử thất bại rồi thành công (đỏ–xanh).
+- Chỉ hoàn tất sau hai vòng xác minh mới và kiểm tra thực tế bằng Chromium ở kích thước `1440x900` và `390x844`.
+- Bản triển khai HTTP hiện tại được xác định rõ là tạm thời và không an toàn cho lưu lượng chứa thông tin nhạy cảm thực tế.
 
 ---
 
-### Task 1: Same-origin frontend transport
+### Công việc 1: Giao tiếp frontend cùng nguồn
 
-**Files:**
-- Create: `frontend/src/config/apiBaseUrl.js`
-- Create: `frontend/src/config/apiBaseUrl.test.js`
-- Delete: `frontend/src/App.test.js` (obsolete Create React App placeholder)
-- Modify: `frontend/src/config/axios.js`
-- Modify: `frontend/src/config/axiosJWT.js`
+**Tệp:**
+- Tạo: `frontend/src/config/apiBaseUrl.js`
+- Tạo: `frontend/src/config/apiBaseUrl.test.js`
+- Xóa: `frontend/src/App.test.js` (tệp mẫu Create React App đã lỗi thời)
+- Sửa: `frontend/src/config/axios.js`
+- Sửa: `frontend/src/config/axiosJWT.js`
 
-**Interfaces:**
-- Produces: `resolveApiBaseUrl(value?: string): string`, returning a trimmed explicit URL or `''` for same-origin.
-- Consumes: Create React App's `process.env.REACT_APP_API_URL`.
+**Giao diện:**
+- Cung cấp: `resolveApiBaseUrl(value?: string): string`, trả về URL được chỉ định sau khi loại bỏ khoảng trắng ở hai đầu hoặc `''` để dùng cùng nguồn.
+- Sử dụng: `process.env.REACT_APP_API_URL` của Create React App.
 
-- [ ] **Step 1: Write the failing resolver test**
+- [ ] **Bước 1: Viết kiểm thử thất bại cho hàm xác định URL**
 
 ```js
 import { resolveApiBaseUrl } from './apiBaseUrl';
@@ -51,61 +51,61 @@ test('trims an explicitly configured API URL', () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [ ] **Bước 2: Chạy kiểm thử ở pha ĐỎ**
 
-Run: `cd frontend && CI=true yarn test --watchAll=false src/config/apiBaseUrl.test.js`
+Chạy: `cd frontend && CI=true yarn test --watchAll=false src/config/apiBaseUrl.test.js`
 
-Expected: FAIL because `./apiBaseUrl` does not exist.
+Kết quả mong đợi: THẤT BẠI vì `./apiBaseUrl` chưa tồn tại.
 
-- [ ] **Step 3: Implement the minimal resolver**
+- [ ] **Bước 3: Cài đặt hàm xác định URL tối thiểu**
 
 ```js
 export const resolveApiBaseUrl = (value) => (value || '').trim();
 ```
 
-Update both Axios configuration files to import the resolver and set their base URL from:
+Cập nhật cả hai tệp cấu hình Axios để nhập hàm xác định URL và thiết lập URL cơ sở từ:
 
 ```js
 const API_BASE_URL = resolveApiBaseUrl(process.env.REACT_APP_API_URL);
 ```
 
-Remove the obsolete Render fallback and development branch.
+Loại bỏ URL Render dự phòng đã lỗi thời và nhánh xử lý dành cho môi trường phát triển.
 
-Delete `frontend/src/App.test.js`: it asserts that the removed Create React App
-starter text "learn react" is present and therefore does not test current
-product behavior. Do not replace it with a shallow assertion; the new resolver
-test is the maintained transport regression test for this task.
+Xóa `frontend/src/App.test.js`: tệp này kiểm tra sự hiện diện của dòng chữ mẫu
+"learn react" trong Create React App vốn đã bị xóa, nên không kiểm thử hành vi
+hiện tại của sản phẩm. Không thay bằng một phép kiểm tra hời hợt; kiểm thử mới
+cho hàm xác định URL là kiểm thử hồi quy được duy trì cho cơ chế giao tiếp trong công việc này.
 
-- [ ] **Step 4: Run GREEN and the frontend suite**
+- [ ] **Bước 4: Chạy kiểm thử ở pha XANH và toàn bộ kiểm thử frontend**
 
-Run: `cd frontend && CI=true yarn test --watchAll=false src/config/apiBaseUrl.test.js`
+Chạy: `cd frontend && CI=true yarn test --watchAll=false src/config/apiBaseUrl.test.js`
 
-Expected: 2 tests pass.
+Kết quả mong đợi: 2 kiểm thử thành công.
 
-Run: `cd frontend && CI=true yarn test --watchAll=false`
+Chạy: `cd frontend && CI=true yarn test --watchAll=false`
 
-Expected: all maintained tests pass and no stale starter-template assertion remains.
+Kết quả mong đợi: tất cả kiểm thử đang được duy trì đều thành công và không còn phép kiểm tra mẫu khởi tạo đã lỗi thời.
 
-- [ ] **Step 5: Commit**
+- [ ] **Bước 5: Tạo commit**
 
 ```bash
 git add frontend/src/App.test.js frontend/src/config/apiBaseUrl.js frontend/src/config/apiBaseUrl.test.js frontend/src/config/axios.js frontend/src/config/axiosJWT.js
 git commit -m "fix: use same-origin API in production"
 ```
 
-### Task 2: Protocol-aware authentication cookies
+### Công việc 2: Cookie xác thực phù hợp với giao thức
 
-**Files:**
-- Create: `backend/utils/cookieOptions.js`
-- Create: `backend/test/cookieOptions.test.js`
-- Modify: `backend/controllers/authControllers.js`
+**Tệp:**
+- Tạo: `backend/utils/cookieOptions.js`
+- Tạo: `backend/test/cookieOptions.test.js`
+- Sửa: `backend/controllers/authControllers.js`
 
-**Interfaces:**
-- Produces: `isHttpsRequest(req): boolean`.
-- Produces: `refreshCookieOptions(req, overrides?): object` with `httpOnly`, `path`, `secure`, `sameSite`, and optional overrides.
-- Consumes: Express request protocol and `X-Forwarded-Proto` populated by Nginx.
+**Giao diện:**
+- Cung cấp: `isHttpsRequest(req): boolean`.
+- Cung cấp: `refreshCookieOptions(req, overrides?): object` với `httpOnly`, `path`, `secure`, `sameSite` và các giá trị ghi đè tùy chọn.
+- Sử dụng: giao thức yêu cầu của Express và `X-Forwarded-Proto` do Nginx thiết lập.
 
-- [ ] **Step 1: Write failing cookie-policy tests**
+- [ ] **Bước 1: Viết các kiểm thử thất bại cho chính sách cookie**
 
 ```js
 const { refreshCookieOptions } = require('../utils/cookieOptions');
@@ -121,13 +121,13 @@ test('uses None Secure cookie behind an HTTPS proxy', () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [ ] **Bước 2: Chạy kiểm thử ở pha ĐỎ**
 
-Run: `cd backend && yarn test --runInBand test/cookieOptions.test.js`
+Chạy: `cd backend && yarn test --runInBand test/cookieOptions.test.js`
 
-Expected: FAIL because `cookieOptions` does not exist.
+Kết quả mong đợi: THẤT BẠI vì `cookieOptions` chưa tồn tại.
 
-- [ ] **Step 3: Implement and reuse the cookie policy**
+- [ ] **Bước 3: Cài đặt và tái sử dụng chính sách cookie**
 
 ```js
 const isHttpsRequest = (req) => {
@@ -143,38 +143,38 @@ const refreshCookieOptions = (req, overrides = {}) => {
 module.exports = { isHttpsRequest, refreshCookieOptions };
 ```
 
-Replace duplicated cookie-option construction in login, logout, and refresh-token handlers. Preserve their current max ages, expiration behavior, and optional cookie domain.
+Thay thế phần tạo tùy chọn cookie bị lặp trong các hàm xử lý đăng nhập, đăng xuất và làm mới token. Giữ nguyên thời gian tồn tại tối đa, hành vi hết hạn và tên miền cookie tùy chọn hiện tại.
 
-- [ ] **Step 4: Run GREEN and backend tests**
+- [ ] **Bước 4: Chạy kiểm thử ở pha XANH và các kiểm thử backend**
 
-Run: `cd backend && yarn test --runInBand test/cookieOptions.test.js`
+Chạy: `cd backend && yarn test --runInBand test/cookieOptions.test.js`
 
-Expected: 2 tests pass.
+Kết quả mong đợi: 2 kiểm thử thành công.
 
-Run: `cd backend && yarn test --runInBand`
+Chạy: `cd backend && yarn test --runInBand`
 
-Expected: entire backend test suite passes.
+Kết quả mong đợi: toàn bộ bộ kiểm thử backend thành công.
 
-- [ ] **Step 5: Commit**
+- [ ] **Bước 5: Tạo commit**
 
 ```bash
 git add backend/utils/cookieOptions.js backend/test/cookieOptions.test.js backend/controllers/authControllers.js
 git commit -m "fix: derive auth cookie security from request protocol"
 ```
 
-### Task 3: Readiness endpoint and loopback binding
+### Công việc 3: Điểm cuối trạng thái sẵn sàng và lắng nghe trên địa chỉ loopback
 
-**Files:**
-- Create: `backend/utils/runtimeStatus.js`
-- Create: `backend/test/runtimeStatus.test.js`
-- Modify: `backend/server.js`
+**Tệp:**
+- Tạo: `backend/utils/runtimeStatus.js`
+- Tạo: `backend/test/runtimeStatus.test.js`
+- Sửa: `backend/server.js`
 
-**Interfaces:**
-- Produces: `getHealth(connectionState): { statusCode: number, body: object }`.
-- Produces: `resolveListenHost(value?: string): string` returning an explicit host or `0.0.0.0`.
-- Exposes: `GET /api/health` returning `200` with `status: "ok"` when Mongoose state is `1`, otherwise `503` with `status: "not_ready"`.
+**Giao diện:**
+- Cung cấp: `getHealth(connectionState): { statusCode: number, body: object }`.
+- Cung cấp: `resolveListenHost(value?: string): string`, trả về địa chỉ máy chủ được chỉ định hoặc `0.0.0.0`.
+- Cung cấp điểm cuối: `GET /api/health` trả về `200` với `status: "ok"` khi trạng thái Mongoose là `1`; ngược lại trả về `503` với `status: "not_ready"`.
 
-- [ ] **Step 1: Write failing runtime tests**
+- [ ] **Bước 1: Viết các kiểm thử thất bại cho trạng thái vận hành**
 
 ```js
 const { getHealth, resolveListenHost } = require('../utils/runtimeStatus');
@@ -192,18 +192,18 @@ test('defaults to all interfaces but accepts a loopback override', () => {
 });
 ```
 
-- [ ] **Step 2: Run RED**
+- [ ] **Bước 2: Chạy kiểm thử ở pha ĐỎ**
 
-Run: `cd backend && yarn test --runInBand test/runtimeStatus.test.js`
+Chạy: `cd backend && yarn test --runInBand test/runtimeStatus.test.js`
 
-Expected: FAIL because `runtimeStatus` does not exist.
+Kết quả mong đợi: THẤT BẠI vì `runtimeStatus` chưa tồn tại.
 
-- [ ] **Step 3: Implement status helpers and endpoint**
+- [ ] **Bước 3: Cài đặt các hàm hỗ trợ trạng thái và điểm cuối**
 
-Implement exact state mapping `0 -> disconnected`, `1 -> connected`,
-`2 -> connecting`, and `3 -> disconnecting`, without including URI,
-credentials, stack traces, or host details in the response. Any unknown state
-maps to `unknown` with status `503`. Add `/api/health` before application routers:
+Cài đặt chính xác ánh xạ trạng thái `0 -> disconnected`, `1 -> connected`,
+`2 -> connecting` và `3 -> disconnecting`, không đưa URI, thông tin xác thực,
+dấu vết ngăn xếp hoặc chi tiết máy chủ vào phản hồi. Mọi trạng thái không xác định
+được ánh xạ thành `unknown` với mã trạng thái `503`. Thêm `/api/health` trước các bộ định tuyến ứng dụng:
 
 ```js
 app.get('/api/health', (req, res) => {
@@ -212,47 +212,47 @@ app.get('/api/health', (req, res) => {
 });
 ```
 
-Change the final listener to use:
+Thay đổi phần lắng nghe cuối cùng để sử dụng:
 
 ```js
 const HOST = resolveListenHost(process.env.HOST);
 httpServer.listen(PORT, HOST, () => console.log(`Server listening on ${HOST}:${PORT}`));
 ```
 
-- [ ] **Step 4: Run GREEN and backend suite**
+- [ ] **Bước 4: Chạy kiểm thử ở pha XANH và toàn bộ bộ kiểm thử backend**
 
-Run: `cd backend && yarn test --runInBand test/runtimeStatus.test.js`
+Chạy: `cd backend && yarn test --runInBand test/runtimeStatus.test.js`
 
-Expected: 2 tests pass.
+Kết quả mong đợi: 2 kiểm thử thành công.
 
-Run: `cd backend && yarn test --runInBand`
+Chạy: `cd backend && yarn test --runInBand`
 
-Expected: entire suite passes.
+Kết quả mong đợi: toàn bộ bộ kiểm thử thành công.
 
-- [ ] **Step 5: Commit**
+- [ ] **Bước 5: Tạo commit**
 
 ```bash
 git add backend/utils/runtimeStatus.js backend/test/runtimeStatus.test.js backend/server.js
 git commit -m "feat: expose backend readiness status"
 ```
 
-### Task 4: Versioned deployment configuration
+### Công việc 4: Cấu hình triển khai được quản lý phiên bản
 
-**Files:**
-- Create: `deploy/nginx/rentalroom.conf`
-- Create: `deploy/systemd/rentalroom-backend.service`
-- Create: `deploy/env/backend.production.env.example`
-- Create: `deploy/scripts/install-production.sh`
-- Create: `deploy/scripts/verify-production.sh`
+**Tệp:**
+- Tạo: `deploy/nginx/rentalroom.conf`
+- Tạo: `deploy/systemd/rentalroom-backend.service`
+- Tạo: `deploy/env/backend.production.env.example`
+- Tạo: `deploy/scripts/install-production.sh`
+- Tạo: `deploy/scripts/verify-production.sh`
 
-**Interfaces:**
-- Nginx serves `/var/www/rentalroom` and proxies to `http://127.0.0.1:8000`.
-- systemd loads `/etc/rentalroom/backend.env` and runs `/usr/bin/node server.js` from the repository backend directory.
-- Install script accepts `PROJECT_ROOT`, defaulting to the current repository root after path validation.
+**Giao diện:**
+- Nginx phục vụ `/var/www/rentalroom` và chuyển tiếp yêu cầu đến `http://127.0.0.1:8000`.
+- systemd nạp `/etc/rentalroom/backend.env` và chạy `/usr/bin/node server.js` từ thư mục backend của kho mã.
+- Tập lệnh cài đặt nhận `PROJECT_ROOT`; giá trị mặc định là thư mục gốc của kho mã hiện tại sau khi xác thực đường dẫn.
 
-- [ ] **Step 1: Create a failing static configuration test**
+- [ ] **Bước 1: Tạo kiểm thử thất bại cho cấu hình tĩnh**
 
-Run before files exist:
+Chạy trước khi các tệp tồn tại:
 
 ```bash
 test -f deploy/nginx/rentalroom.conf \
@@ -260,11 +260,11 @@ test -f deploy/nginx/rentalroom.conf \
   && test -f deploy/scripts/install-production.sh
 ```
 
-Expected: non-zero exit status.
+Kết quả mong đợi: mã thoát khác 0.
 
-- [ ] **Step 2: Add Nginx and systemd templates**
+- [ ] **Bước 2: Thêm mẫu cấu hình Nginx và systemd**
 
-Nginx requirements:
+Yêu cầu đối với Nginx:
 
 ```nginx
 server {
@@ -300,17 +300,17 @@ server {
 }
 ```
 
-The systemd unit uses `User=codexproxy`, `Group=codexproxy`, `EnvironmentFile=/etc/rentalroom/backend.env`, `Restart=on-failure`, `RestartSec=5`, `NoNewPrivileges=true`, `PrivateTmp=true`, and `WantedBy=multi-user.target`.
+Đơn vị dịch vụ systemd sử dụng `User=codexproxy`, `Group=codexproxy`, `EnvironmentFile=/etc/rentalroom/backend.env`, `Restart=on-failure`, `RestartSec=5`, `NoNewPrivileges=true`, `PrivateTmp=true` và `WantedBy=multi-user.target`.
 
-- [ ] **Step 3: Add idempotent install and verification scripts**
+- [ ] **Bước 3: Thêm tập lệnh cài đặt có thể chạy lặp lại an toàn và tập lệnh xác minh**
 
-The install script must use `set -euo pipefail`; validate that `backend/server.js` and `frontend/package.json` exist; install Nginx only if absent; build the frontend; synchronize build output to `/var/www/rentalroom`; install versioned Nginx/systemd files; run `nginx -t`; reload systemd; enable/restart both services; preserve SSH in UFW before optionally enabling it; and never create or print the secret environment file.
+Tập lệnh cài đặt phải sử dụng `set -euo pipefail`; xác minh `backend/server.js` và `frontend/package.json` tồn tại; chỉ cài Nginx nếu chưa có; biên dịch frontend; đồng bộ kết quả biên dịch vào `/var/www/rentalroom`; cài đặt các tệp Nginx/systemd được quản lý phiên bản; chạy `nginx -t`; nạp lại cấu hình systemd; bật tự khởi động và khởi động lại cả hai dịch vụ; bảo đảm UFW cho phép SSH trước khi tùy chọn bật tường lửa; tuyệt đối không tạo hoặc in nội dung tệp môi trường chứa bí mật.
 
-The verification script must use `curl --fail --show-error` against `/`, `/api/health`, and the loopback backend; check systemd active/enabled state; run `nginx -t`; and return non-zero on any failure.
+Tập lệnh xác minh phải sử dụng `curl --fail --show-error` với `/`, `/api/health` và backend qua địa chỉ loopback; kiểm tra trạng thái đang chạy và tự khởi động của systemd; chạy `nginx -t`; trả về mã khác 0 khi có bất kỳ lỗi nào.
 
-- [ ] **Step 4: Validate configuration without installation**
+- [ ] **Bước 4: Xác thực cấu hình mà không cài đặt**
 
-Run:
+Chạy:
 
 ```bash
 bash -n deploy/scripts/install-production.sh
@@ -319,52 +319,52 @@ systemd-analyze verify deploy/systemd/rentalroom-backend.service
 test -f deploy/nginx/rentalroom.conf && test -f deploy/systemd/rentalroom-backend.service
 ```
 
-Expected: every command exits `0`. Run `nginx -t` after Nginx installation in Task 6.
+Kết quả mong đợi: mọi lệnh đều thoát với mã `0`. Chạy `nginx -t` sau khi cài Nginx trong Công việc 6.
 
-- [ ] **Step 5: Commit**
+- [ ] **Bước 5: Tạo commit**
 
 ```bash
 git add deploy
 git commit -m "ops: add production deployment configuration"
 ```
 
-### Task 5: Product README and operations wiki
+### Công việc 5: README sản phẩm và wiki vận hành
 
-**Files:**
-- Create: `README.md`
-- Create: `docs/wiki/operations.md`
-- Modify: `backend/README.md`
+**Tệp:**
+- Tạo: `README.md`
+- Tạo: `docs/wiki/operations.md`
+- Sửa: `backend/README.md`
 
-**Interfaces:**
-- Root README links to the design, plan, backend guide, frontend guide, and operations wiki.
-- Operations wiki is the canonical runbook for status, logs, restart, deploy, rollback, secrets, and roadmap.
+**Giao diện:**
+- README ở thư mục gốc liên kết đến thiết kế, kế hoạch, hướng dẫn backend, hướng dẫn frontend và wiki vận hành.
+- Wiki vận hành là tài liệu quy trình chuẩn cho việc xem trạng thái, nhật ký, khởi động lại, triển khai, khôi phục phiên bản trước, quản lý bí mật và lộ trình.
 
-- [ ] **Step 1: Create failing documentation checks**
+- [ ] **Bước 1: Tạo các kiểm tra thất bại cho tài liệu**
 
-Run:
+Chạy:
 
 ```bash
 test -f README.md && test -f docs/wiki/operations.md
 ```
 
-Expected: non-zero exit status.
+Kết quả mong đợi: mã thoát khác 0.
 
-- [ ] **Step 2: Write README and wiki**
+- [ ] **Bước 2: Viết README và wiki**
 
-Document:
+Ghi lại các nội dung:
 
-- product functions and frontend/backend architecture;
-- deployment status and public URL;
-- exact install, status, restart, logs, health, rebuild, and rollback commands;
-- all required environment-variable names with placeholder values only;
-- current work, next work, HTTP security limitation, and credential rotation;
-- mandatory Git management, Superpowers workflow, surgical changes, TDD, two audit rounds, desktop/mobile browser checks, screenshot evidence, and 24-hour screenshot deletion policy.
+- chức năng sản phẩm và kiến trúc frontend/backend;
+- trạng thái triển khai và URL công khai;
+- các lệnh chính xác để cài đặt, xem trạng thái, khởi động lại, xem nhật ký, kiểm tra sức khỏe, biên dịch lại và khôi phục phiên bản trước;
+- tên tất cả biến môi trường bắt buộc, chỉ kèm giá trị mẫu;
+- công việc hiện tại, công việc tiếp theo, hạn chế bảo mật HTTP và việc thay mới thông tin xác thực;
+- yêu cầu bắt buộc về quản lý Git, quy trình Superpowers, thay đổi có phạm vi hẹp và chính xác, TDD, hai vòng rà soát, kiểm tra trình duyệt máy tính/di động, bằng chứng ảnh chụp màn hình và chính sách xóa ảnh sau 24 giờ.
 
-Correct `backend/README.md` to use `REFRESH_JWT_SECRET`, production-safe placeholder examples, and Yarn commands matching the repository.
+Sửa `backend/README.md` để sử dụng `REFRESH_JWT_SECRET`, các ví dụ chứa giá trị mẫu an toàn cho môi trường vận hành chính thức và các lệnh Yarn phù hợp với kho mã.
 
-- [ ] **Step 3: Check documentation for secret leakage and broken local links**
+- [ ] **Bước 3: Kiểm tra tài liệu để phát hiện rò rỉ bí mật và liên kết nội bộ bị hỏng**
 
-Run:
+Chạy:
 
 ```bash
 rg -n 'mongodb\+srv://[^:]+:[^@]+@|AIza[0-9A-Za-z_-]{20,}|SMTP_PASS=[^<]|API_SECRET=[^<]' README.md backend/README.md docs/wiki docs/superpowers/specs && exit 1 || true
@@ -373,49 +373,49 @@ test -f docs/superpowers/specs/2026-09-05-public-ip-production-deployment-design
 test -f docs/superpowers/plans/2026-09-05-public-ip-production-deployment.md
 ```
 
-Expected: no secret pattern is found and all linked local files exist.
+Kết quả mong đợi: không phát hiện mẫu bí mật nào và tất cả tệp nội bộ được liên kết đều tồn tại.
 
-- [ ] **Step 4: Commit**
+- [ ] **Bước 4: Tạo commit**
 
 ```bash
 git add README.md backend/README.md docs/wiki/operations.md
 git commit -m "docs: add product and production operations guide"
 ```
 
-### Task 6: Install runtime services and secrets
+### Công việc 6: Cài đặt dịch vụ vận hành và thông tin bí mật
 
-**Files outside Git:**
-- Create: `/etc/rentalroom/backend.env` with owner `codexproxy:codexproxy`, mode `0600`.
-- Install: `/etc/nginx/sites-available/rentalroom`.
-- Install: `/etc/systemd/system/rentalroom-backend.service`.
-- Publish: `/var/www/rentalroom/`.
+**Tệp nằm ngoài Git:**
+- Tạo: `/etc/rentalroom/backend.env` với chủ sở hữu `codexproxy:codexproxy`, quyền `0600`.
+- Cài đặt: `/etc/nginx/sites-available/rentalroom`.
+- Cài đặt: `/etc/systemd/system/rentalroom-backend.service`.
+- Xuất bản: `/var/www/rentalroom/`.
 
-**Interfaces:**
-- Backend environment includes the supplied values plus `NODE_ENV=production`, `PORT=8000`, `HOST=127.0.0.1`, and `FRONTEND_URL=http://161.248.81.124`.
+**Giao diện:**
+- Môi trường backend bao gồm các giá trị đã được cung cấp cùng với `NODE_ENV=production`, `PORT=8000`, `HOST=127.0.0.1` và `FRONTEND_URL=http://161.248.81.124`.
 
-- [ ] **Step 1: Create the environment file without printing it**
+- [ ] **Bước 1: Tạo tệp môi trường mà không in nội dung**
 
-Use `sudo install -d -m 0750 -o codexproxy -g codexproxy /etc/rentalroom`, create the file through `apply_patch` in a private staging path, install it with `sudo install -m 0600 -o codexproxy -g codexproxy`, and immediately remove the staging copy. Do not include inline comments after values.
+Sử dụng `sudo install -d -m 0750 -o codexproxy -g codexproxy /etc/rentalroom`, tạo tệp bằng `apply_patch` tại một đường dẫn tạm riêng tư, cài đặt bằng `sudo install -m 0600 -o codexproxy -g codexproxy`, rồi xóa ngay bản sao tạm. Không thêm chú thích cùng dòng sau các giá trị.
 
-- [ ] **Step 2: Prove secrets are excluded from Git**
+- [ ] **Bước 2: Chứng minh bí mật không được đưa vào Git**
 
-Run `git status --short` and `git grep -n` for unique fragments of each supplied secret.
+Chạy `git status --short` và `git grep -n` để tìm các đoạn đặc trưng của từng bí mật đã được cung cấp.
 
-Expected: no secret appears in tracked or staged content.
+Kết quả mong đợi: không có bí mật nào xuất hiện trong nội dung đang được theo dõi hoặc đã được đưa vào vùng chờ commit.
 
-- [ ] **Step 3: Allow Atlas access and test connectivity**
+- [ ] **Bước 3: Cho phép truy cập Atlas và kiểm tra kết nối**
 
-Attempt backend startup with the protected environment file and inspect only sanitized connection output. If Atlas returns an IP allow-list error, report that `161.248.81.124/32` must be added in Atlas and stop; do not replace Atlas or alter data.
+Thử khởi động backend với tệp môi trường đã được bảo vệ và chỉ kiểm tra đầu ra kết nối đã loại bỏ thông tin nhạy cảm. Nếu Atlas trả về lỗi danh sách IP được phép, báo rằng cần thêm `161.248.81.124/32` vào Atlas rồi dừng lại; không thay thế Atlas hoặc chỉnh sửa dữ liệu.
 
-- [ ] **Step 4: Run the install script**
+- [ ] **Bước 4: Chạy tập lệnh cài đặt**
 
-Run: `sudo PROJECT_ROOT="$PWD" bash deploy/scripts/install-production.sh`
+Chạy: `sudo PROJECT_ROOT="$PWD" bash deploy/scripts/install-production.sh`
 
-Expected: frontend build succeeds; Nginx syntax passes; backend and Nginx are active and enabled.
+Kết quả mong đợi: biên dịch frontend thành công; cú pháp Nginx hợp lệ; backend và Nginx đang chạy và được bật tự khởi động.
 
-- [ ] **Step 5: Verify port exposure and service ownership**
+- [ ] **Bước 5: Xác minh các cổng được mở và quyền sở hữu dịch vụ**
 
-Run:
+Chạy:
 
 ```bash
 ss -ltnp | rg ':80|:8000'
@@ -424,14 +424,14 @@ sudo systemctl is-enabled rentalroom-backend nginx
 stat -c '%U:%G %a %n' /etc/rentalroom/backend.env
 ```
 
-Expected: Nginx listens publicly on `80`; backend listens only on `127.0.0.1:8000`; services are active/enabled; environment permissions are `codexproxy:codexproxy 600`.
+Kết quả mong đợi: Nginx lắng nghe công khai trên cổng `80`; backend chỉ lắng nghe tại `127.0.0.1:8000`; các dịch vụ đang chạy và được bật tự khởi động; chủ sở hữu và quyền của tệp môi trường là `codexproxy:codexproxy 600`.
 
-### Task 7: Verification round 1 — build and service audit
+### Công việc 7: Vòng xác minh 1 — rà soát bản biên dịch và dịch vụ
 
-**Files:**
-- No source changes unless a failing check exposes a separately diagnosed defect.
+**Tệp:**
+- Không thay đổi mã nguồn trừ khi một kiểm tra thất bại phát hiện lỗi đã được chẩn đoán riêng.
 
-- [ ] **Step 1: Run complete automated checks**
+- [ ] **Bước 1: Chạy đầy đủ các kiểm tra tự động**
 
 ```bash
 cd backend && yarn test --runInBand
@@ -443,9 +443,9 @@ sudo systemctl is-active rentalroom-backend nginx
 sudo systemctl is-enabled rentalroom-backend nginx
 ```
 
-Expected: all commands exit `0`, with no failed tests.
+Kết quả mong đợi: tất cả lệnh đều thoát với mã `0`, không có kiểm thử thất bại.
 
-- [ ] **Step 2: Probe every local component boundary**
+- [ ] **Bước 2: Kiểm tra từng điểm giao tiếp giữa các thành phần cục bộ**
 
 ```bash
 curl --fail --show-error http://127.0.0.1:8000/api/health
@@ -454,29 +454,29 @@ curl --fail --show-error http://127.0.0.1/
 curl --fail --show-error 'http://127.0.0.1/socket.io/?EIO=4&transport=polling'
 ```
 
-Expected: health is `200` and database is `connected`; homepage contains the React root; Socket.IO returns an Engine.IO open packet.
+Kết quả mong đợi: điểm cuối sức khỏe trả về `200` và cơ sở dữ liệu có trạng thái `connected`; trang chủ chứa phần tử gốc React; Socket.IO trả về gói mở kết nối Engine.IO.
 
-- [ ] **Step 3: Restart and re-probe**
+- [ ] **Bước 3: Khởi động lại và kiểm tra lại**
 
-Run: `sudo systemctl restart rentalroom-backend nginx && deploy/scripts/verify-production.sh`
+Chạy: `sudo systemctl restart rentalroom-backend nginx && deploy/scripts/verify-production.sh`
 
-Expected: restart completes and all probes pass without manual intervention.
+Kết quả mong đợi: khởi động lại hoàn tất và tất cả phép kiểm tra đều thành công mà không cần can thiệp thủ công.
 
-- [ ] **Step 4: Audit Git and logs**
+- [ ] **Bước 4: Rà soát Git và nhật ký**
 
-Run `git diff --check`, `git status --short`, secret-pattern scans, and `sudo journalctl -u rentalroom-backend --since '10 minutes ago' --no-pager`.
+Chạy `git diff --check`, `git status --short`, quét các mẫu bí mật và `sudo journalctl -u rentalroom-backend --since '10 minutes ago' --no-pager`.
 
-Expected: no secrets in Git, no unplanned source changes, no MongoDB connection errors, uncaught exceptions, or restart loops.
+Kết quả mong đợi: không có bí mật trong Git, không có thay đổi mã nguồn ngoài kế hoạch, không có lỗi kết nối MongoDB, ngoại lệ chưa được xử lý hoặc vòng lặp khởi động lại.
 
-### Task 8: Verification round 2 — public, stress, and browser audit
+### Công việc 8: Vòng xác minh 2 — rà soát truy cập công khai, tải và trình duyệt
 
-**Files:**
-- Create temporarily: `screenshots/production-desktop.png`
-- Create temporarily: `screenshots/production-mobile.png`
+**Tệp:**
+- Tạo tạm thời: `screenshots/production-desktop.png`
+- Tạo tạm thời: `screenshots/production-mobile.png`
 
-- [ ] **Step 1: Probe the public path**
+- [ ] **Bước 1: Kiểm tra đường truy cập công khai**
 
-Run:
+Chạy:
 
 ```bash
 curl --fail --show-error --max-time 15 http://161.248.81.124/
@@ -484,39 +484,39 @@ curl --fail --show-error --max-time 15 http://161.248.81.124/api/health
 curl --fail --show-error --max-time 15 'http://161.248.81.124/socket.io/?EIO=4&transport=polling'
 ```
 
-Expected: homepage, database-ready health, and Socket.IO handshake all succeed through Nginx.
+Kết quả mong đợi: trang chủ, điểm cuối sức khỏe báo cơ sở dữ liệu sẵn sàng và quá trình bắt tay Socket.IO đều hoạt động thành công qua Nginx.
 
-- [ ] **Step 2: Run bounded concurrency tests**
+- [ ] **Bước 2: Chạy kiểm thử đồng thời có giới hạn**
 
-Use 200 requests with concurrency 20 against `/` and `/api/health` using `ab` if installed, otherwise parallel `curl`. Capture request count, failed requests, non-2xx responses, and latency.
+Gửi 200 yêu cầu với mức đồng thời 20 đến `/` và `/api/health`, sử dụng `ab` nếu đã cài đặt, nếu không thì chạy `curl` song song. Ghi lại số yêu cầu, yêu cầu thất bại, phản hồi ngoài nhóm 2xx và độ trễ.
 
-Expected: zero connection failures and zero unexpected HTTP statuses. This is a bounded smoke load, not a capacity certification.
+Kết quả mong đợi: không có lỗi kết nối và không có mã trạng thái HTTP ngoài dự kiến. Đây là kiểm tra tải sơ bộ có giới hạn, không phải chứng nhận năng lực chịu tải.
 
-- [ ] **Step 3: Test desktop Chromium**
+- [ ] **Bước 3: Kiểm tra Chromium trên máy tính**
 
-Open `http://161.248.81.124` in headless Chromium at `1440x900`, record browser console and failed network requests, wait for network idle plus the app's loading state to settle, then save `screenshots/production-desktop.png`.
+Mở `http://161.248.81.124` bằng Chromium không giao diện ở kích thước `1440x900`, ghi lại bảng điều khiển trình duyệt và các yêu cầu mạng thất bại, chờ hoạt động mạng tạm lắng và trạng thái tải của ứng dụng ổn định, rồi lưu `screenshots/production-desktop.png`.
 
-Expected: no console exceptions, no failed first-party API requests, no visible loading deadlock, overlap, clipping, or horizontal overflow.
+Kết quả mong đợi: không có ngoại lệ trong bảng điều khiển, không có yêu cầu API của chính ứng dụng bị thất bại, không xuất hiện tình trạng kẹt tải, chồng lấn, cắt mất nội dung hoặc tràn ngang.
 
-- [ ] **Step 4: Test mobile Chromium**
+- [ ] **Bước 4: Kiểm tra Chromium trên thiết bị di động**
 
-Repeat at `390x844` and save `screenshots/production-mobile.png`.
+Lặp lại ở kích thước `390x844` và lưu `screenshots/production-mobile.png`.
 
-Expected: same functional criteria, readable navigation/content, and no horizontal overflow.
+Kết quả mong đợi: đáp ứng cùng các tiêu chí chức năng, phần điều hướng và nội dung dễ đọc, không tràn ngang.
 
-- [ ] **Step 5: Verify authentication transport**
+- [ ] **Bước 5: Xác minh cơ chế truyền thông tin xác thực**
 
-Use a non-destructive test account if one already exists. Confirm login returns a refresh cookie with `HttpOnly`, `SameSite=Lax`, and without `Secure` on HTTP; refresh succeeds; logout expires the same cookie. Do not create or modify a real user's data without separate authorization.
+Sử dụng tài khoản kiểm thử sẵn có theo cách không làm hỏng dữ liệu. Xác nhận đăng nhập trả về cookie làm mới với `HttpOnly`, `SameSite=Lax` và không có `Secure` khi dùng HTTP; làm mới thành công; đăng xuất làm hết hạn chính cookie đó. Không tạo hoặc sửa dữ liệu của người dùng thực nếu chưa được cho phép riêng.
 
-- [ ] **Step 6: Schedule screenshot deletion**
+- [ ] **Bước 6: Lên lịch xóa ảnh chụp màn hình**
 
-Install a transient systemd timer or `at` job that deletes only the two explicit production screenshot paths after 24 hours. Verify the scheduled unit/job exists. Do not use a broad glob or recursive deletion.
+Tạo bộ hẹn giờ systemd tạm thời hoặc tác vụ `at` chỉ xóa đúng hai đường dẫn ảnh chụp màn hình môi trường vận hành chính thức sau 24 giờ. Xác minh đơn vị hoặc tác vụ đã lên lịch tồn tại. Không dùng mẫu ký tự đại diện trên phạm vi rộng hoặc xóa đệ quy.
 
-- [ ] **Step 7: Record evidence and final status**
+- [ ] **Bước 7: Ghi lại bằng chứng và trạng thái cuối cùng**
 
-Update `docs/wiki/operations.md` with the deployment timestamp, commit SHA, two-round results, known HTTP risk, public URL, and next action (domain plus TLS). Link the two screenshots in the handoff, report any unmet acceptance criterion as a blocker, and never claim pass unless every required check has fresh evidence.
+Cập nhật `docs/wiki/operations.md` với thời điểm triển khai, SHA của commit, kết quả hai vòng kiểm tra, rủi ro HTTP đã biết, URL công khai và hành động tiếp theo (tên miền cùng TLS). Đưa liên kết đến hai ảnh chụp màn hình vào phần bàn giao, báo cáo mọi tiêu chí nghiệm thu chưa đạt là trở ngại và tuyệt đối không tuyên bố thành công nếu chưa có bằng chứng mới cho từng kiểm tra bắt buộc.
 
-- [ ] **Step 8: Commit final operational status**
+- [ ] **Bước 8: Tạo commit ghi lại trạng thái vận hành cuối cùng**
 
 ```bash
 git add docs/wiki/operations.md
