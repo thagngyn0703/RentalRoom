@@ -15,7 +15,7 @@ export default function HomeHero() {
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} gap={1.5}>
           <Button href="/rooms" variant="contained" size="large" endIcon={<ArrowForward />}>Khám phá phòng</Button>
-          <Button href="/invite-rooms" variant="outlined" size="large">Tìm bạn ở ghép</Button>
+          {/* <Button href="/invite-rooms" variant="outlined" size="large">Tìm bạn ở ghép</Button> */}
         </Stack>
         <Stack direction="row" gap={2.5} sx={{ mt: 4, color: 'text.secondary', flexWrap: 'wrap' }}>
           <Box className="hero-benefit"><Tune fontSize="small" /> Lọc theo nhu cầu</Box>
