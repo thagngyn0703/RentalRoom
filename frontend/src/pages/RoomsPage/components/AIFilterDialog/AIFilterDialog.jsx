@@ -1,10 +1,10 @@
 import React from 'react';
-import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
   TextField,
   Box,
   Typography,
@@ -90,13 +90,13 @@ const AIFilterDialog = ({
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <AutoAwesomeIcon sx={{ color: '#667eea' }} />
+          <AutoAwesomeIcon sx={{ color: '#087f72' }} />
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Tìm kiếm thông minh với AI
           </Typography>
         </Box>
       </DialogTitle>
-      
+
       <DialogContent dividers>
         {/* AI Text Input Section */}
         <Paper
@@ -104,16 +104,16 @@ const AIFilterDialog = ({
           sx={{
             p: 3,
             mb: 3,
-            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
+            background: 'linear-gradient(135deg, rgba(8, 127, 114, 0.05) 0%, rgba(25, 59, 52, 0.05) 100%)',
             border: '2px solid',
-            borderColor: 'rgba(102, 126, 234, 0.2)',
+            borderColor: 'rgba(8, 127, 114, 0.2)',
             borderRadius: 2
           }}
         >
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              fontWeight: 600, 
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 600,
               mb: 1,
               display: 'flex',
               alignItems: 'center',
@@ -122,14 +122,14 @@ const AIFilterDialog = ({
           >
             🤖 Mô tả nhu cầu của bạn
           </Typography>
-          <Typography 
-            variant="body2" 
-            color="text.secondary" 
+          <Typography
+            variant="body2"
+            color="text.secondary"
             sx={{ mb: 2 }}
           >
             Hãy mô tả chi tiết về người bạn cùng phòng lý tưởng, sở thích, thói quen sinh hoạt...
           </Typography>
-          
+
           <TextField
             fullWidth
             multiline
@@ -143,16 +143,16 @@ const AIFilterDialog = ({
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
                 '&:hover fieldset': {
-                  borderColor: '#667eea',
+                  borderColor: '#087f72',
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: '#667eea',
+                  borderColor: '#087f72',
                   borderWidth: 2
                 }
               }
             }}
           />
-          
+
           <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             <Typography variant="caption" color="text.secondary">
               Gợi ý:
@@ -169,14 +169,14 @@ const AIFilterDialog = ({
                 label={suggestion}
                 size="small"
                 onClick={() => {
-                  setAISearchText(prev => 
+                  setAISearchText(prev =>
                     prev ? `${prev}, ${suggestion.toLowerCase()}` : suggestion
                   );
                 }}
                 sx={{
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: 'rgba(102, 126, 234, 0.1)'
+                    bgcolor: 'rgba(8, 127, 114, 0.1)'
                   }
                 }}
               />
@@ -241,7 +241,7 @@ const AIFilterDialog = ({
           setSelectedFeatures={setSelectedFeatures}
         />
       </DialogContent>
-      
+
       <DialogActions sx={{ p: 2, gap: 1 }}>
         <Button color="secondary" onClick={handleClearAll}>
           Xóa tất cả
@@ -249,16 +249,16 @@ const AIFilterDialog = ({
         <Button onClick={onClose}>
           Đóng
         </Button>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={handleAISearch}
           disabled={!aiSearchText.trim()}
           sx={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
             fontWeight: 600,
             px: 3,
             '&:hover': {
-              background: 'linear-gradient(135deg, #5568d3 0%, #5e3c82 100%)',
+              background: 'linear-gradient(135deg, #075b51 0%, #123d35 100%)',
             },
             '&.Mui-disabled': {
               background: '#e0e0e0'
@@ -276,7 +276,7 @@ const AIFilterDialog = ({
         sx={{
           position: 'absolute',
           zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%)',
+          background: 'linear-gradient(135deg, rgba(8, 127, 114, 0.15) 0%, rgba(25, 59, 52, 0.15) 100%)',
           backdropFilter: 'blur(8px)',
           borderRadius: 2
         }}
@@ -299,9 +299,9 @@ const AIFilterDialog = ({
                 width: `${20 + i * 10}px`,
                 height: `${20 + i * 10}px`,
                 borderRadius: '50%',
-                background: i % 2 === 0 
-                  ? 'radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%)'
-                  : 'radial-gradient(circle, rgba(118, 75, 162, 0.4) 0%, transparent 70%)',
+                background: i % 2 === 0
+                  ? 'radial-gradient(circle, rgba(8, 127, 114, 0.4) 0%, transparent 70%)'
+                  : 'radial-gradient(circle, rgba(25, 59, 52, 0.4) 0%, transparent 70%)',
                 left: `${(i * 15) % 100}%`,
                 top: `${(i * 20) % 100}%`,
                 animation: `float-${i % 3} ${4 + i * 0.5}s ease-in-out infinite`,
@@ -360,7 +360,7 @@ const AIFilterDialog = ({
               sx={{
                 position: 'absolute',
                 fontSize: 45,
-                color: '#667eea',
+                color: '#087f72',
                 top: -5,
                 right: 10,
                 animation: 'spin 3s linear infinite',
@@ -371,12 +371,12 @@ const AIFilterDialog = ({
                 }
               }}
             />
-            
+
             <SettingsIcon
               sx={{
                 position: 'absolute',
                 fontSize: 35,
-                color: '#764ba2',
+                color: '#193b34',
                 bottom: 5,
                 left: 5,
                 animation: 'spin-reverse 2.5s linear infinite',
@@ -396,12 +396,12 @@ const AIFilterDialog = ({
                 height: '85%',
                 borderRadius: '50%',
                 border: '3px solid transparent',
-                borderTopColor: '#667eea',
-                borderRightColor: '#764ba2',
+                borderTopColor: '#087f72',
+                borderRightColor: '#193b34',
                 animation: 'spin 2s linear infinite',
               }}
             />
-            
+
             {/* Middle rotating circle */}
             <Box
               sx={{
@@ -409,11 +409,11 @@ const AIFilterDialog = ({
                 width: '65%',
                 height: '65%',
                 borderRadius: '50%',
-                border: '2px dashed rgba(102, 126, 234, 0.5)',
+                border: '2px dashed rgba(8, 127, 114, 0.5)',
                 animation: 'spin-reverse 3s linear infinite',
               }}
             />
-            
+
             {/* Sparkles flying around */}
             {[0, 1, 2, 3].map((index) => (
               <AutoAwesomeIcon
@@ -421,7 +421,7 @@ const AIFilterDialog = ({
                 sx={{
                   position: 'absolute',
                   fontSize: 16,
-                  color: index % 2 === 0 ? '#667eea' : '#764ba2',
+                  color: index % 2 === 0 ? '#087f72' : '#193b34',
                   animation: `sparkle-${index} 2s ease-in-out infinite`,
                   [`@keyframes sparkle-${index}`]: {
                     '0%, 100%': {
@@ -437,7 +437,7 @@ const AIFilterDialog = ({
                 }}
               />
             ))}
-            
+
             {/* Center Robot with Brain Icon */}
             <Box
               sx={{
@@ -451,31 +451,31 @@ const AIFilterDialog = ({
               <SmartToyIcon
                 sx={{
                   fontSize: 60,
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   animation: 'robot-think 1.5s ease-in-out infinite',
                   '@keyframes robot-think': {
-                    '0%, 100%': { 
+                    '0%, 100%': {
                       transform: 'scale(1) rotate(0deg)',
                     },
                     '25%': {
                       transform: 'scale(1.05) rotate(-3deg)',
                     },
-                    '75%': { 
+                    '75%': {
                       transform: 'scale(1.05) rotate(3deg)',
                     }
                   }
                 }}
               />
-              
+
               {/* Brain icon above robot - thinking effect */}
               <PsychologyIcon
                 sx={{
                   position: 'absolute',
                   top: -15,
                   fontSize: 24,
-                  color: '#764ba2',
+                  color: '#193b34',
                   animation: 'brain-pulse 1s ease-in-out infinite',
                   '@keyframes brain-pulse': {
                     '0%, 100%': {
@@ -491,14 +491,14 @@ const AIFilterDialog = ({
               />
             </Box>
           </Box>
-          
+
           {/* Loading Text */}
           <Box sx={{ textAlign: 'center' }}>
             <Typography
               variant="h6"
               sx={{
                 fontWeight: 700,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 mb: 1
@@ -516,7 +516,7 @@ const AIFilterDialog = ({
               Đang tìm kiếm kết quả phù hợp nhất cho bạn
             </Typography>
           </Box>
-          
+
           {/* Animated dots */}
           <Box sx={{ display: 'flex', gap: 1 }}>
             {[0, 1, 2].map((index) => (
@@ -526,7 +526,7 @@ const AIFilterDialog = ({
                   width: 8,
                   height: 8,
                   borderRadius: '50%',
-                  bgcolor: '#667eea',
+                  bgcolor: '#087f72',
                   animation: `bounce 1.4s infinite ease-in-out ${index * 0.16}s`,
                   '@keyframes bounce': {
                     '0%, 80%, 100%': {

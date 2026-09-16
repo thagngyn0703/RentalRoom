@@ -1,7 +1,7 @@
 /* HomePageUser.css */
 .homepage-user {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #087f72 0%, #193b34 100%);
     padding: 20px 0;
 }
 
@@ -121,7 +121,7 @@
 .feature-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    border-color: #667eea;
+    border-color: #087f72;
 }
 
 .feature-card h4 {
@@ -138,7 +138,7 @@
 }
 
 .feature-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #087f72 0%, #193b34 100%);
     color: white;
     border: none;
     padding: 12px 25px;
@@ -151,7 +151,7 @@
 
 .feature-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 20px rgba(8, 127, 114, 0.4);
 }
 
 /* Stats Section */
@@ -179,7 +179,7 @@
 .stat-card {
     text-align: center;
     padding: 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #087f72 0%, #193b34 100%);
     border-radius: 12px;
     color: white;
     transition: all 0.3s ease;
@@ -187,7 +187,7 @@
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 15px 35px rgba(8, 127, 114, 0.3);
 }
 
 .stat-number {
@@ -225,23 +225,23 @@
         gap: 20px;
         text-align: center;
     }
-    
+
     .homepage-user__header h1 {
         font-size: 2rem;
     }
-    
+
     .features-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .welcome-section h2 {
         font-size: 1.5rem;
     }
-    
+
     .welcome-section p {
         font-size: 1rem;
     }
@@ -251,22 +251,22 @@
     .homepage-user__container {
         padding: 0 15px;
     }
-    
+
     .homepage-user__header,
     .welcome-section,
     .features-section,
     .stats-section {
         padding: 25px;
     }
-    
+
     .feature-card {
         padding: 20px;
     }
-    
+
     .stat-card {
         padding: 20px;
     }
-    
+
     .stat-number {
         font-size: 2.5rem;
     }

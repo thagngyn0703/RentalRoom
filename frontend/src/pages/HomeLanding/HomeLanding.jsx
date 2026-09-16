@@ -216,7 +216,7 @@ const HomePostGrid = ({ items = [], favoriteIds = new Set(), onToggleFavorite, s
                     px: 1,
                     py: 0.25,
                     borderRadius: 1,
-                    bgcolor: 'rgba(25, 118, 210, 0.08)',
+                    bgcolor: 'rgba(8, 127, 114, 0.08)',
                     color: 'primary.main',
                     fontWeight: 700,
                   }}
@@ -459,12 +459,12 @@ const HomeLanding = () => {
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
-      <Box sx={{ mt: 1, p: 2 }}>
+      <Box sx={{ bgcolor: '#eff4ec', borderBottom: '1px solid #e1e9e3' }}>
         <Carousel sx={{ mt: 2 }} />
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Box sx={{ maxWidth: 1500, width: '100%', mx: 'auto', px: 2, pb: 4 }}>
+        <Box sx={{ maxWidth: 1440, width: '100%', mx: 'auto', px: { xs: 2, md: 5 }, pb: 8 }}>
           {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
               <CircularProgress />

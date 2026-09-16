@@ -18,16 +18,14 @@ const FilterSidebar = ({
   return (
     <Box
       sx={{
-        p: { lg: 1.5, xl: 2 },
-        borderRight: '1px solid #eee',
+        p: 2.5,
+        border: '1px solid', borderColor: 'divider', bgcolor: 'background.paper', borderRadius: 3,
         position: 'sticky',
-        top: '70px',
+        top: '100px',
         alignSelf: 'flex-start',
-        ml: 0,
-        minWidth: 190,
-        width: { lg: 240, xl: 300 ,md: 200},
-        '@media (max-width:1200px) and (min-width:1113px)': { width: 200, p: 1.25 },
-         '@media (max-width:1400px) and (min-width:1113px)': { width: 220, p: 1.25 }
+        mt: 3,
+        minWidth: 0,
+        width: '100%',
 
       }}
     >

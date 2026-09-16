@@ -1,160 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-import AppsIcon from '@mui/icons-material/Apps';
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PeopleIcon from '@mui/icons-material/People';
+import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, IconButton, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HomeWorkOutlined, SupportAgent, PeopleOutline, AccountBalanceWalletOutlined, Menu as MenuIcon, ArrowBack, Close } from '@mui/icons-material';
 
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-
-const drawerWidth = 260;
-
+const drawerWidth = 264;
 const adminMenu = [
-  {
-    label: 'Quản lý đặt phòng',
-    icon: <MonetizationOnIcon color="primary" />,
-    path: '/admin/bookings',
-  },
-  {
-    label: 'Quản lý trả phòng',
-    icon: <MonetizationOnIcon color="primary" />,
-    path: '/admin/checkout',
-  },
-  {
-    label: 'Yêu cầu đặt cọc',
-    icon: <MonetizationOnIcon color="primary" />,
-    path: '/admin/deposits',
-  },
-  {
-    label: 'Yêu cầu trả phòng sớm',
-    icon: <MonetizationOnIcon color="primary" />,
-    path: '/admin/early-checkout',
-  },
-  {
-    label: 'Quản lý bài đăng',
-    icon: <HomeWorkIcon color="primary" />,
-    path: '/admin/posts',
-  },
-  {
-    label: 'Quản lý hỗ trợ',
-    icon: <ContactSupportIcon color="primary" />,
-    path: '/admin/viewsupport',
-  },
-  {
-    label: 'Quản lý tài khoản',
-    icon: <AccountCircleIcon color="primary" />,
-    path: '/admin/users',
-  },
-  {
-    label: 'Yêu cầu rút tiền',
-    icon: <MonetizationOnIcon color="primary" />,
-    path: '/admin/withdrawals',
-  },
-  {
-    label: 'Xem website',
-    icon: <PeopleIcon color="primary" />,
-    path: '/',
-  },
+  ['Quản lý đặt phòng', '/admin/bookings', AccountBalanceWalletOutlined],
+  ['Quản lý trả phòng', '/admin/checkout', HomeWorkOutlined],
+  ['Yêu cầu đặt cọc', '/admin/deposits', AccountBalanceWalletOutlined],
+  ['Yêu cầu trả phòng sớm', '/admin/early-checkout', HomeWorkOutlined],
+  ['Quản lý bài đăng', '/admin/posts', HomeWorkOutlined],
+  ['Quản lý hỗ trợ', '/admin/viewsupport', SupportAgent],
+  ['Quản lý tài khoản', '/admin/users', PeopleOutline],
+  ['Yêu cầu rút tiền', '/admin/withdrawals', AccountBalanceWalletOutlined],
 ];
-
-function AdminSidebar() {
+export default function AdminLayout() {
+  const theme = useTheme();
+  const desktop = useMediaQuery(theme.breakpoints.up('md'));
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const title = adminMenu.find(([, path]) => pathname.startsWith(path))?.[0] || 'Tổng quan';
+  const go = path => { navigate(path); setOpen(false); };
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
-          width: drawerWidth,
-          boxSizing: 'border-box',
-          bgcolor: '#f8fafd',
-          borderRight: '1px solid #e0e0e0',
-          pt: 0.5,
-          borderTopRightRadius: 32,
-          borderBottomRightRadius: 32,
-          boxShadow: '2px 0 16px 0 rgba(25, 118, 210, 0.07)',
-        },
-      }}
-    >
-      {/* Logo nhỏ phía trên */}
-      <Toolbar sx={{ minHeight: 72, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <AppsIcon sx={{ fontSize: 36, color: '#1976d2', filter: 'drop-shadow(0 2px 8px #e3f2fd)' }} />
-          <Typography variant="h6" sx={{ fontWeight: 800, color: '#1976d2', letterSpacing: 1 }}>
-            ADMIN
-          </Typography>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Drawer variant={desktop ? 'permanent' : 'temporary'} open={desktop || open} onClose={() => setOpen(false)}
+        sx={{ width: desktop ? drawerWidth : 0, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth, bgcolor: '#fff', borderRight: '1px solid #e1e9e3', p: 2 } }}>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', py: 2, px: 1, color: 'primary.dark' }}>
+          <HomeWorkOutlined /><Typography variant="h5" sx={{ fontWeight: 800 }}>trọ chung.</Typography>
+          {!desktop && <IconButton aria-label="Đóng menu quản trị" onClick={() => setOpen(false)} sx={{ ml: 'auto' }}><Close /></IconButton>}
         </Box>
-      </Toolbar>
-      <Divider />
-      <List sx={{ mt: 1 }}>
-        {adminMenu.map((item) => (
-          <ListItem
-            button
-            key={item.label}
-            onClick={() => item.path && navigate(item.path)}
-            selected={item.path && location.pathname.startsWith(item.path)}
-            sx={{
-              pl: 2.5,
-              py: 1.5,
-              borderRadius: 3,
-              mx: 1,
-              mb: 1,
-              bgcolor: item.path && location.pathname.startsWith(item.path) ? '#1c6dc9' : 'inherit',
-              color: '#222',
-              fontWeight: item.path && location.pathname.startsWith(item.path) ? 700 : 600,
-              fontSize: 17,
-              boxShadow: item.path && location.pathname.startsWith(item.path) ? '0 4px 16px 0 rgba(25, 118, 210, 0.13)' : 'none',
-              transition: 'all 0.22s',
-              '&:hover': {
-                bgcolor: item.path && location.pathname.startsWith(item.path) ? '#0977e6' : '#050607',
-                color: '#1976d2',
-                fontWeight: 700,
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: '#1976d2', minWidth: 40, fontSize: 26 }}>{React.cloneElement(item.icon, { fontSize: 'large' })}</ListItemIcon>
-            <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: item.path && location.pathname.startsWith(item.path) ? 700 : 600, fontSize: 17, color: '#222' }} />
-          </ListItem>
-        ))}
-      </List>
-    </Drawer>
-  );
-}
-
-const AdminLayout = () => {
-  return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f4f6fb' }}>
-      <CssBaseline />
-      <AdminSidebar />
-      <Box component="main" sx={{ flex: 1, p: { xs: 1, md: 3 }, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        {/* Nội dung chính bo góc, shadow */}
-        <Box sx={{
-          flex: 1,
-          bgcolor: '#fff',
-          borderRadius: 3,
-          boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)',
-          p: { xs: 1.5, md: 3 },
-          minHeight: 0,
-          overflow: 'auto',
-        }}>
-          <Outlet />
+        <Typography variant="overline" sx={{ color: 'text.secondary', px: 1, mt: 3, mb: 1, letterSpacing: 1.5 }}>KHÔNG GIAN QUẢN TRỊ</Typography>
+        <List disablePadding>
+          {adminMenu.map(([label, path, Icon]) => (
+            <ListItemButton key={path} selected={pathname.startsWith(path)} onClick={() => go(path)} sx={{ mb: .75, py: 1.2, px: 1.5 }}>
+              <ListItemIcon sx={{ minWidth: 34, color: pathname.startsWith(path) ? 'primary.main' : 'text.secondary' }}><Icon fontSize="small" /></ListItemIcon>
+              <ListItemText primary={label} primaryTypographyProps={{ fontSize: 13, fontWeight: pathname.startsWith(path) ? 700 : 500 }} />
+            </ListItemButton>
+          ))}
+        </List>
+        <ListItemButton onClick={() => go('/')} sx={{ mt: 'auto', flexGrow: 0, borderTop: '1px solid', borderColor: 'divider', pt: 2 }}>
+          <ListItemIcon sx={{ minWidth: 34 }}><ArrowBack fontSize="small" /></ListItemIcon><ListItemText primary="Về website" primaryTypographyProps={{ fontSize: 14 }} />
+        </ListItemButton>
+      </Drawer>
+      <Box component="main" sx={{ flex: 1, minWidth: 0, p: { xs: 2, md: 4 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
+          {!desktop && <IconButton aria-label="Mở menu quản trị" onClick={() => setOpen(true)}><MenuIcon /></IconButton>}
+          <Box><Typography variant="overline" color="text.secondary">QUẢN TRỊ / VẬN HÀNH</Typography><Typography variant="h4">{title}</Typography></Box>
         </Box>
+        <Box sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 3, p: { xs: 1.5, md: 3 }, overflow: 'auto' }}><Outlet /></Box>
       </Box>
     </Box>
   );
-};
-
-export default AdminLayout;
+}

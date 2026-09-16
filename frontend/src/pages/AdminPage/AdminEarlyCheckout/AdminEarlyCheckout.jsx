@@ -93,10 +93,10 @@ const AdminEarlyCheckout = () => {
       )}
       {loading && <div style={{ marginBottom: 12, textAlign: 'center' }}>Đang tải...</div>}
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)' }}>
+      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)' }}>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
-            <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+            <TableRow sx={{ bgcolor: '#f6f8f5' }}>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Phòng</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Người yêu cầu</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Ngày trả dự kiến</TableCell>
@@ -120,7 +120,7 @@ const AdminEarlyCheckout = () => {
             {paged.map((request) => {
               const meta = statusMeta[request.status] || { color: 'default', label: request.status || '—' };
               return (
-                <TableRow key={request._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+                <TableRow key={request._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                   <TableCell align="center">
                     {request.booking?.room ? (request.booking.room.roomType || request.booking.room.address) : 'N/A'}
                   </TableCell>
@@ -166,7 +166,7 @@ const AdminEarlyCheckout = () => {
                           color="primary"
                           size="small"
                           onClick={() => handleApproveEarlyCheckout(request._id)}
-                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.10)' }}
+                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(8, 127, 114, 0.10)' }}
                         >
                           Phê duyệt
                         </Button>

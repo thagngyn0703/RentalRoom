@@ -126,6 +126,23 @@ Chromium thật ở `1440x900` cùng `390x844`, gồm console, network và respo
 
 ## Work tracking
 
+- UI redesign preview: teal/forest shared theme; refreshed home, navigation,
+  footer, room listings, auth, account/admin shells. Backend/API unchanged.
+- Visual checks for protected pages use a browser-local fixture and intercept
+  all API calls; they must not be reported as real authenticated transaction tests.
+- On memory-constrained demo hosts, build with
+  `GENERATE_SOURCEMAP=false NODE_OPTIONS=--max-old-space-size=1536 CI=false npm run build`.
+  Keep the existing static site until the complete build succeeds, back it up,
+  then copy the new assets. Git push still requires explicit target-branch approval.
+- UI preview deployed on 2026-09-16 at `http://161.248.81.124/`; rollback static
+  files are in `/var/backups/rentalroom-ui-20260916.24qLhM`. Backend unchanged.
+- Verification: 10 frontend tests pass (`--watchAll=false --runInBand --forceExit`;
+  legacy test/runtime warnings remain). Production build passes with existing
+  lint/dependency warnings. Public pages checked at 1440/390px; account/admin
+  visual fixture checks cover 26 routes at both sizes plus mobile drawer navigation.
+  Comparison, chatbot open/close, and room-detail overflow regression checks
+  cover 320/390/768/1024/1440px. No real payment/write transaction was tested.
+
 - Đang làm: chờ tài khoản test để kiểm tra E2E authenticated/payment.
 - UX-02: so sánh 2 phòng đã triển khai ở frontend; lựa chọn chỉ tồn tại trong
   phiên trang, giới hạn cứng 2 phòng, có thanh chọn và dialog responsive.

@@ -68,10 +68,10 @@ const AdminPayments = () => {
       </Typography>
       {loading && <Typography sx={{ mb: 1, textAlign: 'center' }}>Đang tải...</Typography>}
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)' }}>
+      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)' }}>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
-            <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+            <TableRow sx={{ bgcolor: '#f6f8f5' }}>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Người gửi</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Số tiền</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Thời gian</TableCell>
@@ -81,7 +81,7 @@ const AdminPayments = () => {
           </TableHead>
           <TableBody>
             {paged.map((it) => (
-              <TableRow key={it._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+              <TableRow key={it._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                 <TableCell align="center">{it.user?.username || it.user?.email || String(it.user)}</TableCell>
                 <TableCell align="center">{Number(it.amount || 0).toLocaleString('vi-VN')} VND</TableCell>
                 <TableCell align="center">{it.createdAt ? new Date(it.createdAt).toLocaleString('vi-VN') : '—'}</TableCell>
@@ -100,7 +100,7 @@ const AdminPayments = () => {
                       color="primary"
                       size="small"
                       onClick={() => handleApprove(it._id)}
-                      sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.10)' }}
+                      sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(8, 127, 114, 0.10)' }}
                     >
                       Xác nhận
                     </Button>

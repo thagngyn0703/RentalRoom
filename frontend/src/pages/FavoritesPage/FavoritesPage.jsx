@@ -568,7 +568,7 @@ const FavoritesPage = () => {
   );
 
   return (
-    <Box sx={{ background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)', minHeight: 'calc(100vh - 70px)', width: '100%', m: 0, p: 0 }}>
+    <Box sx={{ background: 'linear-gradient(135deg, rgba(8, 127, 114, 0.05) 0%, rgba(25, 59, 52, 0.05) 100%)', minHeight: 'calc(100vh - 70px)', width: '100%', m: 0, p: 0 }}>
       <Grid container spacing={3} sx={{ width: '100%', px: { xs: 2, lg: 0 } }}>
         {renderFilterFeature()}
         {renderListRoomPage()}
@@ -580,4 +580,3 @@ const FavoritesPage = () => {
 };
 
 export default FavoritesPage;
-

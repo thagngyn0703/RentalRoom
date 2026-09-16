@@ -6,26 +6,26 @@ import RoomInfo from './RoomInfo';
 
 const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompared, onToggleCompare, compareDisabled }) => {
   return (
-    <Paper 
-      key={room.id} 
+    <Paper
+      key={room.id}
       elevation={0}
       onClick={() => handleViewDetails(room.id)}
-      sx={{ 
+      sx={{
         position: 'relative',
-        p: 2.5, 
-        borderRadius: 3, 
+        p: { xs: 1.5, sm: 2 },
+        borderRadius: 3,
         minHeight: 180,
         cursor: 'pointer',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         border: '1px solid',
-        borderColor: '#E4E6EB',
+        borderColor: '#e1e9e3',
         bgcolor: '#fff',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
-        background: 'linear-gradient(135deg, #ffffff 0%, #fafafa 100%)',
+        background: '#ffffff',
         '&:hover': {
-          boxShadow: '0 4px 12px rgba(24, 119, 242, 0.15)',
+          boxShadow: '0 4px 12px rgba(8, 127, 114, 0.15)',
           transform: 'translateY(-2px)',
-          borderColor: '#1877F2',
+          borderColor: '#087f72',
         }
       }}
     >
@@ -40,7 +40,7 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
               onToggleCompare(room);
             }}
             size="small"
-            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,0.94)', color: isCompared ? 'primary.main' : 'text.secondary' }}
+            sx={{ position: 'absolute', top: 24, left: 24, zIndex: 2, bgcolor: 'rgba(255,255,255,0.94)', color: isCompared ? 'primary.main' : 'text.secondary' }}
           >
             <CompareArrowsIcon fontSize="small" />
           </IconButton>
@@ -50,7 +50,7 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
         container
         spacing={0.5}
         alignItems="flex-start"
-        sx={{ flexWrap: { xs: 'wrap', md: 'nowrap' } }}
+        sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' } }}
       >
         <Grid
           item

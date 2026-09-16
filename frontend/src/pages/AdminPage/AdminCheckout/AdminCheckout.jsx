@@ -99,14 +99,14 @@ const AdminCheckout = () => {
         component={Paper}
         sx={{
           borderRadius: 3,
-          boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)',
+          boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)',
           overflowX: 'auto',
           width: '100%',
         }}
       >
         <Table sx={{ minWidth: 1400 }}>
           <TableHead>
-            <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+            <TableRow sx={{ bgcolor: '#f6f8f5' }}>
               <TableCell align="center" sx={{ fontWeight: 700, whiteSpace: 'nowrap' }}>Phòng</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700, whiteSpace: 'nowrap' }}>Người yêu cầu</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700, whiteSpace: 'nowrap' }}>Ngày hết hạn</TableCell>
@@ -136,7 +136,7 @@ const AdminCheckout = () => {
               const statusColor = req.status === 'pending_admin' ? 'warning' : 'success';
 
               return (
-                <TableRow key={req._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+                <TableRow key={req._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                   <TableCell align="center">{req.booking?.room ? (req.booking.room.roomType || req.booking.room.address) : 'N/A'}</TableCell>
                   <TableCell align="center">{req.user?.email || req.user?.username || req.booking?.user?.email || 'N/A'}</TableCell>
                   <TableCell align="center">{req.booking?.endDate ? new Date(req.booking.endDate).toLocaleDateString('vi-VN') : '—'}</TableCell>
@@ -172,7 +172,7 @@ const AdminCheckout = () => {
                         color="primary"
                         size="small"
                         onClick={() => openConfirmModal(req)}
-                        sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.10)' }}
+                        sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(8, 127, 114, 0.10)' }}
                       >
                         Xác nhận trả phòng
                       </Button>

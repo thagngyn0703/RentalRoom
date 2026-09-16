@@ -51,7 +51,7 @@ const NotificationBadge = () => {
         if (!user || !usePolling) return;
 
         console.log('📊 Starting polling for unread count (fallback mode)');
-        
+
         // Initial fetch
         fetchUnreadCount();
 
@@ -79,8 +79,8 @@ const NotificationBadge = () => {
         fetchUnreadCount();
 
         // Try WebSocket first
-        const socket = io(SOCKET_URL, { 
-            withCredentials: true, 
+        const socket = io(SOCKET_URL, {
+            withCredentials: true,
             transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionDelay: 1000,
@@ -173,9 +173,9 @@ const NotificationBadge = () => {
         window.addEventListener('chatUnreadUpdated', handleRefresh);
         window.addEventListener('chatConversationOpened', handleDecrement);
         window.addEventListener('storage', handleStorage);
-        
+
         console.log('✅ NotificationBadge: Event listeners registered');
-        
+
         return () => {
             window.removeEventListener('chatUnreadUpdated', handleRefresh);
             window.removeEventListener('chatConversationOpened', handleDecrement);
@@ -194,17 +194,17 @@ const NotificationBadge = () => {
         <IconButton
             onClick={handleClick}
             sx={{
-                color: '#667eea',
+                color: '#087f72',
                 transition: 'all 0.3s ease',
                 position: 'relative',
                 '&:hover': {
-                    bgcolor: 'rgba(102, 126, 234, 0.1)',
+                    bgcolor: 'rgba(8, 127, 114, 0.1)',
                     transform: 'scale(1.05)',
                 }
             }}
         >
-            <Badge 
-                badgeContent={unreadCount} 
+            <Badge
+                badgeContent={unreadCount}
                 color="error"
                 max={99}
                 sx={{
@@ -247,12 +247,12 @@ export default NotificationBadge;
 const style = document.createElement('style');
 style.textContent = `
   @keyframes pulse {
-    0%, 100% { 
-      transform: scale(1); 
+    0%, 100% {
+      transform: scale(1);
       opacity: 1;
     }
-    50% { 
-      transform: scale(1.15); 
+    50% {
+      transform: scale(1.15);
       opacity: 0.9;
     }
   }

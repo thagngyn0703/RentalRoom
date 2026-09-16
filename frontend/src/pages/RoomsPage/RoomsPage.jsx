@@ -41,17 +41,17 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
   // Custom hooks
   const { rooms: hookRooms, total: hookTotal, page, setPage, searchParams, setSearchParams, setRooms, setTotal } = useRooms(sort, postType, showToast);
   const { favorites, toggleFavorite } = useFavorites(showToast);
-  
+
   // Use local state for rooms/total para manter controle quando usar AI
   const [rooms, setRoomsLocal] = useState(hookRooms);
   const [total, setTotalLocal] = useState(hookTotal);
-  
+
   // Sync with hook when hookRooms changes
   useEffect(() => {
     setRoomsLocal(hookRooms);
     setTotalLocal(hookTotal);
   }, [hookRooms, hookTotal]);
-  
+
   const {
     filters,
     setFilters,
@@ -233,7 +233,7 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
     else setCheckOutDate('');
     setSearch(searchQ);
     setMinRating(Number.isNaN(minRatingQ) ? 0 : minRatingQ);
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
@@ -590,15 +590,15 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
         features: selectedFeatures
       }
     });
-    
+
     // Start loading
     setAiLoading(true);
-    
+
     try {
       // Apply filters - KHÔNG thêm textSearchAI vào URL
       const sp = new URLSearchParams(searchParams.toString());
       sp.set('page', '1');
-      
+
       // Add filters (không có textSearchAI)
       if (selectedProvince) sp.set('city', selectedProvince);
       else sp.delete('city');
@@ -617,7 +617,7 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
       if (draftUtilities && draftUtilities.length) {
         sp.set('utilities', draftUtilities.join(','));
       }
-      
+
       // Gọi API trực tiếp với textSearchAI
       const res = await fetchRooms({
         page: 1,
@@ -643,17 +643,17 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
         setRoomsLocal(Array.isArray(res.rooms) ? res.rooms : []);
         setTotalLocal(Number(res.total) || 0);
         setPage(1);
-        
+
         // Update URL params (không có textSearchAI)
         setSearchParams(sp);
-        
+
         // Xử lý AI message nếu có
         if (res.aiMessage) {
           showToast(res.aiMessage, 'warning');
         } else {
           showToast('AI đã phân tích và tìm thấy kết quả phù hợp!', 'success');
         }
-        
+
         if (res.aiStats) {
           console.log('🤖 AI Stats:', res.aiStats);
         }
@@ -685,11 +685,10 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
     <Grid
       item
       xs={12}
-      lg={2.5}
+      lg={3}
 
       sx={{
         display: { xs: 'none', lg: 'block' },
-        '@media (max-width:1112px)': { display: 'none' },
       }}
     >
       <FilterSidebar
@@ -767,7 +766,7 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
         applyFilters={applyFilters}
         setSearchParams={setSearchParams}
       />
-      
+
       {/* AI Filter Dialog */}
       <AIFilterDialog
         open={openAIFilter}
@@ -829,24 +828,15 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
     <Grid
       item
       xs={12}
-      lg={7.5}
+      lg={9}
       sx={{
-        mx: { xs: 0, md: 2, lg: 0 },
-        px: { xs: 2, lg: 0 },
-        '@media (max-width:1300px) and (min-width:1113px)': {
-          flexBasis: '75%',
-          maxWidth: '75%'
-        },
-        '@media (max-width:1112px) and (min-width:990px)': {
-          flexBasis: '95%',
-          maxWidth: '95%',
-          mx: 3
-        }
+        minWidth: 0,
       }}
     >
       <Box sx={{ width: '100%', py: 3 }}>
         {/* Header Section */}
         <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="primary" sx={{ letterSpacing: 1.5 }}>KHÔNG GIAN SỐNG DÀNH CHO BẠN</Typography>
           <Typography
             variant="h4"
             sx={{
@@ -856,10 +846,10 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
               color: 'text.primary'
             }}
           >
-            Tìm phòng trọ
+            {postType === 'room_rental' ? 'Một nơi ở, nhiều khởi đầu.' : 'Tìm người bạn cùng nhà.'}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tìm kiếm trong {total} phòng trọ
+            {total} lựa chọn · Lọc theo khu vực, ngân sách và phong cách sống
           </Typography>
         </Box>
 
@@ -872,7 +862,7 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
           bgcolor: 'background.paper',
           p: 2,
           borderRadius: 2,
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          border: '1px solid', borderColor: 'divider', boxShadow: 'none'
         }}>
           {/* First Row: Filter, Search, Sort */}
           <Box sx={{
@@ -979,16 +969,16 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
                 size="medium"
                 onClick={openAIFilterDialog}
                 sx={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                   textTransform: 'none',
                   borderRadius: 2,
                   px: 3,
                   whiteSpace: 'nowrap',
                   fontWeight: 600,
-                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                  boxShadow: '0 4px 12px rgba(8, 127, 114, 0.3)',
                   '&:hover': {
-                    background: 'linear-gradient(135deg, #5568d3 0%, #5e3c82 100%)',
-                    boxShadow: '0 6px 16px rgba(102, 126, 234, 0.4)',
+                    background: 'linear-gradient(135deg, #075b51 0%, #123d35 100%)',
+                    boxShadow: '0 6px 16px rgba(8, 127, 114, 0.4)',
                     transform: 'translateY(-2px)'
                   },
                   transition: 'all 0.3s ease'
@@ -1357,28 +1347,19 @@ const RoomsPage = ({ postType = 'room_rental' }) => {
 
   return (
     <Box sx={{
-      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
+      bgcolor: 'background.default',
       minHeight: 'calc(100vh - 70px)',
       width: '100%',
       m: 0,
-      p: 0
+      px: { xs: 2, md: 4 }, pb: 6
     }}>
-      <Grid container spacing={3} sx={{ width: '100%', px: { xs: 2, lg: 0 } }}>
+      <Grid container columnSpacing={3} sx={{ maxWidth: 1440, mx: 'auto', width: '100%', '& > .MuiGrid-item': { pl: { xs: 0, lg: 3 } } }}>
         {/* BLOCK 1: FilterFeature - Sidebar (Desktop Only) */}
         {renderFilterFeature()}
 
         {/* BLOCK 3: ListRoomPage - Main Content */}
         {renderListRoomPage()}
 
-        {/* BLOCK 4: Right Spacer (Desktop Only) */}
-        <Grid
-          item
-          lg={2}
-          sx={{
-            "@media (max-width:1300px)": { display: 'none' },
-            display: { xs: 'none', lg: 'block' },
-          }}
-        />
       </Grid>
 
       {/* BLOCK 2: DialogFilter - Mobile Filter Dialog */}

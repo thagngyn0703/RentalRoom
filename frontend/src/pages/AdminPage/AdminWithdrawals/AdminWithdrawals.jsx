@@ -118,10 +118,10 @@ const AdminWithdrawals = () => {
 
         return (
           <>
-            <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)' }}>
+            <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)' }}>
               <Table size="small">
           <TableHead>
-                <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+                <TableRow sx={{ bgcolor: '#f6f8f5' }}>
                   <TableCell align="center" sx={{ fontWeight: 700 }}>Chủ phòng</TableCell>
                   <TableCell align="center" sx={{ fontWeight: 700 }}>Số tiền rút</TableCell>
                   <TableCell align="center" sx={{ fontWeight: 700 }}>Chiết khấu 10%</TableCell>
@@ -144,7 +144,7 @@ const AdminWithdrawals = () => {
               const commission = Math.floor((amount * COMMISSION_PERCENT) / 100);
               const receive = amount - commission;
               return (
-                <TableRow key={row._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+                <TableRow key={row._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                   <TableCell align="center">
                     {row.user?.username || row.user?.email || row.user?._id || '—'}
                   </TableCell>

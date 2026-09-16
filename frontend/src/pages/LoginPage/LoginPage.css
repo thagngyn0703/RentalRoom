@@ -32,7 +32,7 @@
 
 .logo {
   font-weight: 700;
-  color: #2b6fe8;
+  color: #087f72;
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
@@ -91,7 +91,7 @@
 }
 
 .eye-icon:hover {
-  color: #2b6fe8;
+  color: #087f72;
 }
 
 /* --- Nhớ mật khẩu + quên mật khẩu --- */
@@ -114,7 +114,7 @@
 .login-options input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #2b6fe8;
+  accent-color: #087f72;
 }
 
 .forgot-link {
@@ -130,7 +130,7 @@
 /* --- Nút đăng nhập --- */
 .login-btn {
   width: 100%;
-  background-color: #2b6fe8;
+  background-color: #087f72;
   border: none;
   color: white;
   font-weight: 600;

@@ -36,9 +36,9 @@ const UnreadBadge = ({ count, size = 'medium', variant = 'default' }) => {
             boxShadow: '0 2px 4px rgba(244, 67, 54, 0.3)',
         },
         primary: {
-            bgcolor: '#667eea',
+            bgcolor: '#087f72',
             color: 'white',
-            boxShadow: '0 2px 4px rgba(102, 126, 234, 0.3)',
+            boxShadow: '0 2px 4px rgba(8, 127, 114, 0.3)',
         },
         success: {
             bgcolor: '#4caf50',
@@ -83,12 +83,12 @@ export default UnreadBadge;
 const style = document.createElement('style');
 style.textContent = `
     @keyframes unreadPulse {
-        0%, 100% { 
-            transform: scale(1); 
+        0%, 100% {
+            transform: scale(1);
             opacity: 1;
         }
-        50% { 
-            transform: scale(1.08); 
+        50% {
+            transform: scale(1.08);
             opacity: 0.95;
         }
     }

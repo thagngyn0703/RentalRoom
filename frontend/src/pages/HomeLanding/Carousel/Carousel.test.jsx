@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import CarouselFadeExample from './Carousel';
 
-test('does not overlay duplicate campaign copy on text-bearing artwork', () => {
+test('provides direct paths to rental search and roommate search', () => {
   render(<CarouselFadeExample />);
 
-  expect(screen.queryByText('Khám phá phòng mới mỗi ngày')).not.toBeInTheDocument();
-  expect(screen.getAllByRole('img')).toHaveLength(3);
+  expect(screen.getByRole('link', { name: /khám phá phòng/i })).toHaveAttribute('href', '/rooms');
+  expect(screen.getByRole('link', { name: /tìm bạn ở ghép/i })).toHaveAttribute('href', '/invite-rooms');
+  expect(screen.getByRole('heading', { level: 1 })).toBeVisible();
 });

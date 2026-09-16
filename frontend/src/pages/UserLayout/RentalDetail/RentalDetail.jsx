@@ -97,12 +97,12 @@ const RentalDetail = () => {
         component={Paper}
         sx={{
           borderRadius: 3,
-          boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)',
+          boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)',
           overflow: 'hidden',
         }}
       >
         <TableHead>
-          <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+          <TableRow sx={{ bgcolor: '#f6f8f5' }}>
             <TableCell align="center" sx={{ fontWeight: 700 }}>Phòng</TableCell>
             <TableCell align="center" sx={{ fontWeight: 700 }}>Người thuê</TableCell>
             <TableCell align="center" sx={{ fontWeight: 700 }}>Ngày bắt đầu</TableCell>
@@ -180,7 +180,7 @@ const RentalDetail = () => {
           size="small"
           onClick={() => navigate(`/room/${room._id}`)}
           sx={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
             textTransform: 'none',
             fontWeight: 600,
           }}

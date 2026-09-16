@@ -13,7 +13,6 @@ import { FaFacebookF, FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "../../config/axios";
-import registerImg from "../../assets/anh_login.jpg";
 import "./Register.css";
 
 export default function Register() {
@@ -68,13 +67,14 @@ export default function Register() {
     <div className="register-page">
       <div className="register-card">
         {/* Ảnh minh họa bên trái */}
-        <div className="register-left">
-          <img src={registerImg} alt="Register Illustration" />
+        <div className="register-left auth-art">
+          <img src="/images/home-interior.webp" alt="Không gian sống minh họa" />
+          <div className="auth-art-caption"><span>CÙNG NHAU BẮT ĐẦU</span><h2>Một tổ ấm mới<br />đang chờ bạn.</h2><small>Ảnh minh họa</small></div>
         </div>
 
         {/* Form bên phải */}
         <div className="register-right">
-          <div className="register-logo">Your Logo</div>
+          <div className="register-logo">trọ chung.</div>
           <h2 className="register-title">Đăng ký</h2>
           <p className="register-subtitle">
             Hãy để bạn có được tất cả các đặc quyền để truy cập vào tài khoản cá nhân của mình.
@@ -85,7 +85,7 @@ export default function Register() {
               <TextField
                 fullWidth
                 name="firstName"
-                label="First name"
+                label="Tên"
                 placeholder="John"
                 variant="outlined"
                 size="small"
@@ -95,7 +95,7 @@ export default function Register() {
               <TextField
                 fullWidth
                 name="lastName"
-                label="Last name"
+                label="Họ"
                 placeholder="Doe"
                 variant="outlined"
                 size="small"
@@ -194,7 +194,7 @@ export default function Register() {
 
             <Typography variant="body2" align="center" className="login-link">
               Đã có tài khoản?{" "}
-              <Link href="/login" underline="hover" sx={{ color: "#2b6fe8" }}>
+              <Link href="/login" underline="hover" sx={{ color: "#087f72" }}>
                 Đăng nhập
               </Link>
             </Typography>
@@ -205,7 +205,7 @@ export default function Register() {
 
             <div className="social-login">
               <button className="social-btn" type="button">
-                <FaFacebookF size={20} style={{ color: "#1877f2" }} />
+                <FaFacebookF size={20} style={{ color: "#087f72" }} />
               </button>
               <button className="social-btn" type="button">
                 <FcGoogle size={22} />

@@ -119,10 +119,10 @@ const NotificationBellBadge = () => {
       <IconButton
         onClick={handleOpenMenu}
         sx={{
-          color: '#667eea',
+          color: '#087f72',
           transition: 'all 0.3s ease',
           '&:hover': {
-            bgcolor: 'rgba(102, 126, 234, 0.1)',
+            bgcolor: 'rgba(8, 127, 114, 0.1)',
             transform: 'scale(1.05)',
           },
         }}
@@ -212,7 +212,7 @@ const NotificationBellBadge = () => {
                     alignItems: 'flex-start',
                     px: 2,
                     py: 1.25,
-                    bgcolor: n.readAt ? 'transparent' : 'rgba(25, 118, 210, 0.08)',
+                    bgcolor: n.readAt ? 'transparent' : 'rgba(8, 127, 114, 0.08)',
                   }}
                 >
                   <Box sx={{ flex: 1, minWidth: 0 }}>

@@ -1,16 +1,16 @@
 ---
-version: alpha
-name: TroChung Friendly Housing
+version: 2
+name: TroChung Everyday Living
 description: A clear, approachable rental marketplace for Vietnamese users.
 colors:
-  primary: "#6C63D9"
-  primary-dark: "#5548B8"
-  secondary: "#5F7CFF"
+  primary: "#087F72"
+  primary-dark: "#075B51"
+  secondary: "#B76536"
   surface: "#FFFFFF"
-  surface-soft: "#F8F8FC"
-  on-surface: "#1D1D24"
-  on-surface-muted: "#666673"
-  border: "#E7E7F1"
+  surface-soft: "#F6F8F5"
+  on-surface: "#193B34"
+  on-surface-muted: "#64756F"
+  border: "#E1E9E3"
   error: "#C62828"
 typography:
   heading:
@@ -49,9 +49,9 @@ components:
     backgroundColor: "{colors.surface}"
     rounded: "{rounded.md}"
     borderColor: "{colors.border}"
-  carousel:
-    rounded: "{rounded.sm}"
-    textOverlay: none
+  home-hero:
+    rounded: 24px
+    textOverlay: separate-column
     imageFit: cover
 ---
 
@@ -62,8 +62,8 @@ is the focus; decoration must never compete with prices, locations or actions.
 
 ## Colors
 
-Purple identifies the product and primary actions, blue supports links and
-secondary actions, and quiet neutral surfaces keep listing photography legible.
+Teal identifies primary actions, forest green anchors navigation and the footer,
+and warm ivory surfaces keep listing photography legible. Clay is an accent.
 Normal text must meet WCAG AA contrast.
 
 ## Typography
@@ -89,7 +89,7 @@ chips.
 
 ## Components
 
-Carousel artwork already contains campaign typography, so it must not receive
+Legacy carousel artwork already contains campaign typography, so it must not receive
 an additional caption overlay. Images use meaningful alt text; controls remain
 keyboard accessible and visible against the artwork.
 

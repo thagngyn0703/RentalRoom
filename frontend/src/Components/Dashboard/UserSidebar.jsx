@@ -191,13 +191,13 @@ export default function UserSidebar({ mobileMenuOpen, onMobileMenuClose }) {
                     display: "flex",
                     flexDirection: "column",
                     gap: 1.25,
-                    boxShadow: `4px 0 12px ${theme.palette.divider}`,
+                    boxShadow: 'none',
                     borderRight: `1px solid ${theme.palette.divider}`,
                 }}
             >
                 {/* User ID + balance (replace avatar) */}
                 <Box display="flex" flexDirection="column" alignItems="flex-start" gap={0.5} mb={0.5}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.text.primary }}>ID</Typography>
+                    <Typography variant="overline" sx={{ fontWeight: 700, color: theme.palette.text.secondary }}>TÀI KHOẢN CỦA BẠN</Typography>
                     <Typography variant="body2" sx={{ color: theme.palette.text.secondary, mb: 0.5 }}>
                         {currentUser?.id || currentUser?._id || 'Khách'}
                     </Typography>

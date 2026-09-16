@@ -9,7 +9,7 @@ const RoomInfoCard = ({ room, ratingStats }) => {
           <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
             {room.title}
           </Typography>
-          <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 1 }}>
+          <Stack direction="row" alignItems="center" spacing={2} useFlexGap sx={{ mb: 1, flexWrap: 'wrap' }}>
             <Chip label="Cho Thuê" color="primary" size="small" />
             <MuiRating value={Number(ratingStats.average) || 0} readOnly precision={0.5} size="small" />
             <Typography variant="body2" color="text.secondary">
@@ -25,7 +25,7 @@ const RoomInfoCard = ({ room, ratingStats }) => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
-            <Typography variant="h3" sx={{ fontWeight: 700, color: 'primary.main', mb: 1 }}>
+            <Typography variant="h3" sx={{ fontWeight: 700, color: 'primary.main', mb: 1, fontSize: { xs: 30, md: 40 }, overflowWrap: 'anywhere' }}>
               {room.price}  VND
             </Typography>
             <Typography variant="h6" color="text.secondary">

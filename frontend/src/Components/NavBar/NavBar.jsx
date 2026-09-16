@@ -86,21 +86,22 @@ const NavBar = () => {
       position="sticky"
       elevation={0}
       sx={{
-        background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%)',
+        background: 'rgba(255,255,255,.97)',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(102, 126, 234, 0.1)',
-        boxShadow: '0 4px 16px rgba(102, 126, 234, 0.08)',
-        height: 75,
+        borderBottom: '1px solid rgba(8, 127, 114, 0.1)',
+        boxShadow: 'none',
+        height: 80,
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', height: '100%', px: { xs: 2, md: 3, lg: 4 } }}>
         {/* Mobile Menu Button - Show on screens < 1000px */}
         <IconButton
+          aria-label="Mở menu điều hướng"
           color="inherit"
           onClick={handleMobileMenuOpen}
           sx={{
             display: { xs: 'flex', lg: 'none' },
-            mr: 2
+            mr: 1
           }}
         >
           <MenuIcon sx={{ color: "primary.main" }} />
@@ -110,31 +111,22 @@ const NavBar = () => {
         <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
           <Box
             sx={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'primary.dark',
               borderRadius: 3,
-              px: 3,
+              px: 0,
               py: 1.2,
               display: 'flex',
               alignItems: 'center',
-              boxShadow: '0 4px 12px rgba(102, 126, 234, 0.25), 0 2px 4px rgba(102, 126, 234, 0.15)',
+              gap: 1,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-2px)',
-                boxShadow: '0 6px 16px rgba(102, 126, 234, 0.35), 0 3px 6px rgba(102, 126, 234, 0.2)',
+                boxShadow: '0 6px 16px rgba(8, 127, 114, 0.35), 0 3px 6px rgba(8, 127, 114, 0.2)',
               }
             }}
           >
-            <Box
-              component="img"
-              src="/Logomautrang.png"
-              alt="Logo"
-              sx={{
-                height: 44,
-                width: 'auto',
-                display: 'block',
-                objectFit: 'contain',
-              }}
-            />
+            <HomeWork sx={{ fontSize: 32 }} />
+            <Box component="span" sx={{ fontSize: 25, fontWeight: 800, letterSpacing: '-1px', whiteSpace: 'nowrap' }}>trọ chung.</Box>
           </Box>
         </Link>
 
@@ -147,7 +139,7 @@ const NavBar = () => {
             to="/"
             startIcon={<Home sx={{ fontSize: 20 }} />}
             sx={{
-              color: location.pathname === '/' ? '#764ba2' : '#667eea',
+              color: location.pathname === '/' ? '#193b34' : '#087f72',
               textTransform: 'none',
               fontWeight: location.pathname === '/' ? 700 : 600,
               fontSize: '0.95rem',
@@ -156,9 +148,9 @@ const NavBar = () => {
               borderRadius: 2.5,
               position: 'relative',
               transition: 'all 0.3s ease',
-              bgcolor: location.pathname === '/' ? 'rgba(118, 75, 162, 0.08)' : 'transparent',
+              bgcolor: location.pathname === '/' ? 'rgba(25, 59, 52, 0.08)' : 'transparent',
               '&:hover': {
-                bgcolor: 'rgba(102, 126, 234, 0.1)',
+                bgcolor: 'rgba(8, 127, 114, 0.1)',
                 transform: 'translateY(-2px)',
               },
               '&:after': {
@@ -169,7 +161,7 @@ const NavBar = () => {
                 transform: location.pathname === '/' ? 'translateX(-50%) scaleX(1)' : 'translateX(-50%) scaleX(0)',
                 width: '70%',
                 height: 2,
-                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(90deg, #087f72 0%, #193b34 100%)',
                 borderRadius: 1,
                 transition: 'transform 0.3s ease',
               },
@@ -178,7 +170,7 @@ const NavBar = () => {
               }
             }}
           >
-            Trang chủ 
+            Trang chủ
           </Button>
 
           <Button
@@ -187,7 +179,7 @@ const NavBar = () => {
             to="/rooms"
             startIcon={<HomeWork sx={{ fontSize: 20 }} />}
             sx={{
-              color: location.pathname === '/rooms' ? '#764ba2' : '#667eea',
+              color: location.pathname === '/rooms' ? '#193b34' : '#087f72',
               textTransform: 'none',
               fontWeight: location.pathname === '/rooms' ? 700 : 600,
               fontSize: '0.95rem',
@@ -196,9 +188,9 @@ const NavBar = () => {
               borderRadius: 2.5,
               position: 'relative',
               transition: 'all 0.3s ease',
-              bgcolor: location.pathname === '/rooms' ? 'rgba(118, 75, 162, 0.08)' : 'transparent',
+              bgcolor: location.pathname === '/rooms' ? 'rgba(25, 59, 52, 0.08)' : 'transparent',
               '&:hover': {
-                bgcolor: 'rgba(102, 126, 234, 0.1)',
+                bgcolor: 'rgba(8, 127, 114, 0.1)',
                 transform: 'translateY(-2px)',
               },
               '&:after': {
@@ -209,7 +201,7 @@ const NavBar = () => {
                 transform: location.pathname === '/rooms' ? 'translateX(-50%) scaleX(1)' : 'translateX(-50%) scaleX(0)',
                 width: '70%',
                 height: 2,
-                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(90deg, #087f72 0%, #193b34 100%)',
                 borderRadius: 1,
                 transition: 'transform 0.3s ease',
               },
@@ -221,14 +213,14 @@ const NavBar = () => {
             Nhà trọ
           </Button>
 
-          
+
           <Button
             color="inherit"
             component={Link}
             to="/about"
             startIcon={<HelpOutline sx={{ fontSize: 20 }} />}
             sx={{
-              color: location.pathname === '/about' ? '#764ba2' : '#667eea',
+              color: location.pathname === '/about' ? '#193b34' : '#087f72',
               textTransform: 'none',
               fontWeight: location.pathname === '/about' ? 700 : 600,
               fontSize: '0.95rem',
@@ -237,9 +229,9 @@ const NavBar = () => {
               borderRadius: 2.5,
               position: 'relative',
               transition: 'all 0.3s ease',
-              bgcolor: location.pathname === '/about' ? 'rgba(118, 75, 162, 0.08)' : 'transparent',
+              bgcolor: location.pathname === '/about' ? 'rgba(25, 59, 52, 0.08)' : 'transparent',
               '&:hover': {
-                bgcolor: 'rgba(102, 126, 234, 0.1)',
+                bgcolor: 'rgba(8, 127, 114, 0.1)',
                 transform: 'translateY(-2px)',
               },
               '&:after': {
@@ -250,7 +242,7 @@ const NavBar = () => {
                 transform: location.pathname === '/about' ? 'translateX(-50%) scaleX(1)' : 'translateX(-50%) scaleX(0)',
                 width: '70%',
                 height: 2,
-                background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(90deg, #087f72 0%, #193b34 100%)',
                 borderRadius: 1,
                 transition: 'transform 0.3s ease',
               },
@@ -259,7 +251,7 @@ const NavBar = () => {
               }
             }}
           >
-            About
+            Về chúng tôi
           </Button>
 
         </Box>
@@ -276,7 +268,7 @@ const NavBar = () => {
                 to={user?.role === 'admin' ? "/admin" : "/user/profile"}
                 startIcon={<ManageAccounts />}
                 sx={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                   color: 'white',
                   textTransform: 'none',
                   fontWeight: 700,
@@ -284,11 +276,11 @@ const NavBar = () => {
                   px: 3,
                   py: 1,
                   borderRadius: 2.5,
-                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                  boxShadow: '0 4px 12px rgba(8, 127, 114, 0.3)',
                   transition: 'all 0.3s ease',
-                  '&:hover': { 
-                    background: 'linear-gradient(135deg, #5568d3 0%, #5e3c82 100%)',
-                    boxShadow: '0 6px 16px rgba(102, 126, 234, 0.4)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #075b51 0%, #123d35 100%)',
+                    boxShadow: '0 6px 16px rgba(8, 127, 114, 0.4)',
                     transform: 'translateY(-2px)',
                   }
                 }}
@@ -299,7 +291,7 @@ const NavBar = () => {
               <IconButton
                 size="large"
                 onClick={handleMenu}
-                sx={{ 
+                sx={{
                   p: 0,
                   transition: 'transform 0.3s ease',
                   '&:hover': {
@@ -308,13 +300,13 @@ const NavBar = () => {
                 }}
               >
                 <Avatar
-                  sx={{ 
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  sx={{
+                    background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                     color: 'white',
-                    width: 40, 
+                    width: 40,
                     height: 40,
                     fontWeight: 700,
-                    boxShadow: '0 3px 8px rgba(102, 126, 234, 0.3)',
+                    boxShadow: '0 3px 8px rgba(8, 127, 114, 0.3)',
                     border: '2px solid rgba(255, 255, 255, 0.8)',
                   }}
                   alt={user.username}
@@ -354,25 +346,25 @@ const NavBar = () => {
             </>
           ) : (
             <>
-            
 
-              <Button 
-                color="inherit" 
-                component={Link} 
+
+              <Button
+                color="inherit"
+                component={Link}
                 to="/login"
                 sx={{
-                  color: '#667eea',
+                  color: '#087f72',
                   textTransform: 'none',
                   fontWeight: 600,
                   fontSize: '0.95rem',
                   px: 2.5,
                   py: 1,
                   borderRadius: 2.5,
-                  border: '1.5px solid rgba(102, 126, 234, 0.3)',
+                  border: '1.5px solid rgba(8, 127, 114, 0.3)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
-                    bgcolor: 'rgba(102, 126, 234, 0.1)',
-                    borderColor: '#667eea',
+                    bgcolor: 'rgba(8, 127, 114, 0.1)',
+                    borderColor: '#087f72',
                     transform: 'translateY(-2px)',
                   }
                 }}
@@ -383,8 +375,8 @@ const NavBar = () => {
                 variant="contained"
                 component={Link}
                 to="/register"
-                sx={{ 
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                sx={{
+                  background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
                   color: 'white',
                   textTransform: 'none',
                   fontWeight: 700,
@@ -392,11 +384,11 @@ const NavBar = () => {
                   px: 3,
                   py: 1,
                   borderRadius: 2.5,
-                  boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)',
+                  boxShadow: '0 4px 12px rgba(8, 127, 114, 0.3)',
                   transition: 'all 0.3s ease',
-                  '&:hover': { 
-                    background: 'linear-gradient(135deg, #5568d3 0%, #5e3c82 100%)',
-                    boxShadow: '0 6px 16px rgba(102, 126, 234, 0.4)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #075b51 0%, #123d35 100%)',
+                    boxShadow: '0 6px 16px rgba(8, 127, 114, 0.4)',
                     transform: 'translateY(-2px)',
                   }
                 }}

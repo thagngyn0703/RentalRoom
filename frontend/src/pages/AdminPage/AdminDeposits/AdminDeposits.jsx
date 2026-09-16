@@ -85,10 +85,10 @@ const AdminDeposits = () => {
       )}
       {loading && <div style={{ marginBottom: 12, textAlign: 'center' }}>Đang tải...</div>}
 
-      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)' }}>
+      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)' }}>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
-            <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+            <TableRow sx={{ bgcolor: '#f6f8f5' }}>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Phòng</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Người đặt</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Số tiền</TableCell>
@@ -108,7 +108,7 @@ const AdminDeposits = () => {
             {paged.map((deposit) => {
               const meta = statusMeta[deposit.status] || { color: 'default', label: deposit.status || '—' };
               return (
-                <TableRow key={deposit._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+                <TableRow key={deposit._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                   <TableCell align="center">
                     {deposit.room ? (deposit.room.roomType || deposit.room.address) : 'N/A'}
                   </TableCell>
@@ -139,7 +139,7 @@ const AdminDeposits = () => {
                           color="primary"
                           size="small"
                           onClick={() => handleApproveDeposit(deposit._id)}
-                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.10)' }}
+                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(8, 127, 114, 0.10)' }}
                         >
                           Xác nhận
                         </Button>

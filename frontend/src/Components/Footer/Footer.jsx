@@ -1,142 +1,32 @@
 import React from 'react';
 import { Box, Container, Typography, Link, Stack } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import HomeWorkOutlined from '@mui/icons-material/HomeWorkOutlined';
 
-const Footer = () => {
+const groups = [
+  ['Khám phá', [['Tìm phòng trọ', '/rooms'], ['Tìm bạn ở ghép', '/invite-rooms'], ['Phòng yêu thích', '/favorites']]],
+  ['Dành cho bạn', [['Đăng tin cho thuê', '/user/post-room'], ['Quản lý tài khoản', '/user/profile'], ['Trung tâm hỗ trợ', '/user/support']]],
+  ['Trọ Chung', [['Về chúng tôi', '/about'], ['Đăng nhập', '/login'], ['Tạo tài khoản', '/register']]],
+];
+export default function Footer() {
   return (
-    <Box
-      component="footer"
-      sx={{
-        bgcolor: '#0B63E5',        // xanh giống hình
-        color: 'white',
-        py: { xs: 4, md: 6 },
-        mt: 'auto',
-      }}
-    >
-      <Container maxWidth="lg">
-        {/* Dùng CSS Grid để 4 cột luôn đều nhau và thẳng hàng */}
-        <Box
-          sx={{
-            display: { xs: 'block', md: 'grid' },
-            gridTemplateColumns: { md: 'repeat(4, 1fr)' },
-            columnGap: { md: 6 },
-            rowGap: { xs: 4, md: 0 },
-            alignItems: 'start',
-          }}
-        >
-          {/* Cột 1: Điều hướng nhanh */}
-          <Box component="nav">
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 600, mb: 2, fontSize: '1.1rem', textAlign: 'left' }}
-            >
-              Điều hướng nhanh
-            </Typography>
-            <Stack spacing={1.25} sx={{ alignItems: 'flex-start' }}>
-              <Link href="/" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Trang chủ
-              </Link>
-              <Link href="/rooms" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Tìm kiếm (Nhà trọ / Ở ghép)
-              </Link>
-              <Link href="/news" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Tin tức &amp; Blog
-              </Link>
-              <Link href="/post" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Đăng tin miễn phí
-              </Link>
-              <Link href="/contact" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Liên hệ hỗ trợ
-              </Link>
-            </Stack>
+    <Box component="footer" sx={{ bgcolor: '#153e35', color: '#fff', mt: 'auto', pt: { xs: 5, md: 7 }, pb: 3 }}>
+      <Container maxWidth="xl">
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: '2fr 1fr 1fr 1fr' }, gap: { xs: 4, md: 5 }, pb: 5 }}>
+          <Box sx={{ gridColumn: { xs: '1 / -1', md: 'auto' } }}>
+            <Stack direction="row" alignItems="center" gap={1} sx={{ mb: 2 }}><HomeWorkOutlined /><Typography variant="h5" color="inherit">trọ chung<span style={{ color: '#a9d8b8' }}>.</span></Typography></Stack>
+            <Typography sx={{ color: '#bad0c4', maxWidth: 300, fontSize: 14 }}>Một căn phòng phù hợp. Một người bạn cùng nhà. Một khởi đầu đáng mong chờ.</Typography>
           </Box>
-
-          {/* Cột 2: Về chúng tôi */}
-          <Box>
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 600, mb: 2, fontSize: '1.1rem', textAlign: 'left' }}
-            >
-              Về chúng tôi
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ lineHeight: 1.6, fontSize: '0.9rem', textAlign: 'left' }}
-            >
-              Website cho thuê phòng trọ,
-              nhà trọ nhanh chóng
-              và hiệu quả
-            </Typography>
-          </Box>
-
-          {/* Cột 3: Chính sách & Điều khoản */}
-          <Box component="nav">
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 600, mb: 2, fontSize: '1.1rem', textAlign: 'left' }}
-            >
-              Chính sách &amp; Điều khoản
-            </Typography>
-            <Stack spacing={1.25} sx={{ alignItems: 'flex-start' }}>
-              <Link href="/privacy" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Chính sách bảo mật
-              </Link>
-              <Link href="/terms" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Điều khoản sử dụng
-              </Link>
-              <Link href="/payment-policy" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Chính sách thanh toán &amp; hoàn tiền
-              </Link>
-              <Link href="/community-guidelines" color="inherit" underline="hover" sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}>
-                Nguyên tắc cộng đồng
-              </Link>
-            </Stack>
-          </Box>
-
-          {/* Cột 4: Kết nối mạng xã hội */}
-          <Box component="nav">
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 600, mb: 2, fontSize: '1.1rem', textAlign: 'left' }}
-            >
-              Kết nối mạng xã hội
-            </Typography>
-            <Stack spacing={1.25} sx={{ alignItems: 'flex-start' }}>
-              <Link
-                href="https://www.facebook.com/profile.php?id=61582080571720"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-                underline="hover"
-                sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}
-              >
-                Fanpage Facebook
-              </Link>
-              <Link
-                href="https://tiktok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-                underline="hover"
-                sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}
-              >
-                TikTok
-              </Link>
-              <Link
-                href="https://youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-                underline="hover"
-                sx={{ fontSize: '0.9rem', '&:hover': { color: '#ffeb3b' } }}
-              >
-                Kênh YouTube
-              </Link>
-            </Stack>
-          </Box>
+          {groups.map(([title, links]) => <Box key={title}>
+            <Typography sx={{ fontSize: 14, fontWeight: 700, mb: 2 }}>{title}</Typography>
+            <Stack gap={1.3}>{links.map(([label, to]) => <Link key={to} component={RouterLink} to={to} underline="hover" sx={{ color: '#bad0c4', fontSize: 14 }}>{label}</Link>)}</Stack>
+          </Box>)}
+        </Box>
+        <Box sx={{ borderTop: '1px solid #3b5c50', pt: 3, display: 'flex', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap', color: '#bad0c4' }}>
+          <Typography variant="caption">© {new Date().getFullYear()} Trọ Chung</Typography>
+          <Typography variant="caption">Kết nối nơi ở, chia sẻ cuộc sống.</Typography>
         </Box>
       </Container>
     </Box>
   );
-};
-
-export default Footer;
+}

@@ -19,6 +19,14 @@ loopback `127.0.0.1:8000`. API và Socket.IO dùng cùng origin.
 
 ## Trạng thái
 
+- Bản giao diện thử nghiệm mới dùng teal/forest, nền ivory, ảnh minh họa nội thất
+  nhẹ và hệ thống MUI chung cho trang công khai, tài khoản và quản trị.
+- Trang chủ, điều hướng, footer, danh sách phòng, biểu mẫu xác thực và khung
+  quản lý được làm mới; admin/tài khoản có menu mobile. Không đổi API nghiệp vụ.
+- Bản UI đã được người dùng xem demo và yêu cầu đưa lên nhánh `main`.
+  Kiểm tra authenticated bằng fixture chỉ xác nhận giao diện,
+  không thay thế kiểm thử giao dịch bằng tài khoản thật.
+
 - Mục tiêu public: `http://161.248.81.124`.
 - Trạng thái: đang phục vụ qua Nginx/systemd; kiểm chứng public, browser và stress
   đã đạt, còn chờ tài khoản test để xác nhận trọn luồng đăng nhập/thanh toán.

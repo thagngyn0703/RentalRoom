@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import UserSidebar from '../../Components/Dashboard/UserSidebar';
@@ -26,26 +27,29 @@ const UserLayout = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', width: '100vw' }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
       {/* Sidebar */}
-      <UserSidebar 
+      <UserSidebar
         mobileMenuOpen={mobileMenuOpen}
         onMobileMenuClose={() => setMobileMenuOpen(false)}
       />
 
       {/* Main Content */}
-      <Box 
+      <Box
         component="main"
         sx={{
           flex: 1,
           p: { xs: 2, md: 3 },
-          backgroundColor: '#fff',
+          backgroundColor: 'background.default',
           minWidth: 0,
           overflow: 'auto',
-          mt: { xs: '56px', md: 0 }, // Margin top cho mobile AppBar
         }}
       >
-        <Outlet />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3, pb: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+          <IconButton aria-label="Mở menu tài khoản" onClick={handleMobileMenuToggle} sx={{ display: { xs: 'inline-flex', md: 'none' } }}><MenuIcon /></IconButton>
+          <Box><Typography variant="overline" color="primary">KHÔNG GIAN CỦA BẠN</Typography><Typography variant="h6">Tài khoản & quản lý</Typography></Box>
+        </Box>
+        <Box sx={{ bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider', borderRadius: 3, p: { xs: 1.5, md: 3 }, minWidth: 0 }}><Outlet /></Box>
       </Box>
     </Box>
   );

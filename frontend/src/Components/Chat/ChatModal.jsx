@@ -159,13 +159,13 @@ const ChatModal = ({ open, onClose, ownerId, roomId, currentUser, showToast }) =
             if (response?.success) {
                 console.log('✅ Message sent successfully');
                 // Replace temp message with real one
-                setMessages((prev) => 
+                setMessages((prev) =>
                     prev.map((m) => m._id === tempId ? { ...response.message, isPending: false } : m)
                 );
             } else {
                 console.error('❌ Failed to send message');
                 // Mark as failed
-                setMessages((prev) => 
+                setMessages((prev) =>
                     prev.map((m) => m._id === tempId ? { ...m, isFailed: true, isPending: false } : m)
                 );
             }
@@ -216,9 +216,9 @@ const ChatModal = ({ open, onClose, ownerId, roomId, currentUser, showToast }) =
                         return (
                             <Box key={msg._id || idx} className={`chat-bubble-row ${isMe ? 'me' : 'other'}`}>
                                 {!isMe && (
-                                    <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontSize: 13 }}>C</Avatar>
+                                    <Avatar sx={{ width: 28, height: 28, bgcolor: '#087f72', fontSize: 13 }}>C</Avatar>
                                 )}
-                                <Box 
+                                <Box
                                     className={`chat-bubble ${isMe ? 'bubble-me' : 'bubble-other'}`}
                                     sx={{ opacity: msg.isPending ? 0.6 : 1 }}
                                 >

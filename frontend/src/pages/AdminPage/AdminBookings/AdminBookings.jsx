@@ -123,10 +123,10 @@ const AdminBookings = () => {
     <div style={{ maxWidth: 1200, margin: '0 auto', marginTop: 32 }}>
       {error && <div style={{ color: '#d32f2f', background: '#fff3f3', borderRadius: 8, padding: 12, marginBottom: 16, textAlign: 'center' }}>{error}</div>}
       {loading && <div style={{ marginBottom: 12, textAlign: 'center' }}>Đang tải...</div>}
-      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(25, 118, 210, 0.07)' }}>
+      <TableContainer component={Paper} sx={{ borderRadius: 3, boxShadow: '0 2px 16px 0 rgba(8, 127, 114, 0.07)' }}>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
-            <TableRow sx={{ bgcolor: '#f4f6fb' }}>
+            <TableRow sx={{ bgcolor: '#f6f8f5' }}>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Phòng</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Người đặt</TableCell>
               <TableCell align="center" sx={{ fontWeight: 700 }}>Ngày bắt đầu</TableCell>
@@ -142,7 +142,7 @@ const AdminBookings = () => {
               </TableRow>
             )}
             {pagedBookings.map((record) => (
-              <TableRow key={record._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e3f2fd' } }}>
+              <TableRow key={record._id} hover sx={{ transition: 'all 0.2s', '&:hover': { bgcolor: '#e5f3ec' } }}>
                 <TableCell align="center">{record.room ? (record.room.roomType || record.room.address) : 'N/A'}</TableCell>
                 <TableCell align="center">{record.user ? (record.user.email || record.user.username) : 'N/A'}</TableCell>
                 <TableCell align="center">{record.startDate ? new Date(record.startDate).toLocaleDateString('vi-VN') : '—'}</TableCell>
@@ -165,7 +165,7 @@ const AdminBookings = () => {
                           size="small"
                           startIcon={<CheckCircleIcon />}
                           onClick={() => handleConfirm(record._id)}
-                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(25, 118, 210, 0.10)' }}
+                          sx={{ fontWeight: 700, borderRadius: 2, px: 2, boxShadow: '0 2px 8px 0 rgba(8, 127, 114, 0.10)' }}
                         >
                           Xác nhận thanh toán
                         </Button>
@@ -211,14 +211,14 @@ const AdminBookings = () => {
     {/* Modal chi tiết phòng và bài đăng */}
     <Modal open={openDetail} onClose={handleCloseDetail}>
       <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: '#fff', boxShadow: 24, p: 4, borderRadius: 4, minWidth: 400, maxWidth: 650, width: '95%', maxHeight: '90vh', overflowY: 'auto' }}>
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, textAlign: 'center', color: '#1976d2' }}>Chi tiết phòng & bài đăng</Typography>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, textAlign: 'center', color: '#087f72' }}>Chi tiết phòng & bài đăng</Typography>
         {detailLoading ? (
           <Typography>Đang tải...</Typography>
         ) : detailError ? (
           <Typography color="error">{detailError}</Typography>
         ) : (
           <>
-            <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 700, color: '#1976d2' }}>Thông tin người tham gia:</Typography>
+            <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 700, color: '#087f72' }}>Thông tin người tham gia:</Typography>
             <Box sx={{ mb: 2, mt: 1 }}>
               <div style={{ marginBottom: 6 }}>
                 <b>Chủ trọ:</b>{' '}
@@ -244,7 +244,7 @@ const AdminBookings = () => {
               </div>
             </Box>
 
-            <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 700, color: '#1976d2' }}>Chi tiết phòng:</Typography>
+            <Typography variant="subtitle1" sx={{ mt: 1, fontWeight: 700, color: '#087f72' }}>Chi tiết phòng:</Typography>
             {detailData.room ? (
               <Box sx={{ mb: 2 }}>
                 <div style={{ marginBottom: 4 }}><b>Loại phòng:</b> {detailData.room.roomType}</div>
@@ -279,5 +279,5 @@ const AdminBookings = () => {
   </div>
   );
 };
-  
+
 export default AdminBookings;

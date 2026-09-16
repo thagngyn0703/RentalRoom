@@ -1,25 +1,46 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; color: #193b34; background: #f6f8f5; -webkit-font-smoothing: antialiased; }
+.App { min-height: 100vh; }
+img { max-width: 100%; }
+a { text-underline-offset: 4px; }
+.home-hero { display: grid; grid-template-columns: 1.05fr 1fr; max-width: 1440px; margin: 0 auto; gap: 48px; padding: 60px 40px 72px; align-items: center; }
+.hero-eyebrow.MuiTypography-root { color: #087f72; font-size: 11px; letter-spacing: .16em; font-weight: 750; }
+.home-hero-visual { position: relative; padding: 0 0 32px 18px; }
+.home-hero-visual > img { width: 100%; height: 470px; object-fit: cover; border-radius: 100px 24px 24px 24px; background: #e3ece2; }
+.hero-image-label { position: absolute; bottom: 58px; left: -12px; right: 38px; display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,.96); padding: 18px; border: 1px solid #e1e9e3; border-radius: 16px; box-shadow: 0 12px 40px #193b3412; }
+.hero-image-note.MuiTypography-root { text-align: right; color: #64756f; font-size: 10px; margin-top: 12px; }
+.hero-benefit { display: flex; gap: 7px; align-items: center; font-size: 12px; }
+body .login-page, body .register-page, body .verify-page { background: #edf3ec; padding: 48px 20px; }
+body .login-card, body .register-card, body .verify-card { border: 1px solid #dce7dd; box-shadow: 0 20px 70px #193b340d; border-radius: 24px; overflow: hidden; }
+body .login-right, body .register-left, body .verify-right { background: #dcebdd; }
+body .login-heading, body .register-title, body .verify-title { color: #193b34; letter-spacing: -.035em; }
+body .login-btn, body .register-btn, body .verify-btn { background: #087f72; border-radius: 12px; }
+body .login-btn:hover, body .register-btn:hover, body .verify-btn:hover { background: #075b51; }
+body .login-form input, body .register-form input { border-radius: 10px; border-color: #d4dfd6; }
+body .register-logo, body .forgot-link, body .register-link, body .login-link a { color: #087f72; }
+.auth-brand { display: inline-block; font-size: 26px; font-weight: 800; letter-spacing: -1px; color: #075b51; text-decoration: none; margin-bottom: 32px; }
+body .auth-art { position: relative; padding: 0; overflow: hidden; min-height: 550px; }
+body .auth-art > img { position: absolute; inset: 0; width: 100%; max-width: none; height: 100%; object-fit: cover; }
+.auth-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 35%, #123d35e8); }
+.auth-art-caption { position: relative; z-index: 1; align-self: flex-end; width: 100%; padding: 36px; color: white; }
+.auth-art-caption span { font-size: 10px; letter-spacing: .15em; }
+.auth-art-caption h2 { font-size: 32px; line-height: 1.25; letter-spacing: -.025em; margin: 14px 0; }
+.auth-art-caption small { font-size: 10px; opacity: .75; }
+body .login-form .eye-icon { border: 0; background: transparent; padding: 4px; color: #64756f; }
+@media (max-width: 899px) {
+  .home-hero { grid-template-columns: 1fr; gap: 30px; padding: 32px 20px 40px; }
+  .home-hero-visual { padding-left: 10px; }
+  .home-hero-visual > img { height: 330px; border-radius: 60px 18px 18px; }
+  .hero-image-label { left: 0; right: 20px; bottom: 50px; padding: 14px; }
 }
-.App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  min-height: 100vh;
+@media (max-width: 599px) {
+  body .login-page, body .register-page, body .verify-page { padding: 24px 12px; }
+  body .login-card, body .register-card, body .verify-card { width: 100%; max-width: 100%; min-height: auto; }
+  body .login-right, body .register-left, body .verify-right { display: none; }
+  body .login-left, body .register-right, body .verify-left { padding: 28px 22px; min-width: 0; }
+  body .name-fields { flex-direction: column; }
+  .home-hero-visual > img { height: 280px; }
 }
-body,
-.App {
-  min-height: 100vh;
-  margin: 0;
-  scroll-behavior: smooth;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
-  font-size: 1.15rem;
-  font-family: "Inter", sans-serif;
-  background-color: #ffffff;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

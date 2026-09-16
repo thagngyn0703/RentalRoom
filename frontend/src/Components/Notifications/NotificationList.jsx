@@ -61,7 +61,7 @@ const NotificationList = () => {
         {notifications.length === 0 && <ListItem><ListItemText primary="Không có thông báo nào." /></ListItem>}
         {notifications.map((notif) => (
           <React.Fragment key={notif._id}>
-            <ListItem alignItems="flex-start" sx={{ bgcolor: !notif.readAt ? '#e3f2fd' : undefined }}>
+            <ListItem alignItems="flex-start" sx={{ bgcolor: !notif.readAt ? '#e5f3ec' : undefined }}>
               <ListItemText
                 primary={<b>{notif.title}</b>}
                 secondary={<>

@@ -4,7 +4,7 @@ import { Box, Paper, Typography, Button } from '@mui/material';
 /**
  * Debug overlay để xem real-time badge state
  * Chỉ hiển thị trong development mode
- * 
+ *
  * Cách sử dụng:
  * 1. Import vào App.js
  * 2. Thêm <BadgeDebugOverlay /> vào cuối component
@@ -92,9 +92,9 @@ const BadgeDebugOverlay = () => {
                     minWidth: 40,
                     height: 40,
                     borderRadius: '50%',
-                    bgcolor: '#1976d2',
+                    bgcolor: '#087f72',
                     color: 'white',
-                    '&:hover': { bgcolor: '#1565c0' }
+                    '&:hover': { bgcolor: '#075b51' }
                 }}
             >
                 🐛
@@ -144,8 +144,8 @@ const BadgeDebugOverlay = () => {
                         Storage Count: <strong style={{ color: '#ffeb3b' }}>{storageCount}</strong>
                     </Typography>
                     <br />
-                    <Typography variant="caption" sx={{ 
-                        color: badgeCount === storageCount ? '#81c784' : '#f44336' 
+                    <Typography variant="caption" sx={{
+                        color: badgeCount === storageCount ? '#81c784' : '#f44336'
                     }}>
                         {badgeCount === storageCount ? '✓ Synced' : '✗ Out of sync'}
                     </Typography>
@@ -189,8 +189,8 @@ const BadgeDebugOverlay = () => {
                     size="small"
                     variant="outlined"
                     onClick={() => {
-                        window.dispatchEvent(new CustomEvent('chatConversationOpened', { 
-                            detail: { count: 1 } 
+                        window.dispatchEvent(new CustomEvent('chatConversationOpened', {
+                            detail: { count: 1 }
                         }));
                     }}
                     sx={{ color: 'white', borderColor: 'white', fontSize: 10 }}

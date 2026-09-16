@@ -490,8 +490,8 @@ const MyRentals = () => {
                 onClick={() => handleOpenRenew(booking)}
                 sx={{
                   fontWeight: 800,
-                  boxShadow: '0 6px 16px rgba(25, 118, 210, 0.25)',
-                  '&:hover': { boxShadow: '0 10px 24px rgba(25, 118, 210, 0.35)' },
+                  boxShadow: '0 6px 16px rgba(8, 127, 114, 0.25)',
+                  '&:hover': { boxShadow: '0 10px 24px rgba(8, 127, 114, 0.35)' },
                 }}
               >
                 Gia hạn thêm tháng

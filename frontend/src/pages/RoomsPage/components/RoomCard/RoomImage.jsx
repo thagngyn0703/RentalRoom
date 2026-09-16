@@ -10,17 +10,18 @@ const RoomImage = ({ room, favorites, toggleFavorite }) => {
     <Box
       sx={{
         position: 'relative',
-        height: { xs: 180, sm: 170 },
+        height: { xs: 220, sm: 190 },
         width: { xs: '100%', sm: 240 },
         overflow: 'hidden',
-        borderRadius: 1.2,
-        bgcolor: '#000',
+        borderRadius: 2,
+        bgcolor: '#edf3ec',
         alignSelf: 'stretch',
         flexShrink: 0
       }}
     >
       <Box
         component="img"
+        loading="lazy"
         src={room.image}
         alt={room.title}
         sx={{
@@ -32,7 +33,7 @@ const RoomImage = ({ room, favorites, toggleFavorite }) => {
           minWidth: '100%',
           minHeight: '100%',
           height: '100%',
-          objectFit: 'contain',
+          objectFit: 'cover',
           objectPosition: 'center center',
           display: 'block'
         }}
@@ -54,6 +55,7 @@ const RoomImage = ({ room, favorites, toggleFavorite }) => {
       </Box>
       <Tooltip title={isFavorite ? 'Bỏ yêu thích' : 'Yêu thích'}>
         <IconButton
+          aria-label={isFavorite ? 'Bỏ yêu thích' : 'Lưu phòng yêu thích'}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

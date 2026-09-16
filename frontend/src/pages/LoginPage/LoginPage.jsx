@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../../services/api/authApi";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import secureImg from "../../assets/anh_login.jpg"; // thay bằng ảnh bạn gửi
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -31,15 +30,17 @@ const LoginPage = () => {
       <div className="login-card">
         {/* Cột bên trái */}
         <div className="login-left">
-          <div className="logo">Your Logo</div>
-          <h2 className="login-heading">Đăng nhập</h2>
+          <Link to="/" className="auth-brand">trọ chung.</Link>
+          <h1 className="login-heading">Chào bạn trở lại.</h1>
           <p className="login-subtext">
-            Đăng nhập để truy cập tài khoản của bạn
+            Tiếp tục hành trình tìm nơi ở dành riêng cho bạn.
           </p>
 
           <form onSubmit={handleLogin} className="login-form">
-            <label>Email</label>
+            <label htmlFor="login-email">Email</label>
             <input
+              id="login-email"
+              autoComplete="username"
               type="email"
               placeholder="example@gmail.com"
               value={username}
@@ -47,21 +48,25 @@ const LoginPage = () => {
               required
             />
 
-            <label>Password</label>
+            <label htmlFor="login-password">Mật khẩu</label>
             <div className="password-input">
               <input
+                id="login-password"
+                autoComplete="current-password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <span
+              <button
+                type="button"
+                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                 className="eye-icon"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              </button>
             </div>
 
             <div className="login-options">
@@ -89,8 +94,9 @@ const LoginPage = () => {
         </div>
 
         {/* Cột bên phải */}
-        <div className="login-right">
-          <img src={secureImg} alt="secure login" />
+        <div className="login-right auth-art">
+          <img src="/images/home-interior.webp" alt="Không gian sống minh họa" />
+          <div className="auth-art-caption"><span>NƠI Ở MỚI. CÂU CHUYỆN MỚI.</span><h2>Chốn riêng để<br />bạn là chính mình.</h2><small>Ảnh minh họa</small></div>
         </div>
       </div>
     </div>

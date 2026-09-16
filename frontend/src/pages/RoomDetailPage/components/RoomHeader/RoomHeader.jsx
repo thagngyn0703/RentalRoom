@@ -7,7 +7,7 @@ const RoomHeader = ({ room, isFavorite, onBack, onToggleFavorite }) => {
       <IconButton onClick={onBack} sx={{ bgcolor: 'grey.100' }}>
         <ArrowBack />
       </IconButton>
-      <Typography variant="h4" sx={{ fontWeight: 700, flex: 1 }}>
+      <Typography variant="h4" sx={{ fontWeight: 700, flex: 1, minWidth: 0, overflowWrap: 'anywhere', fontSize: { xs: 20, md: 26 } }}>
         {room.title}
       </Typography>
       <Tooltip title={isFavorite ? 'Bỏ yêu thích' : 'Yêu thích'}>

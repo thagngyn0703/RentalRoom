@@ -37,12 +37,12 @@ const ChatInboxPage = () => {
         const style = document.createElement('style');
         style.textContent = `
             @keyframes pulse {
-                0%, 100% { 
-                    transform: scale(1); 
+                0%, 100% {
+                    transform: scale(1);
                     opacity: 1;
                 }
-                50% { 
-                    transform: scale(1.1); 
+                50% {
+                    transform: scale(1.1);
                     opacity: 0.9;
                 }
             }
@@ -131,8 +131,8 @@ const ChatInboxPage = () => {
         load();
 
         // Setup global socket for notifications
-        const globalSocket = io(SOCKET_URL, { 
-            withCredentials: true, 
+        const globalSocket = io(SOCKET_URL, {
+            withCredentials: true,
             transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionDelay: 1000,
@@ -194,7 +194,7 @@ const ChatInboxPage = () => {
                 // Optimistic update: immediately clear unread count
                 const previousUnreadCount = selectedConv.unreadCount || 0;
                 console.log(`📂 Opening conversation ${selectedConv._id}, unread count: ${previousUnreadCount}`);
-                
+
                 setConversations((prev) =>
                     prev.map((c) => String(c._id) === String(selectedConv._id) ? { ...c, unreadCount: 0 } : c)
                 );
@@ -202,12 +202,12 @@ const ChatInboxPage = () => {
                 // Trigger optimistic badge update
                 if (previousUnreadCount > 0) {
                     console.log(`🔔 Dispatching chatConversationOpened event with count: ${previousUnreadCount}`);
-                    const event = new CustomEvent('chatConversationOpened', { 
-                        detail: { count: previousUnreadCount } 
+                    const event = new CustomEvent('chatConversationOpened', {
+                        detail: { count: previousUnreadCount }
                     });
                     window.dispatchEvent(event);
                     console.log('✅ Event dispatched successfully');
-                    
+
                     // Also trigger immediate refresh as backup
                     setTimeout(() => {
                         window.dispatchEvent(new Event('chatUnreadUpdated'));
@@ -231,8 +231,8 @@ const ChatInboxPage = () => {
                 if (cancelled) return;
                 setMessages(res.data || []);
 
-                socket = io(SOCKET_URL, { 
-                    withCredentials: true, 
+                socket = io(SOCKET_URL, {
+                    withCredentials: true,
                     transports: ['websocket', 'polling'],
                     reconnection: true,
                     reconnectionDelay: 1000
@@ -319,8 +319,8 @@ const ChatInboxPage = () => {
 
         // Update latest message in sidebar optimistically
         setConversations((prev) =>
-            prev.map((c) => String(c._id) === String(selectedConv._id) 
-                ? { ...c, latestMessage: { text, senderId: myId, createdAt: new Date().toISOString() } } 
+            prev.map((c) => String(c._id) === String(selectedConv._id)
+                ? { ...c, latestMessage: { text, senderId: myId, createdAt: new Date().toISOString() } }
                 : c
             )
         );
@@ -335,13 +335,13 @@ const ChatInboxPage = () => {
             if (response?.success) {
                 console.log('✅ Message sent successfully');
                 // Replace temp message with real one
-                setMessages((prev) => 
+                setMessages((prev) =>
                     prev.map((m) => m._id === tempId ? { ...response.message, isPending: false } : m)
                 );
             } else {
                 console.error('❌ Failed to send message');
                 // Mark message as failed
-                setMessages((prev) => 
+                setMessages((prev) =>
                     prev.map((m) => m._id === tempId ? { ...m, isFailed: true, isPending: false } : m)
                 );
             }
@@ -388,45 +388,45 @@ const ChatInboxPage = () => {
                                         selected={isSelected}
                                         onClick={() => {
                                             console.log(`🖱️ Clicked on conversation ${conv._id}, unread: ${conv.unreadCount}`);
-                                            
+
                                             // Trigger event IMMEDIATELY before state update
                                             if (conv.unreadCount > 0) {
                                                 console.log(`🔔 Triggering chatConversationOpened with count: ${conv.unreadCount}`);
-                                                
+
                                                 // Method 1: Custom Event
-                                                window.dispatchEvent(new CustomEvent('chatConversationOpened', { 
-                                                    detail: { count: conv.unreadCount } 
+                                                window.dispatchEvent(new CustomEvent('chatConversationOpened', {
+                                                    detail: { count: conv.unreadCount }
                                                 }));
-                                                
+
                                                 // Method 2: LocalStorage (backup)
                                                 try {
                                                     const currentBadge = parseInt(localStorage.getItem('chatBadgeCount') || '0');
                                                     const newBadge = Math.max(0, currentBadge - conv.unreadCount);
                                                     localStorage.setItem('chatBadgeCount', newBadge.toString());
                                                     console.log(`💾 LocalStorage: ${currentBadge} → ${newBadge}`);
-                                                    
+
                                                     // Trigger storage event
                                                     window.dispatchEvent(new Event('storage'));
                                                 } catch (e) {
                                                     console.error('LocalStorage error:', e);
                                                 }
                                             }
-                                            
+
                                             // Then update selected conversation
                                             setSelectedConv(conv);
                                         }}
-                                        sx={{ 
-                                            px: 2, 
-                                            py: 1.5, 
-                                            bgcolor: conv.unreadCount > 0 ? 'rgba(102, 126, 234, 0.05)' : 'transparent',
-                                            borderLeft: conv.unreadCount > 0 ? '3px solid #667eea' : '3px solid transparent',
+                                        sx={{
+                                            px: 2,
+                                            py: 1.5,
+                                            bgcolor: conv.unreadCount > 0 ? 'rgba(8, 127, 114, 0.05)' : 'transparent',
+                                            borderLeft: conv.unreadCount > 0 ? '3px solid #087f72' : '3px solid transparent',
                                             transition: 'all 0.2s ease',
-                                            '&.Mui-selected': { 
-                                                bgcolor: 'rgba(102, 126, 234, 0.15)',
-                                                borderLeft: '3px solid #667eea'
+                                            '&.Mui-selected': {
+                                                bgcolor: 'rgba(8, 127, 114, 0.15)',
+                                                borderLeft: '3px solid #087f72'
                                             },
                                             '&:hover': {
-                                                bgcolor: 'rgba(102, 126, 234, 0.1)',
+                                                bgcolor: 'rgba(8, 127, 114, 0.1)',
                                             }
                                         }}
                                     >
@@ -438,11 +438,11 @@ const ChatInboxPage = () => {
                                         <ListItemText
                                             primary={
                                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-                                                    <Typography 
-                                                        variant="body2" 
-                                                        fontWeight={conv.unreadCount > 0 ? 700 : 600} 
+                                                    <Typography
+                                                        variant="body2"
+                                                        fontWeight={conv.unreadCount > 0 ? 700 : 600}
                                                         noWrap
-                                                        sx={{ 
+                                                        sx={{
                                                             flex: 1,
                                                             color: conv.unreadCount > 0 ? 'text.primary' : 'text.secondary'
                                                         }}
@@ -453,11 +453,11 @@ const ChatInboxPage = () => {
                                                 </Box>
                                             }
                                             secondary={
-                                                <Typography 
-                                                    variant="caption" 
-                                                    color="text.secondary" 
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
                                                     noWrap
-                                                    sx={{ 
+                                                    sx={{
                                                         fontWeight: conv.unreadCount > 0 ? 600 : 400,
                                                         color: conv.unreadCount > 0 ? 'text.primary' : 'text.secondary'
                                                     }}
@@ -485,7 +485,7 @@ const ChatInboxPage = () => {
                 ) : (
                     <>
                         {/* Chat header */}
-                        <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 1.5, background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)' }}>
+                        <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider', display: 'flex', alignItems: 'center', gap: 1.5, background: 'linear-gradient(135deg, #087f72 0%, #37a795 100%)' }}>
                             <Avatar sx={{ bgcolor: 'white', color: 'primary.main', width: 36, height: 36, fontWeight: 700 }}>
                                 {selectedConv.otherUser?.username?.[0]?.toUpperCase() || 'U'}
                             </Avatar>
@@ -502,7 +502,7 @@ const ChatInboxPage = () => {
                         </Box>
 
                         {/* Messages */}
-                        <Box sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: 1, bgcolor: '#f5f7fa' }}>
+                        <Box sx={{ flex: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column', gap: 1, bgcolor: '#f6f8f5' }}>
                             {loadingMsgs ? (
                                 <Box sx={{ display: 'flex', justifyContent: 'center', pt: 4 }}>
                                     <CircularProgress size={28} />
@@ -517,7 +517,7 @@ const ChatInboxPage = () => {
                                     return (
                                         <Box key={msg._id || idx} sx={{ display: 'flex', justifyContent: isMe ? 'flex-end' : 'flex-start', gap: 1, alignItems: 'flex-end' }}>
                                             {!isMe && (
-                                                <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontSize: 13 }}>
+                                                <Avatar sx={{ width: 28, height: 28, bgcolor: '#087f72', fontSize: 13 }}>
                                                     {selectedConv.otherUser?.username?.[0]?.toUpperCase() || 'U'}
                                                 </Avatar>
                                             )}
@@ -525,7 +525,7 @@ const ChatInboxPage = () => {
                                                 maxWidth: '65%',
                                                 px: 1.5, py: 1,
                                                 borderRadius: 3,
-                                                bgcolor: isMe ? '#1976d2' : '#fff',
+                                                bgcolor: isMe ? '#087f72' : '#fff',
                                                 color: isMe ? 'white' : '#212121',
                                                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                                                 borderBottomRightRadius: isMe ? 4 : 16,

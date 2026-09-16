@@ -54,8 +54,8 @@ const ReviewsComments = ({
   };
 
   return (
-    <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+    <Paper sx={{ p: { xs: 2, md: 3 }, mb: 3, borderRadius: 2, overflowWrap: 'anywhere' }}>
+      <Stack direction="row" alignItems="center" spacing={2} useFlexGap sx={{ mb: 2, flexWrap: 'wrap' }}>
         <Typography variant="h5" sx={{ fontWeight: 600, mr: 'auto' }}>
           Đánh giá & Bình luận
         </Typography>
@@ -94,7 +94,7 @@ const ReviewsComments = ({
       {/* Form nhập comment */}
       <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
         <Avatar>{(room.author || 'N').charAt(0)}</Avatar>
-        <Box sx={{ flex: 1, display: 'flex', gap: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           <input
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -106,7 +106,7 @@ const ReviewsComments = ({
             }}
             placeholder="Viết bình luận..."
             style={{ 
-              flex: 1, 
+              flex: '1 1 180px', minWidth: 0,
               padding: 10, 
               borderRadius: 8, 
               border: '1px solid #e0e0e0' 
@@ -137,8 +137,8 @@ const ReviewsComments = ({
           <Box key={c._id}>
             <Stack direction="row" spacing={1}>
               <Avatar>{(c.user?.username || 'U').charAt(0)}</Avatar>
-              <Box sx={{ flex: 1 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Stack direction="row" spacing={1} alignItems="center" useFlexGap sx={{ flexWrap: 'wrap' }}>
                   <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                     {c.user?.username || 'User'}
                   </Typography>
@@ -152,7 +152,7 @@ const ReviewsComments = ({
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
                       style={{ 
-                        flex: 1, 
+                        flex: 1, minWidth: 0,
                         padding: 8, 
                         borderRadius: 8, 
                         border: '1px solid #e0e0e0' 
@@ -220,8 +220,8 @@ const ReviewsComments = ({
                     {c.replies.map((r) => (
                       <Stack direction="row" spacing={1} key={r._id}>
                         <Avatar>{(r.user?.username || 'U').charAt(0)}</Avatar>
-                        <Box>
-                          <Stack direction="row" spacing={1} alignItems="center">
+                        <Box sx={{ minWidth: 0 }}>
+                          <Stack direction="row" spacing={1} alignItems="center" useFlexGap sx={{ flexWrap: 'wrap' }}>
                             <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                               {r.user?.username || 'User'}
                             </Typography>
@@ -277,7 +277,7 @@ const ReviewsComments = ({
                         }
                       }}
                       style={{ 
-                        flex: 1, 
+                        flex: 1, minWidth: 0,
                         padding: 8, 
                         borderRadius: 8, 
                         border: '1px solid #e0e0e0' 

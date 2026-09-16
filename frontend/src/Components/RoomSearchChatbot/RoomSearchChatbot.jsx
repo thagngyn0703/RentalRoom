@@ -90,12 +90,13 @@ const RoomSearchChatbot = () => {
     <>
       {!open && (
         <Fab
+          variant="extended"
           color="primary"
           aria-label="Mở trợ lý hỗ trợ"
           onClick={() => setOpen(true)}
           sx={{ position: 'fixed', right: { xs: 16, sm: 24 }, bottom: { xs: 80, sm: 88 }, zIndex: 1100 }}
         >
-          <SmartToyOutlinedIcon />
+          <SmartToyOutlinedIcon sx={{ mr: 1 }} /> Tìm phòng AI
         </Fab>
       )}
 
@@ -122,7 +123,7 @@ const RoomSearchChatbot = () => {
             </IconButton>
           </Box>
 
-          <Box sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: '#f6f8fb' }} aria-live="polite">
+          <Box sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: '#f3f7f2' }} aria-live="polite">
             <Stack spacing={1.5}>
               {messages.map((message) => (
                 <Box key={message.id} sx={{ alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start', maxWidth: '88%' }}>

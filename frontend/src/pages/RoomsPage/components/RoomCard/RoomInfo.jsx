@@ -27,9 +27,9 @@ const RoomInfo = ({ room }) => {
       }}
     >
       {/* Author - Moved to top like Facebook/Instagram post */}
-      <Stack 
-        direction="row" 
-        spacing={1.5} 
+      <Stack
+        direction="row"
+        spacing={1.5}
         alignItems="center"
         sx={{ mb: 0.5 }}
       >
@@ -56,10 +56,10 @@ const RoomInfo = ({ room }) => {
       </Stack>
 
       {/* Title */}
-      <Typography 
-        variant="h6" 
-        sx={{ 
-          fontWeight: 600, 
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 600,
           fontSize: { xs: 16, md: 17 },
           lineHeight: 1.4,
           overflow: 'hidden',
@@ -74,9 +74,9 @@ const RoomInfo = ({ room }) => {
 
       {/* Price */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap' }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
+        <Typography
+          variant="h6"
+          sx={{
             fontWeight: 700,
             color: '#d32f2f',
             fontSize: { xs: 16, md: 17 }
@@ -85,10 +85,10 @@ const RoomInfo = ({ room }) => {
           {formatPrice(room.price)} VND/tháng
         </Typography>
         <Stack direction="row" spacing={0.5} alignItems="center">
-          <Rating 
-            value={room.rating || 0} 
-            precision={0.5} 
-            size="small" 
+          <Rating
+            value={room.rating || 0}
+            precision={0.5}
+            size="small"
             readOnly
             sx={{
               '& .MuiRating-iconFilled': {
@@ -114,7 +114,7 @@ const RoomInfo = ({ room }) => {
           icon={<AspectRatioIcon sx={{ fontSize: 15, opacity: 0.8 }} />}
           label={`${room.area} m²`}
           size="small"
-          sx={{ 
+          sx={{
             height: 28,
             bgcolor: 'rgba(0, 177, 79, 0.08)',
             border: 'none',
@@ -128,21 +128,21 @@ const RoomInfo = ({ room }) => {
           icon={<BedIcon sx={{ fontSize: 15, opacity: 0.8 }} />}
           label={`${room.beds || 0} PN`}
           size="small"
-          sx={{ 
+          sx={{
             height: 28,
-            bgcolor: 'rgba(25, 118, 210, 0.08)',
+            bgcolor: 'rgba(8, 127, 114, 0.08)',
             border: 'none',
             fontWeight: 500,
             color: 'text.primary',
             '& .MuiChip-label': { px: 1.2, fontSize: 12.5 },
-            '& .MuiChip-icon': { ml: 0.8, color: '#1976d2' }
+            '& .MuiChip-icon': { ml: 0.8, color: '#087f72' }
           }}
         />
         <Chip
           icon={<BathtubIcon sx={{ fontSize: 15, opacity: 0.8 }} />}
           label={`${room.baths || 0} WC`}
           size="small"
-          sx={{ 
+          sx={{
             height: 28,
             bgcolor: 'rgba(211, 47, 47, 0.08)',
             border: 'none',

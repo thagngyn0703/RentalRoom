@@ -49,7 +49,7 @@ const AboutPage = () => {
       description: 'Xây dựng cộng đồng thân thiện, sẵn sàng giúp đỡ lẫn nhau'
     },
     {
-      icon: <VerifiedUserIcon sx={{ fontSize: 32, color: '#2196f3' }} />,
+      icon: <VerifiedUserIcon sx={{ fontSize: 32, color: '#289987' }} />,
       title: 'Minh Bạch',
       description: 'Thông tin rõ ràng, xác thực, bảo vệ quyền lợi người dùng'
     },
@@ -61,11 +61,11 @@ const AboutPage = () => {
   ];
 
   return (
-    <Box sx={{ bgcolor: '#f5f7fa', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: '#f6f8f5', minHeight: '100vh' }}>
       {/* Hero Section */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
           color: 'white',
           py: { xs: 8, md: 12 },
           position: 'relative',
@@ -104,9 +104,9 @@ const AboutPage = () => {
                   opacity: 0.9
                 }}
               >
-                Chúng tôi không chỉ đơn thuần là một nền tảng tìm trọ. 
-                Trọ Chung là cầu nối giúp bạn tìm được nơi ở lý tưởng và 
-                những người bạn cùng phòng phù hợp, đồng thời xây dựng một 
+                Chúng tôi không chỉ đơn thuần là một nền tảng tìm trọ.
+                Trọ Chung là cầu nối giúp bạn tìm được nơi ở lý tưởng và
+                những người bạn cùng phòng phù hợp, đồng thời xây dựng một
                 cộng đồng trọ chung vững mạnh, thân thiện và sẵn sàng chia sẻ.
               </Typography>
             </Grid>
@@ -136,10 +136,10 @@ const AboutPage = () => {
                 Sứ Mệnh
               </Typography>
               <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: '1.05rem' }}>
-                Giúp sinh viên, người lao động và cư dân từ các khu vực khác 
-                dễ dàng tìm kiếm được nơi ở hợp lý với mức giá phù hợp. 
-                Đồng thời, kết nối những người có cùng hoàn cảnh, 
-                chí hướng để cùng nhau chia sẻ không gian sống, 
+                Giúp sinh viên, người lao động và cư dân từ các khu vực khác
+                dễ dàng tìm kiếm được nơi ở hợp lý với mức giá phù hợp.
+                Đồng thời, kết nối những người có cùng hoàn cảnh,
+                chí hướng để cùng nhau chia sẻ không gian sống,
                 giảm chi phí và tạo nên những kỷ niệm đáng nhớ.
               </Typography>
             </Paper>
@@ -163,10 +163,10 @@ const AboutPage = () => {
                 Tầm Nhìn
               </Typography>
               <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: '1.05rem' }}>
-                Trở thành nền tảng hàng đầu về kết nối nơi ở và cộng đồng 
-                trọ chung tại Việt Nam. Xây dựng một cộng đồng vững mạnh 
-                nơi mọi người không chỉ tìm được chỗ ở mà còn tìm được 
-                những người bạn, những kiến thức hữu ích và sự hỗ trợ 
+                Trở thành nền tảng hàng đầu về kết nối nơi ở và cộng đồng
+                trọ chung tại Việt Nam. Xây dựng một cộng đồng vững mạnh
+                nơi mọi người không chỉ tìm được chỗ ở mà còn tìm được
+                những người bạn, những kiến thức hữu ích và sự hỗ trợ
                 khi cần thiết.
               </Typography>
             </Paper>
@@ -190,7 +190,7 @@ const AboutPage = () => {
             color="text.secondary"
             sx={{ mb: 6, maxWidth: 600, mx: 'auto' }}
           >
-            Trọ Chung cung cấp đầy đủ các tính năng để bạn dễ dàng 
+            Trọ Chung cung cấp đầy đủ các tính năng để bạn dễ dàng
             tìm kiếm và kết nối
           </Typography>
           <Grid container spacing={4}>
@@ -333,8 +333,8 @@ const AboutPage = () => {
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                Người sáng lập và điều hành Trọ Chung với tầm nhìn xây dựng 
-                một cộng đồng kết nối, chia sẻ và hỗ trợ lẫn nhau trong 
+                Người sáng lập và điều hành Trọ Chung với tầm nhìn xây dựng
+                một cộng đồng kết nối, chia sẻ và hỗ trợ lẫn nhau trong
                 việc tìm kiếm nơi ở lý tưởng.
               </Typography>
             </Card>
@@ -345,7 +345,7 @@ const AboutPage = () => {
       {/* CTA Section */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #087f72 0%, #193b34 100%)',
           py: 8,
           color: 'white'
         }}
@@ -356,7 +356,7 @@ const AboutPage = () => {
               Hãy Tham Gia Cùng Chúng Tôi
             </Typography>
             <Typography variant="h6" sx={{ opacity: 0.9, maxWidth: 600 }}>
-              Trở thành một phần của cộng đồng Trọ Chung - nơi bạn không chỉ 
+              Trở thành một phần của cộng đồng Trọ Chung - nơi bạn không chỉ
               tìm được nơi ở mà còn tìm được những người bạn đồng hành
             </Typography>
           </Stack>
