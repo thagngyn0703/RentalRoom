@@ -39,7 +39,7 @@ export default function DocsPage() {
     <Container maxWidth="xl" sx={{ py: { xs: 3, md: 6 } }}>
       <Chip icon={<Description />} label={`${documents.length} tài liệu · RentalRoom`} variant="outlined" color="primary" />
       <Typography variant="h3" component="h1" sx={{ mt: 2, mb: 1 }}>Tài liệu dự án</Typography>
-      <Typography color="text.secondary" sx={{ mb: 4 }}>Tổng quan, thiết kế, hướng dẫn phát triển và vận hành Trọ Chung.</Typography>
+      <Typography color="text.secondary" sx={{ mb: 4 }}>Hướng dẫn sử dụng website, tổng quan, thiết kế, phát triển và vận hành Trọ Chung.</Typography>
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '280px minmax(0, 1fr)' }, gap: 3, alignItems: 'start' }}>
         <Paper component="nav" aria-label="Danh mục tài liệu" variant="outlined" sx={{ p: 2 }}>
           {[...new Set(documents.map(doc => doc.group))].map(group => (

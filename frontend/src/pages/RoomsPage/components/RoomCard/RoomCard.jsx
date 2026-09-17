@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Grid, IconButton, Tooltip } from '@mui/material';
+import { Paper, Grid, Box, IconButton, Tooltip } from '@mui/material';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import RoomImage from './RoomImage';
 import RoomInfo from './RoomInfo';
@@ -29,23 +29,6 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
         }
       }}
     >
-      {onToggleCompare && <Tooltip title={isCompared ? 'Bỏ khỏi so sánh' : 'Thêm vào so sánh'}>
-        <span>
-          <IconButton
-            aria-label={isCompared ? `Bỏ ${room.title} khỏi so sánh` : `So sánh ${room.title}`}
-            aria-pressed={isCompared}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              onToggleCompare(room);
-            }}
-            size="small"
-            sx={{ position: 'absolute', top: 24, left: 24, zIndex: 2, bgcolor: 'rgba(255,255,255,0.94)', color: isCompared ? 'primary.main' : 'text.secondary' }}
-          >
-            <CompareArrowsIcon fontSize="small" />
-          </IconButton>
-        </span>
-      </Tooltip>}
       <Grid
         container
         spacing={0.5}
@@ -76,6 +59,25 @@ const RoomCard = ({ room, favorites, toggleFavorite, handleViewDetails, isCompar
           <RoomInfo room={room} />
         </Grid>
       </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+      {onToggleCompare && <Tooltip title={isCompared ? 'Bỏ khỏi so sánh' : 'Thêm vào so sánh'}>
+        <span>
+          <IconButton
+            aria-label={isCompared ? `Bỏ ${room.title} khỏi so sánh` : `So sánh ${room.title}`}
+            aria-pressed={isCompared}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              onToggleCompare(room);
+            }}
+            size="small"
+            sx={{ bgcolor: 'rgba(255,255,255,0.94)', color: isCompared ? 'primary.main' : 'text.secondary' }}
+          >
+            <CompareArrowsIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </Tooltip>}
+      </Box>
     </Paper>
   );
 };

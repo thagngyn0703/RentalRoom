@@ -1,4 +1,5 @@
 [
+  {"path":"docs/user-guide.md","title":"Hướng dẫn sử dụng","group":"Dành cho người dùng"},
   {"path":"README.md","title":"Tổng quan dự án","group":"Tổng quan"},
   {"path":"DESIGN.md","title":"Thiết kế giao diện","group":"Tổng quan"},
   {"path":"frontend/PROJECT_STRUCTURE.md","title":"Cấu trúc phần giao diện","group":"Phát triển"},
